@@ -332,6 +332,8 @@ h1.alert, h2.alert		{color: #000000;}
 .hierophant_warning		{color: #660099; font-style: italic;}
 .purple					{color: #5e2d79;}
 .holoparasite			{color: #35333a;}
+.spiderclan			{color: #ffffff; background-color: #000000; display: block; font-family: "Courier New", cursive, sans-serif;}
+.spiderborder			{background-color: #ee0000;}
 
 .revennotice			{color: #1d2953;}
 .revenboldnotice		{color: #1d2953;	font-weight: bold;}

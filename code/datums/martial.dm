@@ -1,15 +1,24 @@
+#define ATK_MISS 0
+#define ATK_HIT 1
+#define ATK_CRIT_HIT 2
+#define HIT_MIN 5
+#define HIT_MAX 10
+
 /datum/martial_art
 	var/name = "Martial Art"
 	var/streak = ""
 	var/max_streak_length = 6
 	var/current_target
 	var/datum/martial_art/base // The permanent style. This will be null unless the martial art is temporary
-	var/deflection_chance = 0 //Chance to deflect projectiles
-	var/block_chance = 0 //Chance to block melee attacks using items while on throw mode.
 	var/restraining = 0 //used in cqc's disarm_act to check if the disarmed is being restrained and so whether they should be put in a chokehold or not
 	var/help_verb
-	var/no_guns = FALSE
 	var/allow_temp_override = TRUE //if this martial art can be overridden by temporary martial arts
+	var/mob/living/carbon/human/owner = null
+
+	var/can_crit = FALSE
+	var/no_guns = FALSE
+	var/deflection_chance = 0 //Chance to deflect projectiles
+	var/block_chance = 0 //Chance to block melee attacks using items while on throw mode.
 
 /datum/martial_art/proc/disarm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	return 0
@@ -58,6 +67,29 @@
 		add_logs(A, D, "attempted to [atk_verb]")
 		return 0
 
+	if(can_crit)
+		var/defense_roll = defense_roll(0)
+		if(defense_roll)
+			playsound(D.loc, A.dna.species.attack_sound, 25, 1, -1)
+			if(defense_roll == 2)
+				damage *= 2
+				D.visible_message("<span class='danger'>[A] has critically [atk_verb]ed [D]!</span>", \
+				"<span class='userdanger'>[A] has critically [atk_verb]ed [D]!</span>", null, COMBAT_MESSAGE_RANGE)
+				add_logs(A, D, "critically punched")
+			else
+				D.visible_message("<span class='danger'>[A] has [atk_verb]ed [D]!</span>", \
+				"<span class='userdanger'>[A] has [atk_verb]ed [D]!</span>", null, COMBAT_MESSAGE_RANGE)
+				add_logs(A, D, "punched")
+			D.apply_damage(damage, BRUTE)
+			return 1
+		else
+			playsound(D.loc, A.dna.species.miss_sound, 25, 1, -1)
+			D.visible_message("<span class='warning'>[A] has attempted to [atk_verb] [D]!</span>", \
+				"<span class='userdanger'>[A] has attempted to [atk_verb] [D]!</span>", null, COMBAT_MESSAGE_RANGE)
+			add_logs(A, D, "attempted to [atk_verb]")
+			return 0
+
+
 	var/obj/item/bodypart/affecting = D.get_bodypart(ran_zone(A.zone_selected))
 	var/armor_block = D.run_armor_check(affecting, "melee")
 
@@ -77,6 +109,27 @@
 	else if(D.lying)
 		D.forcesay(GLOB.hit_appends)
 	return 1
+
+/datum/martial_art/proc/defense_roll(abm)
+	var/armor = (owner.getarmor("chest", "melee") * 0.1)
+	var/armor_class = 10
+	if(!armor)
+		armor_class = 15
+	else
+		armor_class -= armor
+	var/attack_bonus = abm
+	if(owner.incapacitated())
+		attack_bonus += 3
+	var/attack_roll = roll(1,20) + attack_bonus
+	if(attack_roll >= armor_class)
+		if(attack_roll >= 20)
+			attack_roll = roll(1,20) + attack_bonus
+			if(attack_roll >= armor_class)
+				return ATK_CRIT_HIT
+			return ATK_HIT
+		else
+			return ATK_HIT
+	return ATK_MISS
 
 /datum/martial_art/proc/teach(mob/living/carbon/human/H,make_temporary=0)
 	if(!istype(H) || !H.mind)
