@@ -15,10 +15,15 @@
 	var/allow_temp_override = TRUE //if this martial art can be overridden by temporary martial arts
 	var/mob/living/carbon/human/owner = null
 
-	var/can_crit = FALSE
 	var/no_guns = FALSE
 	var/deflection_chance = 0 //Chance to deflect projectiles
 	var/block_chance = 0 //Chance to block melee attacks using items while on throw mode.
+
+	var/current_exp = 100
+	var/next_level_exp = 200
+	var/static/exp_slope = 10.5
+	var/current_level = 1
+	var/level_cap = 1
 
 /datum/martial_art/proc/disarm_act(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	return 0
@@ -67,29 +72,6 @@
 		add_logs(A, D, "attempted to [atk_verb]")
 		return 0
 
-	if(can_crit)
-		var/defense_roll = defense_roll(0)
-		if(defense_roll)
-			playsound(D.loc, A.dna.species.attack_sound, 25, 1, -1)
-			if(defense_roll == 2)
-				damage *= 2
-				D.visible_message("<span class='danger'>[A] has critically [atk_verb]ed [D]!</span>", \
-				"<span class='userdanger'>[A] has critically [atk_verb]ed [D]!</span>", null, COMBAT_MESSAGE_RANGE)
-				add_logs(A, D, "critically punched")
-			else
-				D.visible_message("<span class='danger'>[A] has [atk_verb]ed [D]!</span>", \
-				"<span class='userdanger'>[A] has [atk_verb]ed [D]!</span>", null, COMBAT_MESSAGE_RANGE)
-				add_logs(A, D, "punched")
-			D.apply_damage(damage, BRUTE)
-			return 1
-		else
-			playsound(D.loc, A.dna.species.miss_sound, 25, 1, -1)
-			D.visible_message("<span class='warning'>[A] has attempted to [atk_verb] [D]!</span>", \
-				"<span class='userdanger'>[A] has attempted to [atk_verb] [D]!</span>", null, COMBAT_MESSAGE_RANGE)
-			add_logs(A, D, "attempted to [atk_verb]")
-			return 0
-
-
 	var/obj/item/bodypart/affecting = D.get_bodypart(ran_zone(A.zone_selected))
 	var/armor_block = D.run_armor_check(affecting, "melee")
 
@@ -110,26 +92,19 @@
 		D.forcesay(GLOB.hit_appends)
 	return 1
 
-/datum/martial_art/proc/defense_roll(abm)
-	var/armor = (owner.getarmor("chest", "melee") * 0.1)
-	var/armor_class = 10
-	if(!armor)
-		armor_class = 15
-	else
-		armor_class -= armor
-	var/attack_bonus = abm
-	if(owner.incapacitated())
-		attack_bonus += 3
-	var/attack_roll = roll(1,20) + attack_bonus
-	if(attack_roll >= armor_class)
-		if(attack_roll >= 20)
-			attack_roll = roll(1,20) + attack_bonus
-			if(attack_roll >= armor_class)
-				return ATK_CRIT_HIT
-			return ATK_HIT
-		else
-			return ATK_HIT
-	return ATK_MISS
+/datum/martial_art/proc/add_exp(amt)
+	if(current_level == level_cap)
+		return
+	current_exp += amt
+	if(current_exp >= next_level_exp)
+		current_level++
+		var/next_level = current_level + 1
+		next_level_exp = next_level*100
+		to_chat(owner, "<span class='danger'>You feel more confident in your powers.</span>")
+		do_level_up()
+
+/datum/martial_art/proc/do_level_up()
+	return 0
 
 /datum/martial_art/proc/teach(mob/living/carbon/human/H,make_temporary=0)
 	if(!istype(H) || !H.mind)
@@ -169,3 +144,6 @@
 	if(help_verb)
 		H.verbs -= help_verb
 	return
+
+/datum/action/innate/martial
+	icon_icon = 'icons/mob/actions/actions_martial.dmi'
