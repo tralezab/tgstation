@@ -6,8 +6,8 @@
 
 /datum/martial_art/cqc
 	name = "CQC"
-	help_verb = /mob/living/carbon/human/proc/CQC_help
 	block_chance = 75
+	var/datum/action/innate/martial/cqc_help/cqc_help
 	var/just_a_cook = FALSE
 	var/static/list/areas_under_siege = typecacheof(list(/area/crew_quarters/kitchen,
 														/area/crew_quarters/cafeteria,
@@ -16,6 +16,15 @@
 /datum/martial_art/cqc/under_siege
 	name = "Close Quarters Cooking"
 	just_a_cook = TRUE
+
+/datum/martial_art/cqc/teach(mob/living/carbon/human/H,make_temporary=0)
+	cqc_help = new
+	cqc_help.Grant(H)
+	..()
+
+/datum/martial_art/cqc/on_remove(mob/living/carbon/human/H)
+	QDEL_NULL(cqc_help)
+	return ..()
 
 /datum/martial_art/cqc/proc/drop_restraining()
 	restraining = FALSE
@@ -198,16 +207,18 @@
 		return FALSE
 	return TRUE
 
-/mob/living/carbon/human/proc/CQC_help()
-	set name = "Remember The Basics"
-	set desc = "You try to remember some of the basics of CQC."
-	set category = "CQC"
-	to_chat(usr, "<b><i>You try to remember some of the basics of CQC.</i></b>")
+/datum/action/innate/martial/cqc_help
+	name = "Remember The Basics"
+	desc = "You try to remember some of the basics of CQC."
+	button_icon_state = "cqc"
 
-	to_chat(usr, "<span class='notice'>Slam</span>: Grab Harm. Slam opponent into the ground, knocking them down.")
-	to_chat(usr, "<span class='notice'>CQC Kick</span>: Disarm Harm Harm. Knocks opponent away. Knocks out stunned or knocked down opponents.")
-	to_chat(usr, "<span class='notice'>Restrain</span>: Grab Grab. Locks opponents into a restraining position, disarm to knock them out with a choke hold.")
-	to_chat(usr, "<span class='notice'>Pressure</span>: Disarm Grab. Decent stamina damage.")
-	to_chat(usr, "<span class='notice'>Consecutive CQC</span>: Disarm Disarm Harm. Mainly offensive move, huge damage and decent stamina damage.")
+/datum/action/innate/martial/cqc_help/Activate()
+	to_chat(owner, "<b><i>You try to remember some of the basics of CQC.</i></b>")
 
-	to_chat(usr, "<b><i>In addition, by having your throw mode on when being attacked, you enter an active defense mode where you have a chance to block and sometimes even counter attacks done to you.</i></b>")
+	to_chat(owner, "<span class='notice'>Slam</span>: Grab Harm. Slam opponent into the ground, knocking them down.")
+	to_chat(owner, "<span class='notice'>CQC Kick</span>: Disarm Harm Harm. Knocks opponent away. Knocks out stunned or knocked down opponents.")
+	to_chat(owner, "<span class='notice'>Restrain</span>: Grab Grab. Locks opponents into a restraining position, disarm to knock them out with a choke hold.")
+	to_chat(owner, "<span class='notice'>Pressure</span>: Disarm Grab. Decent stamina damage.")
+	to_chat(owner, "<span class='notice'>Consecutive CQC</span>: Disarm Disarm Harm. Mainly offensive move, huge damage and decent stamina damage.")
+
+	to_chat(owner, "<b><i>In addition, by having your throw mode on when being attacked, you enter an active defense mode where you have a chance to block and sometimes even counter attacks done to you.</i></b>")
