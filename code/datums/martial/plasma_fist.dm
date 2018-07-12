@@ -91,11 +91,12 @@
 	basic_hit(A,D)
 	return 1
 
-/datum/action/innate/plasma_fist_help
+/datum/action/innate/martial/plasma_fist_help
 	name = "Recall Teachings"
 	desc = "Remember the martial techniques of the Plasma Fist."
+	button_icon_state = "plasma_fist"
 
-/datum/action/innate/plasma_fist_help/Activate()
+/datum/action/innate/martial/plasma_fist_help/Activate()
 
 	to_chat(owner, "<b><i>You clench your fists and have a flashback of knowledge...</i></b>")
 

@@ -9,7 +9,7 @@
 	deflection_chance = 100
 	no_guns = TRUE
 	allow_temp_override = FALSE
-	var/datum/action/innate/sleeping_carp_help/sleeping_carp_help
+	var/datum/action/innate/martial/sleeping_carp_help/sleeping_carp_help
 
 /datum/martial_art/the_sleeping_carp/teach(mob/living/carbon/human/H,make_temporary=0)
 	sleeping_carp_help = new
