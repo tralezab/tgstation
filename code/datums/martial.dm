@@ -7,7 +7,6 @@
 	var/deflection_chance = 0 //Chance to deflect projectiles
 	var/block_chance = 0 //Chance to block melee attacks using items while on throw mode.
 	var/restraining = 0 //used in cqc's disarm_act to check if the disarmed is being restrained and so whether they should be put in a chokehold or not
-	var/help_verb
 	var/no_guns = FALSE
 	var/allow_temp_override = TRUE //if this martial art can be overridden by temporary martial arts
 
@@ -90,8 +89,6 @@
 			H.mind.martial_art.on_remove(H)
 	else if(make_temporary)
 		base = H.mind.default_martial_art
-	if(help_verb)
-		H.verbs += help_verb
 	H.mind.martial_art = src
 	return TRUE
 
@@ -113,6 +110,10 @@
 		X.teach(H)
 
 /datum/martial_art/proc/on_remove(mob/living/carbon/human/H)
-	if(help_verb)
-		H.verbs -= help_verb
 	return
+
+/datum/action/innate/martial
+	name = "Recall Teachings"
+	desc = "Hey; either an admin gave you a bad action button or a bug occured. Report this on github."
+	icon_icon = 'icons/mob/actions/actions_martial.dmi'
+	background_icon_state = "bg_default"

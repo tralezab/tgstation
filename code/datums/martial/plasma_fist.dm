@@ -4,8 +4,16 @@
 
 /datum/martial_art/plasma_fist
 	name = "Plasma Fist"
-	help_verb = /mob/living/carbon/human/proc/plasma_fist_help
+	var/datum/action/innate/plasma_fist_help/plasma_fist_help
 
+/datum/martial_art/plasma_fist/teach(mob/living/carbon/human/H,make_temporary=0)
+	plasma_fist_help = new
+	plasma_fist_help.Grant(H)
+	..()
+
+/datum/martial_art/plasma_fist/on_remove(mob/living/carbon/human/H)
+	QDEL_NULL(plasma_fist_help)
+	return ..()
 
 /datum/martial_art/plasma_fist/proc/check_streak(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	if(findtext(streak,TORNADO_COMBO))
@@ -83,12 +91,14 @@
 	basic_hit(A,D)
 	return 1
 
-/mob/living/carbon/human/proc/plasma_fist_help()
-	set name = "Recall Teachings"
-	set desc = "Remember the martial techniques of the Plasma Fist."
-	set category = "Plasma Fist"
+/datum/action/innate/plasma_fist_help
+	name = "Recall Teachings"
+	desc = "Remember the martial techniques of the Plasma Fist."
 
-	to_chat(usr, "<b><i>You clench your fists and have a flashback of knowledge...</i></b>")
-	to_chat(usr, "<span class='notice'>Tornado Sweep</span>: Harm Harm Disarm. Repulses target and everyone back.")
-	to_chat(usr, "<span class='notice'>Throwback</span>: Disarm Harm Disarm. Throws the target and an item at them.")
-	to_chat(usr, "<span class='notice'>The Plasma Fist</span>: Harm Disarm Disarm Disarm Harm. Knocks the brain out of the opponent and gibs their body.")
+/datum/action/innate/plasma_fist_help/Activate()
+
+	to_chat(owner, "<b><i>You clench your fists and have a flashback of knowledge...</i></b>")
+
+	to_chat(owner, "<span class='notice'>Tornado Sweep</span>: Harm Harm Disarm. Repulses target and everyone back.")
+	to_chat(owner, "<span class='notice'>Throwback</span>: Disarm Harm Disarm. Throws the target and an item at them.")
+	to_chat(owner, "<span class='notice'>The Plasma Fist</span>: Harm Disarm Disarm Disarm Harm. Knocks the brain out of the opponent and gibs their body.")

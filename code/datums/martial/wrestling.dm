@@ -1,15 +1,16 @@
-/mob/living/carbon/human/proc/wrestling_help()
-	set name = "Recall Teachings"
-	set desc = "Remember how to wrestle."
-	set category = "Wrestling"
+/datum/action/innate/wrasslin
+	name = "Recall Teachings"
+	desc = "Remember how to wrestle."
 
-	to_chat(usr, "<b><i>You flex your muscles and have a revelation...</i></b>")
-	to_chat(usr, "<span class='notice'>Clinch</span>: Grab. Passively gives you a chance to immediately aggressively grab someone. Not always successful.")
-	to_chat(usr, "<span class='notice'>Suplex</span>: Disarm someone you are grabbing. Suplexes your target to the floor. Greatly injures them and leaves both you and your target on the floor.")
-	to_chat(usr, "<span class='notice'>Advanced grab</span>: Grab. Passively causes stamina damage when grabbing someone.")
+/datum/action/innate/wrasslin/Activate()
+	to_chat(owner, "<b><i>You flex your muscles and have a revelation...</i></b>")
+	to_chat(owner, "<span class='notice'>Clinch</span>: Grab. Passively gives you a chance to immediately aggressively grab someone. Not always successful.")
+	to_chat(owner, "<span class='notice'>Suplex</span>: Disarm someone you are grabbing. Suplexes your target to the floor. Greatly injures them and leaves both you and your target on the floor.")
+	to_chat(owner, "<span class='notice'>Advanced grab</span>: Grab. Passively causes stamina damage when grabbing someone.")
 
 /datum/martial_art/wrestling
 	name = "Wrestling"
+	var/datum/action/innate/wrasslin/wrasslin
 	var/datum/action/slam/slam = new/datum/action/slam()
 	var/datum/action/throw_wrassle/throw_wrassle = new/datum/action/throw_wrassle()
 	var/datum/action/kick/kick = new/datum/action/kick()
@@ -103,7 +104,9 @@
 /datum/martial_art/wrestling/teach(mob/living/carbon/human/H,make_temporary=0)
 	if(..())
 		to_chat(H, "<span class = 'userdanger'>SNAP INTO A THIN TIM!</span>")
-		to_chat(H, "<span class = 'danger'>Place your cursor over a move at the top of the screen to see what it does.</span>")
+		to_chat(H, "<span class = 'danger'>Place your cursor over a move at the top of the screen to see what it does. Your innate skills are found under the first button!</span>")
+		wrasslin = new
+		wrasslin.Grant(H)
 		drop.Grant(H)
 		kick.Grant(H)
 		slam.Grant(H)
@@ -112,6 +115,7 @@
 
 /datum/martial_art/wrestling/on_remove(mob/living/carbon/human/H)
 	to_chat(H, "<span class = 'userdanger'>You no longer feel that the tower of power is too sweet to be sour...</span>")
+	QDEL_NULL(wrasslin)
 	drop.Remove(H)
 	kick.Remove(H)
 	slam.Remove(H)

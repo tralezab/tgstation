@@ -9,7 +9,16 @@
 	deflection_chance = 100
 	no_guns = TRUE
 	allow_temp_override = FALSE
-	help_verb = /mob/living/carbon/human/proc/sleeping_carp_help
+	var/datum/action/innate/sleeping_carp_help/sleeping_carp_help
+
+/datum/martial_art/the_sleeping_carp/teach(mob/living/carbon/human/H,make_temporary=0)
+	sleeping_carp_help = new
+	sleeping_carp_help.Grant(H)
+	..()
+
+/datum/martial_art/the_sleeping_carp/on_remove(mob/living/carbon/human/H)
+	QDEL_NULL(sleeping_carp_help)
+	return ..()
 
 /datum/martial_art/the_sleeping_carp/proc/check_streak(mob/living/carbon/human/A, mob/living/carbon/human/D)
 	if(findtext(streak,WRIST_WRENCH_COMBO))
@@ -143,18 +152,18 @@
 		return 1
 	return ..()
 
-/mob/living/carbon/human/proc/sleeping_carp_help()
-	set name = "Recall Teachings"
-	set desc = "Remember the martial techniques of the Sleeping Carp clan."
-	set category = "Sleeping Carp"
+/datum/action/innate/sleeping_carp_help
+	name = "Recall Teachings"
+	desc = "Remember the martial techniques of the Sleeping Carp clan."
 
-	to_chat(usr, "<b><i>You retreat inward and recall the teachings of the Sleeping Carp...</i></b>")
+/datum/action/innate/sleeping_carp_help/Activate()
+	to_chat(owner, "<b><i>You retreat inward and recall the teachings of the Sleeping Carp...</i></b>")
 
-	to_chat(usr, "<span class='notice'>Wrist Wrench</span>: Disarm Disarm. Forces opponent to drop item in hand.")
-	to_chat(usr, "<span class='notice'>Back Kick</span>: Harm Grab. Opponent must be facing away. Knocks down.")
-	to_chat(usr, "<span class='notice'>Stomach Knee</span>: Grab Harm. Knocks the wind out of opponent and stuns.")
-	to_chat(usr, "<span class='notice'>Head Kick</span>: Disarm Harm Harm. Decent damage, forces opponent to drop item in hand.")
-	to_chat(usr, "<span class='notice'>Elbow Drop</span>: Harm Disarm Harm Disarm Harm. Opponent must be on the ground. Deals huge damage, instantly kills anyone in critical condition.")
+	to_chat(owner, "<span class='notice'>Wrist Wrench</span>: Disarm Disarm. Forces opponent to drop item in hand.")
+	to_chat(owner, "<span class='notice'>Back Kick</span>: Harm Grab. Opponent must be facing away. Knocks down.")
+	to_chat(owner, "<span class='notice'>Stomach Knee</span>: Grab Harm. Knocks the wind out of opponent and stuns.")
+	to_chat(owner, "<span class='notice'>Head Kick</span>: Disarm Harm Harm. Decent damage, forces opponent to drop item in hand.")
+	to_chat(owner, "<span class='notice'>Elbow Drop</span>: Harm Disarm Harm Disarm Harm. Opponent must be on the ground. Deals huge damage, instantly kills anyone in critical condition.")
 
 /obj/item/twohanded/bostaff
 	name = "bo staff"
