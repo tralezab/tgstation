@@ -299,6 +299,16 @@
 	tastes = list("torilla" = 2, "meat" = 3, "hot peppers" = 1)
 	foodtype = GRAIN | MEAT
 
+/obj/item/reagent_containers/food/snacks/alienbeanburrito
+	name = "alien bean burrito"
+	desc = "Did this thing just move?"
+	icon = 'icons/obj/food/food_ingredients.dmi'
+	icon_state = "alien_bean_burrito"
+	list_reagents = list("nutriment" = 3, "polonium" = 10)
+	filling_color = "#FFEFD5"
+	tastes = list("tortilla" = 1, "meat" = 2, "cheese" = 2, "fried egg" = 2, "beans" = 3)
+	foodtype = GRAIN | MEAT | TOXIC | DAIRY | FRIED
+
 /obj/item/reagent_containers/food/snacks/yakiimo
 	name = "yaki imo"
 	desc = "Made with roasted sweet potatoes!"
