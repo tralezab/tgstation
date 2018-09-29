@@ -2120,6 +2120,7 @@
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\blood_drunk_miner.dm"
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\bubblegum.dm"
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\colossus.dm"
+#include "code\modules\mob\living\simple_animal\hostile\megafauna\demons.dm"
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\drake.dm"
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\hierophant.dm"
 #include "code\modules\mob\living\simple_animal\hostile\megafauna\legion.dm"
