@@ -631,6 +631,20 @@
 	M.adjustToxLoss(toxdamage)
 	..()
 
+/datum/reagent/toxin/mycotoxin
+	name = "Mycotoxin"
+	id = "mycotoxin"
+	description = "Tiny, toxic spores that also carry various illnesses with them."
+	reagent_state = LIQUID
+	color = "#964B00"
+	taste_description = "wet dirt"
+	toxpwr = 0
+	metabolization_rate = 0.5 * REAGENTS_METABOLISM
+
+/datum/reagent/toxin/mycotoxin/on_mob_life(mob/living/M)
+	if(prob(1))
+		ForceContractDisease(M)
+
 /datum/reagent/toxin/lipolicide
 	name = "Lipolicide"
 	id = "lipolicide"
