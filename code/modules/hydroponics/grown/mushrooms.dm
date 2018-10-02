@@ -30,6 +30,57 @@
 	icon_state = "reishi"
 	filling_color = "#FF4500"
 
+// Mold!
+/obj/item/seeds/mold
+	name = "pack of Aspergillus mycelium"
+	desc = "You can only plant this on other plants, You monster."
+	icon_state = "mycelium-amanita"
+	species = "mold"
+	plantname = "mold"
+	product = /obj/item/reagent_containers/food/snacks/grown/mushroom/mold
+	lifespan = 70
+	endurance = 70
+	maturation = 10
+	production = 5
+	yield = 4
+	growthstages = 3
+	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism)
+	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
+	mutatelist = list(/obj/item/seeds/organmold)
+	reagents_add = list("nutriment" = 0.02, "mycotoxin" = 0.04)
+
+/obj/item/reagent_containers/food/snacks/grown/mushroom/mold
+	seed = /obj/item/seeds/mold
+	name = "moldy biomass"
+	desc = "<I>Aspergillus Versicolor</I>: Learn poisonous mus- Well... I mean come on, you're not actually going to eat mold, right?"
+	icon_state = "amanita"
+	filling_color = "#654321"
+
+// Organ Mold
+/obj/item/seeds/mold
+	name = "pack of Stachbotrys mycelium"
+	desc = "You can only plant this on other plants. Seems to react to complicated living matter..."
+	icon_state = "mycelium-amanita"
+	species = "mold"
+	plantname = "mold"
+	product = /obj/item/reagent_containers/food/snacks/grown/mushroom/mold
+	lifespan = 80
+	endurance = 100
+	maturation = 15
+	production = 8
+	yield = 6
+	growthstages = 3
+	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism)
+	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
+	reagents_add = list("nutriment" = 0.04 "organmycotoxin" = 0.04)
+
+/obj/item/reagent_containers/food/snacks/grown/mushroom/organmold
+	seed = /obj/item/seeds/organmold
+	name = "moldy biomass"
+	desc = "<I>Stachbotrys Nattereri</I>: WARNING: Do not inhale, do not ingest. Plant person war crimes if you're using it on them."
+	icon_state = "amanita"
+	filling_color = "#654321"
+
 // Fly Amanita
 /obj/item/seeds/amanita
 	name = "pack of fly amanita mycelium"
