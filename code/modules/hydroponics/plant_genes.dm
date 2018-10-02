@@ -203,6 +203,11 @@
 	for(var/datum/plant_gene/trait/T in G.seed.genes)
 		T.on_slip(G, M)
 
+/datum/plant_gene/trait/invasive
+	// Simply, the plant can only be planted on top of other plants.
+	name = "Invasive growth"
+	rate = 2
+
 /datum/plant_gene/trait/cell_charge
 	// Cell recharging trait. Charges all mob's power cells to (potency*rate)% mark when eaten.
 	// Generates sparks on squash.
