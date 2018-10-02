@@ -738,6 +738,9 @@
 
 	else if(istype(O, /obj/item/seeds) && !istype(O, /obj/item/seeds/sample))
 		if(!myseed)
+			if(get_gene(/datum/plant_gene/trait/invasive))
+				to_chat(user, "<span class='warning'>mold requires a plant to grow on first!</span>")
+				return
 			if(istype(O, /obj/item/seeds/kudzu))
 				investigate_log("had Kudzu planted in it by [key_name(user)] at [AREACOORD(src)]","kudzu")
 			if(!user.transferItemToLoc(O, src))
@@ -750,7 +753,22 @@
 			lastcycle = world.time
 			update_icon()
 		else
-			to_chat(user, "<span class='warning'>[src] already has seeds in it!</span>")
+			if(get_gene(/datum/plant_gene/trait/invasive)) //I cast altar's reap!
+				to_chat(user, "<span class='notice'>You plant [O].</span>")
+				dead = 0
+				var/oldPlantName = myseed.plantname
+				qdel(myseed) //As an additional cost to cast Altar's reap, sacrifice a creature
+				myseed = O //Draw 2 cards.
+				age = 1
+				plant_health = myseed.endurance
+				lastcycle = world.time
+				update_icon()
+				weedlevel = 0 // Mold takes no survivors
+				pestlevel = 0 // Mold takes NO survivors
+				update_icon()
+				visible_message("<span class='warning'>The [oldPlantName] is overtaken by some [myseed.plantname]!</span>")
+			else
+				to_chat(user, "<span class='warning'>[src] already has seeds in it!</span>")
 
 	else if(istype(O, /obj/item/plant_analyzer))
 		if(myseed)
