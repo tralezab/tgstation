@@ -16,9 +16,10 @@ the bites. No more contained reagents = no more bites.
 Here is an example of the new formatting for anyone who wants to add more food items.
 ```
 /obj/item/reagent_containers/food/snacks/xenoburger			//Identification path for the object.
-	name = "Xenoburger"													//Name that displays in the UI.
-	desc = "Smells caustic. Tastes like heresy."						//Duh
-	icon_state = "xburger"												//Refers to an icon in food.dmi
+	name = "Xenoburger"																//Name that displays in the UI.
+	desc = "Smells caustic. Tastes like heresy."									//Duh
+	icon_state = "xburger"															//Refers to an icon in food.dmi
+	infernal_replacement = "/obj/item/reagent_containers/food/snacks/demonburger"	//Used by the demon cookbook, see granters.dm
 /obj/item/reagent_containers/food/snacks/xenoburger/Initialize()		//Don't mess with this. | nO I WILL MESS WITH THIS
 	. = ..()														//Same here.
 	reagents.add_reagent("xenomicrobes", 10)						//This is what is in the food item. you may copy/paste
@@ -323,6 +324,17 @@ All foods are distributed among various categories. Use common sense.
 				if(sattisfaction_text)
 					M.emote("me", 1, "[sattisfaction_text]")
 				qdel(src)
+
+/obj/item/reagent_containers/food/snacks/proc/infernal_cooking()
+	var/ghost_ride_the_whip //insert ghost ride the whip video here
+	if(infernal_replacement)
+		ghost_ride_the_whip = infernal_replacement
+	else
+		ghost_ride_the_whip = /obj/item/reagent_containers/food/snacks/meat/slab
+	visible_message("<span class='notice'>[src] twists and contorts into a [ghost_ride_the_whip.name]!</span>")
+	new ghost_ride_the_whip(get_turf(src))
+	list_reagents.Remove("nutriment")//the demon food will have that, but we're still adding the old food's properties
+	ghost_ride_the_whip.list_reagents += list_reagents()
 
 // //////////////////////////////////////////////Store////////////////////////////////////////
 /// All the food items that can store an item inside itself, like bread or cake.
