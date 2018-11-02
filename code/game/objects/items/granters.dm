@@ -392,4 +392,85 @@
 		name = "empty scroll"
 		icon_state = "blankscroll"
 
+
 // I did not include mushpunch's grant, it is not a book and the item does it just fine.
+
+///MISC///
+
+
+/obj/item/book/granter/demoncookbook
+	martial = /datum/martial_art/plasma_fist
+	name = "The Underworld Cookbook"
+	desc = "Asmoranomardicadaistinaculdacar had finally summoned a demon of gluttony but could no longer feed it's infinite hunger. Luckily, she was a very good chef."
+	icon = 'icons/obj/wizard.dmi'
+	oneuse = FALSE
+	var/recoiled = FALSE
+	//icon_state =""remind me to make a bad sprite for this
+	remarks = list("While most overworlders fortunately don’t realize this, gargoyles can be most delicious, providing you have the appropriate tools to carve them.", "Slaughter demon hearts are to die for, if you enjoy becoming half-demon.", "Yeah, Imps are not worth it, in every way possible. A very hard hide and not much inside, and catching them is it's own ordeal.", "I haven't tried cooking big guy bubblegum! I don't think you should either, but he looks a lot more meaty than most demons. It's okay, he can't read this.", "How do I kill all these demons? Turns out all you need to get demons to kill each other is an empty stomach.", "Laughter demons just taste funny, I just can't recommend it.", "Yes, there is no chapter on zombies. That's because they are surprisingly unrelated to demonology, and the demon of glutton won't eat rancid meat like that anyways.")
+
+/obj/item/book/granter/demoncookbook/attack_self(mob/user)
+	. = ..()
+	if(!.)
+		return
+	if(used == TRUE && oneuse == TRUE)
+		recoil(user)
+	else
+		to_chat(user, "<span class='notice'>You start reading about demon meals...</span>")
+		reading = TRUE
+		for(var/i=1, i<=pages_to_mastery, i++)
+			if(!turn_page(user))
+				to_chat(user, "<span class='notice'>You stop reading...</span>")
+				reading = FALSE
+				return
+		if(do_after(user,50, user))
+			to_chat(user, "<span class='notice'>The book flares for a moment!</span>")
+			onlearned(user)
+			for(var/obj/item/reagent_containers/food/snacks/F in range(2, src))
+				F.infernal_cooking()
+		reading = FALSE
+
+/obj/item/book/granter/demoncookbook/onlearned(user)
+	..()
+	if(oneuse)
+		user.visible_message("<span class='caution'>[src] growls for a second!</span>")
+
+/obj/item/book/granter/demoncookbook/recoil(user) //this is probably one of the worst recoils to hit you (and a lot of collateral I bet) but by default the book is infinite use.
+	to_chat(user, "<span class='caution'>as you open the book, you hear the screams of a lot of angry demons.</span>")
+	var/list/demon_types = list(/mob/living/simple_animal/slaughter, /mob/living/simple_animal/imp, /mob/living/simple_animal/imp)
+	var/list/antagon
+	var/list/candidates = pollCandidatesForMob("Do you want to play as an angry demon mob?", ROLE_ALIEN, null, ROLE_ALIEN, 50, src)
+	if(!(LAZYLEN(candidates) >= 3))
+		visible_message("<span class='danger'>[src] grabs [user] and pulls them inside, before burning into ash!</span>")
+		qdel(user)
+		return qdel(src)
+	else
+		for(var/i in 1 to 3)
+			var/mob/dead/observer/candidate = pick(candidates)
+			var/chosen_demon = pick(demon_types)
+			demon_types.Remove(chosen_demon)
+			var/mob/living/D = new chosen_demon(get_turf(src))
+			D.key = C.key
+			D.mind.assigned_role = D.name
+			D.mind.special_role = D.name
+			//in magic, after asmor is finally free from feeding the lord of the pit the other demons find out about the book and hunt her down.//
+			to_chat(D, "<span class='warning'>You've just found out about an ancient cookbook for eating demons! While you don't usually work with [istype(D, /mob/living/simple_animal/slaughter) ? "lowly imps" : "slaughter demons"], they helped track down not only the book, but [user], the person USING the book to make food!</span>")
+			D.mind.add_antag_datum(/datum/antagonist/slaughter/angrymob)
+	visible_message("<span class='danger'>[src] burns to ash as demons enter the realm!</span>")
+	qdel(src)
+
+/datum/antagonist/slaughter/angrymob
+	show_in_roundend = FALSE
+	show_in_antagpanel = FALSE
+	show_name_in_check_antagonists = TRUE
+
+/datum/antagonist/slaughter/angrymob/forge_objectives()
+	if(summoner)
+		var/datum/objective/assassinate/new_objective = new /datum/objective/assassinate
+		new_objective.owner = owner
+		new_objective.target = summoner
+		new_objective.explanation_text = "kill [summoner.name], the one who used the underworld cookbook."
+		objectives += new_objective
+	var/datum/objective/new_objective2 = new /datum/objective
+	new_objective2.owner = owner
+	new_objective2.explanation_text = "kill everyone[summoner ? " else while you're at it":""]."
+	objectives += new_objective2
