@@ -177,3 +177,59 @@
 
 /datum/mutation/human/glow/on_losing(mob/living/carbon/monkey/owner)
 	qdel(glowth)
+
+/datum/mutation/human/void
+	name = "Void Magnet"
+	desc = "rare genome that attracts odd forces not usually observed."
+	quality = MINOR_NEGATIVE //upsides and downsides
+	text_gain_indication = "<span class='notice'>You feel a heavy, dull force just beyond the walls watching you.</span>"
+	instability = 30
+	power = /obj/effect/proc_holder/spell/targeted/void
+
+/datum/mutation/human/void/on_life(mob/living/carbon/human/owner)
+	if(!in_use && (prob(1))) //i don't know how rare this is but coughs are 10% on life so in theory this should be okay
+		invocation_type = "none"
+		Click(autocast = TRUE)
+
+/obj/effect/proc_holder/spell/targeted/void
+	name = "Invoke Void"
+	desc = "rare genome that attracts odd forces not usually observed. May sometimes pull you in randomly."
+	school = "evocation"
+	clothes_req = FALSE
+	charge_max = 600
+	range = -1
+	include_user = 1
+	invocation = "DOOOOOOOOOOOOOOOOOOOOM!!!"
+	invocation_type = "shout"
+	action_icon_state = "immrod"
+	var/in_use = FALSE //so it doesn try and cast while you are already deep innit
+
+/obj/effect/proc_holder/spell/targeted/void/cast(list/targets,mob/user = usr)
+	in_use = TRUE
+	for(var/mob/living/M in targets)
+		user.visible_message("<span class='danger'>[user] is dragged into the void, leaving a hole in [user.p_their()] place!</span>")
+		var/obj/effect/immortality_talisman/Z = new(get_turf(M))
+		Z.name = "hole in reality"
+		Z.desc = "It's shaped an awful lot like [M.name]."
+		Z.setDir(M.dir)
+		user.forceMove(Z)
+		user.notransform = 1
+		user.status_flags |= GODMODE
+		addtimer(CALLBACK(src, .proc/return_to_reality, user, Z), 100)
+
+/obj/effect/proc_holder/spell/targeted/void/proc/return_to_reality(mob/user, obj/effect/immortality_talisman/Z)
+	in_use = FALSE
+	invocation_type = initial(invocation_type)
+	user.status_flags &= ~GODMODE
+	user.notransform = 0
+	user.forceMove(get_turf(Z))
+	user.visible_message("<span class='danger'>[user] pops back into reality!</span>")
+	Z.can_destroy = TRUE
+	qdel(Z)
+
+/obj/effect/proc_holder/spell/targeted/void/Click(var/autocast = FALSE)
+	if(!autocast)
+		return ..()
+	if(action)
+		action.UpdateButtonIcon()
+	choose_targets()
