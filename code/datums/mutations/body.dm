@@ -189,7 +189,7 @@
 /datum/mutation/human/void/on_life(mob/living/carbon/human/owner)
 	if(!in_use && (prob(1))) //i don't know how rare this is but coughs are 10% on life so in theory this should be okay
 		invocation_type = "none"
-		Click(autocast = TRUE)
+		power.Click(autocast = TRUE)
 
 /obj/effect/proc_holder/spell/targeted/void
 	name = "Invoke Void"
