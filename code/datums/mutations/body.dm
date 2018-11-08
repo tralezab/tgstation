@@ -190,7 +190,7 @@
 	var/obj/effect/proc_holder/spell/self/void/voidpower = power
 	if(voidpower.in_use) //i don't know how rare this is but coughs are 10% on life so in theory this should be okay
 		return
-	if(prob(50))
+	if(prob(2)) //very rare, but enough to annoy you hopefully
 		if(voidpower.action)
 			voidpower.action.UpdateButtonIcon()
 		voidpower.invocation_type = "none"
