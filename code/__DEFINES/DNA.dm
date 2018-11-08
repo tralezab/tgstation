@@ -2,7 +2,7 @@
 
 #define CHECK_DNA_AND_SPECIES(C) if((!(C.dna)) || (!(C.dna.species))) return
 
-//Defines copying names of mutations in all cases, make sure to change this if you change mutation's name
+//Defines copying names of mutations in all cases, make sure to change this if you change mutation's type
 #define HULK		/datum/mutation/human/hulk
 #define XRAY		/datum/mutation/human/x_ray
 #define COLDRES		/datum/mutation/human/cold_resistance
@@ -33,6 +33,7 @@
 #define TELEPATHY	/datum/mutation/human/telepath
 #define FIREBREATH	/datum/mutation/human/firebreath
 #define VOID		/datum/mutation/human/void
+#define STRONG    	/datum/mutation/human/strong
 
 #define UI_CHANGED "ui changed"
 #define UE_CHANGED "ue changed"

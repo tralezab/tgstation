@@ -228,3 +228,9 @@
 	user.visible_message("<span class='danger'>[user] pops back into reality!</span>")
 	Z.can_destroy = TRUE
 	qdel(Z)
+
+/datum/mutation/human/strong
+	name = "Strength"
+	desc = "The user's muscles slightly expand."
+	quality = POSITIVE
+	text_gain_indication = "<span class='notice'>You feel strong.</span>"
