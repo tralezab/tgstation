@@ -71,3 +71,11 @@
 			update_light()
 			cooldown = max(600, cooldown - 300)
 			addtimer(CALLBACK(src, .proc/reinforce), cooldown, TIMER_UNIQUE)
+
+/obj/machinery/spawner/clown
+	name = "Hilarious gateway"
+	desc = "A gateway used by the Clown Federation to bring in the punchline."
+	icon_state = "mob_teleporter_on_clown"
+	light_color = LIGHT_COLOR_PINK
+	verb_say = "honks"
+	directive = "Protect the Gateway and work with the Traitors in your group to bring the station a real killer joke!"
