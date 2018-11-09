@@ -1575,6 +1575,19 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	surplus = 0
 	restricted_roles = list("Clown")
 
+/datum/uplink_item/role_restricted/clown_spawner/purchase(mob/user, datum/component/uplink/U)
+	var/obj/machinery/spawner/SS = spawn_item(item, user, U)
+	var/datum/team/custom/T = new()
+	T.name = "[user]'s Syndicate Clown Squad"
+	T.custom_hud_state = "synd"
+	T.custom_hud = new
+	T.custom_hud.self_visible = TRUE
+	GLOB.huds += T.custom_hud //Make it show in admin hud
+	T.add_member(user.mind)
+	SS.Team = T
+	if(purchase_log_vis && U.purchase_log)
+		U.purchase_log.LogPurchase(SS, src, cost)
+
 // Pointless
 /datum/uplink_item/badass
 	category = "(Pointless) Badassery"
