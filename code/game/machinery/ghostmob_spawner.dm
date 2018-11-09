@@ -6,6 +6,7 @@
 	density = TRUE
 	icon = 'icons/obj/machines/teleporter.dmi'
 	icon_state = "mob_teleporter_on"
+	var/icon_reinforcing = "mob_teleporter_active"
 	light_range = 5
 	light_color = LIGHT_COLOR_CYAN
 	max_integrity = 200
@@ -16,6 +17,7 @@
 	var/password = ""
 	var/directive = "Protect the Gateway and follow all orders from the Traitors in your group - no matter the cost!"
 	var/corporation = "Syndicate" //used for polling ghosts
+	var/activation_icon = TRUE //some teleporters do not have an active sprite
 
 	//you know, what the teleporters give you//
 	var/mob/living/simple_animal/ranged_light = /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement
@@ -51,7 +53,8 @@
 /obj/machinery/spawner/proc/reinforce(var/repeat = TRUE)
 	if(!QDELETED(src))
 		light_color = LIGHT_COLOR_RED
-		icon_state = "mob_teleporter_active"
+		if(activation_icon)
+			icon_state = icon_reinforcing
 		update_light()
 		var/list/mob/dead/observer/finalists = pollGhostCandidates("Would you like to be a [corporation] reinforcement?", ROLE_TRAITOR, null, ROLE_TRAITOR, 100, POLL_IGNORE_SYNDICATE)
 		if(LAZYLEN(finalists) && !QDELETED(src))
@@ -59,14 +62,14 @@
 			var/mob/dead/observer/winner = pick(finalists)
 			if(prob(50))
 				if(prob(4))
-					S = new /mob/living/simple_animal/hostile/syndicate/ranged/smg(get_turf(src))
+					S = new ranged_heavy(get_turf(src))
 				else
-					S = new /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement(get_turf(src))
+					S = new ranged_light(get_turf(src))
 			else
 				if(prob(10))
-					S = new /mob/living/simple_animal/hostile/syndicate/melee/sword(get_turf(src))
+					S = new melee_heavy(get_turf(src))
 				else
-					S = new /mob/living/simple_animal/hostile/syndicate/melee/reinforcement(get_turf(src))
+					S = new melee_light(get_turf(src))
 			S.key = winner.key
 			if(Team)
 				Team.add_member(S.mind)
@@ -74,7 +77,7 @@
 			do_sparks(4, TRUE, src)
 		if(repeat)
 			light_color = initial(light_color)
-			icon_state = "mob_teleporter_on"
+			icon_state = initial(icon_state)
 			update_light()
 			cooldown = max(600, cooldown - 300)
 			addtimer(CALLBACK(src, .proc/reinforce), cooldown, TIMER_UNIQUE)
@@ -87,6 +90,7 @@
 	verb_say = "honks"
 	directive = "Protect the Gateway and work with the Traitors in your group to bring the station the killing joke!"
 	corporation = "Clown Federation"
+	activation_icon = FALSE
 	ranged_light = /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement/clown
 	ranged_heavy = /mob/living/simple_animal/hostile/syndicate/ranged/smg/clown
 	melee_light = /mob/living/simple_animal/hostile/syndicate/melee/reinforcement/clown
