@@ -92,6 +92,12 @@
 	melee_damage_upper = 20
 	see_in_dark = 2
 
+/mob/living/simple_animal/hostile/syndicate/melee/reinforcement/clown //Traitor CLOWN Gateway
+	name = "Clown Thug"
+	desc = "Didn't make the cut for the Tunnel Clowns."
+	icon_state = "clown_knife"
+	icon_living = "clown_knife"
+
 /mob/living/simple_animal/hostile/syndicate/melee/reinforcement/Initialize()
 	. = ..()
 	var/the_spell = new /obj/effect/proc_holder/spell/targeted/rod_form/stab_form(null)
@@ -149,6 +155,21 @@
 		visible_message("<span class='danger'>[src] blocks [Proj] with its shield!</span>")
 		return 0
 
+/mob/living/simple_animal/hostile/syndicate/melee/sword/clown //traitor clown gateway
+	name = "Clown Blademaster"
+	desc = "He fully understands that after two swords you run into diminishing returns."
+	icon_state = "clown_sword"
+	icon_living = "clown_sword"
+
+/mob/living/simple_animal/hostile/syndicate/melee/sword/clown/bullet_act(obj/item/projectile/Proj)
+	if(!Proj)
+		return
+	if(prob(50))
+		return ..()
+	else
+		visible_message("<span class='danger'>[src] blocks [Proj] with its swords!</span>")
+		return 0
+
 /mob/living/simple_animal/hostile/syndicate/melee/sword/space
 	icon_state = "syndicate_space_sword"
 	icon_living = "syndicate_space_sword"
@@ -199,6 +220,12 @@
 	desc = "Didn't make the cut for the Nuclear Operator Group."
 	see_in_dark = 2
 
+/mob/living/simple_animal/hostile/syndicate/ranged/reinforcement/clown //Traitor CLOWN Gateway
+	name = "Clown Gunman"
+	desc = "Didn't make the cut for the Tunnel Clowns."
+	icon_state = "clown_knife"
+	icon_living = "clown_knife"
+
 /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement/Initialize()
 	. = ..()
 	var/the_spell = new /obj/effect/proc_holder/spell/targeted/forcewall/sandbag(null)
@@ -232,6 +259,12 @@
 	icon_living = "syndicate_smg"
 	casingtype = /obj/item/ammo_casing/c45/nostamina
 	projectilesound = 'sound/weapons/gunshot_smg.ogg'
+
+/mob/living/simple_animal/hostile/syndicate/ranged/smg/clown //traitor clown gateway
+	name = "Clown Gunman"
+	desc = "Comedian is your name. Honking your native tongue. You're no longer part of the System. You're above the System. Over it. Beyond it."
+	icon_state = "clown_smg"
+	icon_living = "clown_smg"
 
 /mob/living/simple_animal/hostile/syndicate/ranged/smg/pilot //caravan ambush ruin
 	name = "Syndicate Salvage Pilot"

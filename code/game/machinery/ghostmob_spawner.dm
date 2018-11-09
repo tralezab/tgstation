@@ -15,6 +15,13 @@
 	var/datum/team/custom/Team
 	var/password = ""
 	var/directive = "Protect the Gateway and follow all orders from the Traitors in your group - no matter the cost!"
+	var/corporation = "Syndicate" //used for polling ghosts
+
+	//you know, what the teleporters give you//
+	var/mob/living/simple_animal/ranged_light = /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement
+	var/mob/living/simple_animal/ranged_heavy = /mob/living/simple_animal/hostile/syndicate/ranged/smg
+	var/mob/living/simple_animal/melee_light = /mob/living/simple_animal/hostile/syndicate/melee/reinforcement
+	var/mob/living/simple_animal/melee_heavy = /mob/living/simple_animal/hostile/syndicate/melee/sword
 
 /obj/machinery/spawner/Initialize()
 	. = ..()
@@ -46,7 +53,7 @@
 		light_color = LIGHT_COLOR_RED
 		icon_state = "mob_teleporter_active"
 		update_light()
-		var/list/mob/dead/observer/finalists = pollGhostCandidates("Would you like to be a Syndicate reinforcement?", ROLE_TRAITOR, null, ROLE_TRAITOR, 100, POLL_IGNORE_SYNDICATE)
+		var/list/mob/dead/observer/finalists = pollGhostCandidates("Would you like to be a [corporation] reinforcement?", ROLE_TRAITOR, null, ROLE_TRAITOR, 100, POLL_IGNORE_SYNDICATE)
 		if(LAZYLEN(finalists) && !QDELETED(src))
 			var/mob/living/simple_animal/S
 			var/mob/dead/observer/winner = pick(finalists)
@@ -66,7 +73,7 @@
 			to_chat(S, "<span class='boldwarning'>Obey the following directive: <u>[directive]</u>")
 			do_sparks(4, TRUE, src)
 		if(repeat)
-			light_color = LIGHT_COLOR_CYAN
+			light_color = initial(light_color)
 			icon_state = "mob_teleporter_on"
 			update_light()
 			cooldown = max(600, cooldown - 300)
@@ -78,4 +85,15 @@
 	icon_state = "mob_teleporter_on_clown"
 	light_color = LIGHT_COLOR_PINK
 	verb_say = "honks"
-	directive = "Protect the Gateway and work with the Traitors in your group to bring the station a real killer joke!"
+	directive = "Protect the Gateway and work with the Traitors in your group to bring the station the killing joke!"
+	corporation = "Clown Federation"
+	ranged_light = /mob/living/simple_animal/hostile/syndicate/ranged/reinforcement/clown
+	ranged_heavy = /mob/living/simple_animal/hostile/syndicate/ranged/smg/clown
+	melee_light = /mob/living/simple_animal/hostile/syndicate/melee/reinforcement/clown
+	melee_heavy = /mob/living/simple_animal/hostile/syndicate/melee/sword/clown
+
+/obj/machinery/spawner/clown/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, .proc/reinforce), 50)
+	password += num2text(rand(1000,9999))
+	visible_message("<span class='boldwarning'>A horse walks into a bar, and the bartender asks, \"Why are you late, agent? The password is [password]. Your allies may enter this number to identify as friendly to your reinforcements!\"</span>") //a hearty twist on a classic

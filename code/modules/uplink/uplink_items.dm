@@ -1566,6 +1566,15 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	cost = 20
 	restricted_roles = list("Clown")
 
+/datum/uplink_item/role_restricted/clown_spawner
+	name = "Hilarious Gateway"
+	desc = "A gateway that will routinely teleport in Clown pranksters - emphasis on the pranksters, these guys are rather FUNNY. The gateway self-calibrates to allow more reinforcements over time."
+	item = /obj/machinery/spawner/clown
+	cost = 20
+	//player_minimum = 40
+	surplus = 0
+	restricted_roles = list("Clown")
+
 // Pointless
 /datum/uplink_item/badass
 	category = "(Pointless) Badassery"
