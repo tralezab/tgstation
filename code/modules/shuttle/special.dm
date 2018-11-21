@@ -135,7 +135,7 @@
 
 /mob/living/simple_animal/drone/snowflake/bardrone
 	name = "Bardrone"
-	desc = "A barkeeping drone, an indestructible robot built to tend bars."
+	desc = "A barkeeping drone, a thin shield covers its little grabby hands."
 	hacked = TRUE
 	laws = "1. Serve drinks.\n\
 		2. Talk to patrons.\n\
@@ -143,10 +143,26 @@
 	status_flags = GODMODE // Please don't punch the barkeeper
 	unique_name = FALSE // disables the (123) number suffix
 	initial_language_holder = /datum/language_holder/universal
+	var/held_desc
 
 /mob/living/simple_animal/drone/snowflake/bardrone/Initialize()
 	. = ..()
 	access_card.access |= ACCESS_CENT_BAR
+	to_chat(user, "<span class='notice'>To make sure you will do your best to follow your laws, your module has been outfitted with a small but powerful shield to protect you. It is powered by your affinity to bartending, so don't stray too far.</span>")
+
+/mob/living/simple_animal/drone/snowflake/bardrone/Life()
+	var/area/A = get_area(user)
+	if((!istype(A, /area/crew_quarters/bar) || !istype(A, /area/shuttle/escape)))
+		if(status_flags & GODMODE)
+			to_chat(src, "<span class='danger'>Leaving the bar, your shielding dissipates. You feel very vulnerable.</span>")
+			status_flags &= ~GODMODE
+			held_desc = desc
+			desc = "A barkeeping drone."
+	else
+		if(!(status_flags & GODMODE))
+			to_chat(src, "<span class='notice'>Entering the bar, your shielding returns to its soft hum. You feel safe again!</span>")
+			status_flags |= GODMODE
+			desc = held_desc
 
 /mob/living/simple_animal/hostile/alien/maid/barmaid
 	gold_core_spawnable = NO_SPAWN
