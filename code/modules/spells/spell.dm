@@ -290,6 +290,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	invocation(user)
 	if(user && user.ckey)
 		user.log_message("<span class='danger'>cast the spell [name].</span>", LOG_ATTACK)
+	for(var/obj/effect/proc_holder/spell/spell in user.mind.spell_list)
+		if(spell == src)
+			continue
+		spell.spellrecieve(src)
 	if(recharge)
 		recharging = TRUE
 	if(sound)
@@ -339,7 +343,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				smoke.set_up(smoke_amt, location)
 				smoke.start()
 
-
 /obj/effect/proc_holder/spell/proc/cast(list/targets,mob/user = usr)
 	return
 
@@ -378,6 +381,9 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			target.AdjustUnconscious(amount)
 		else
 			target.vars[type] += amount //I bear no responsibility for the runtimes that'll happen if you try to adjust non-numeric or even non-existent vars
+
+/obj/effect/proc_holder/spell/proc/spellrecieve(var/obj/effect/proc_holder/spell/spell) //goes off when another spell the user has is cast, used for the spell 'thunderhead's crucible of storms'
+	return
 
 /obj/effect/proc_holder/spell/targeted //can mean aoe for mobs (limited/unlimited number) or one target mob
 	var/max_targets = 1 //leave 0 for unlimited targets in range, 1 for one selectable target in range, more for limited number of casts (can all target one guy, depends on target_ignore_prev) in range
