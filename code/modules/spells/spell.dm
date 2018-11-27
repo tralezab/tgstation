@@ -125,6 +125,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/level_max = 4 //The max possible level_max is 4
 	var/cooldown_min = 0 //This defines what spell quickened four times has as a cooldown. Make sure to set this for every spell
 	var/player_lock = TRUE //If it can be used by simple mobs
+	var/avoid_recieve = FALSE //if true, other spells will not get spellrecieve() from this spell getting casted.
 
 	var/overlay = 0
 	var/overlay_icon = 'icons/obj/wizard.dmi'
@@ -291,6 +292,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(user && user.ckey)
 		user.log_message("<span class='danger'>cast the spell [name].</span>", LOG_ATTACK)
 	for(var/obj/effect/proc_holder/spell/spell in user.mind.spell_list)
+		if(avoid_recieve)
+			break
 		if(spell == src)
 			continue
 		spell.spellrecieve(src)
@@ -537,8 +540,65 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	school = "restoration"
 	sound = 'sound/magic/staff_healing.ogg'
 
-/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/living/carbon/human/user) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
+/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/user = usr) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
 	//Also, notice the lack of a "for()" statement that looks through the targets. This is, again, because the spell can only have a single target.
 	user.visible_message("<span class='warning'>A wreath of gentle light passes over [user]!</span>", "<span class='notice'>You wreath yourself in healing light!</span>")
 	user.adjustBruteLoss(-10)
 	user.adjustFireLoss(-10)
+
+/obj/effect/proc_holder/spell/passive //Casting this spell will toggle it on and off.
+	range = -1
+	var/enabled = FALSE
+
+/obj/effect/proc_holder/spell/passive/cast(mob/user = usr)
+	if(!enabled)
+		to_chat(user, "<span class='warning'><b>[src]</b> has been <b>enabled</b>.</span>")
+		enabled = TRUE
+	else
+		to_chat(user, "<span class='warning'><b>[src]</b> has been <b>disabled</b>.</span>")
+		ondisable()
+		enabled = FALSE
+	return
+
+/obj/effect/proc_holder/spell/passive/proc/ondisable()
+	return
+
+/obj/effect/proc_holder/spell/passive/crucible
+	name = "Thunderhead's Crucible of Storms"
+	desc = "Copies every spell you cast for every spell on cooldown."
+	human_req = TRUE
+	clothes_req = FALSE
+	invocation = "PROCELLAE MILLESIMUM!!"
+	invocation_type = "shout"
+	avoid_recieve = TRUE
+	
+	school = "evocation"
+	sound = 'sound/magic/staff_healing.ogg'
+	var/list/spells_to_copy = list()
+
+/obj/effect/proc_holder/spell/passive/crucible/ondisable()
+	spells_to_copy = list()
+	return
+
+/obj/effect/proc_holder/spell/passive/crucible/choose_targets(mob/user = usr)
+	if(!user)
+		revert_cast()
+		return
+	perform(null,user=user)
+
+/obj/effect/proc_holder/spell/passive/crucible/spellrecieve(spell)
+	if(!spell || !enabled)
+		return
+	var/copies = 0
+	for(var/obj/effect/proc_holder/spell/spell in user.mind.spell_list)
+		if(spell.recharging && spell != src)
+			copies++
+	for(var/i in 0 to copies)
+		spells_to_copy += spell
+
+/obj/effect/proc_holder/spell/passive/crucible/process()
+	..()
+	if(spells_to_copy.len)
+		var/obj/effect/proc_holder/spell/copied_spell = pick(spells_to_copy)
+		spells_to_copy.Remove(copied_spell)
+		copied_spell.choose_targets(user)
