@@ -571,7 +571,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	invocation = "PROCELLAE MILLESIMUM!!"
 	invocation_type = "shout"
 	avoid_recieve = TRUE
-	
+
 	school = "evocation"
 	sound = 'sound/magic/staff_healing.ogg'
 	var/list/spells_to_copy = list()
@@ -590,8 +590,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!spell || !enabled)
 		return
 	var/copies = 0
-	for(var/obj/effect/proc_holder/spell/spell in user.mind.spell_list)
-		if(spell.recharging && spell != src)
+	for(var/obj/effect/proc_holder/spell/spells in user.mind.spell_list)
+		if(spells.recharging && spells != src)
 			copies++
 	for(var/i in 0 to copies)
 		spells_to_copy += spell
