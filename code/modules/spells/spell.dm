@@ -269,7 +269,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		choose_targets()
 	return 1
 
-/obj/effect/proc_holder/spell/proc/choose_targets(mob/user = usr, automate = FALSE) //depends on subtype - /targeted or /aoe_turf //and automate chooses random targets and does not refund
+/obj/effect/proc_holder/spell/proc/choose_targets(mob/user = usr) //depends on subtype - /targeted or /aoe_turf
 	return
 
 /obj/effect/proc_holder/spell/proc/can_target(mob/living/target)
@@ -399,7 +399,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/spell/aoe_turf //affects all turfs in view or range (depends)
 	var/inner_radius = -1 //for all your ring spell needs
 
-/obj/effect/proc_holder/spell/targeted/choose_targets(mob/user = usr, automate = FALSE)
+/obj/effect/proc_holder/spell/targeted/choose_targets(mob/user = usr)
 	var/list/targets = list()
 
 	switch(max_targets)
@@ -424,7 +424,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				//targets += input("Choose the target for the spell.", "Targeting") as mob in possible_targets
 				//Adds a safety check post-input to make sure those targets are actually in range.
 				var/mob/M
-				if(!random_target || automate)
+				if(!random_target)
 					M = input("Choose the target for the spell.", "Targeting") as null|mob in possible_targets
 				else
 					switch(random_target_priority)
@@ -461,14 +461,13 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!include_user && (user in targets))
 		targets -= user
 
-	if(!targets.len) //doesn't waste the spell unless it's free
-		if(!automate)
-			revert_cast(user)
+	if(!targets.len) //doesn't waste the spell
+		revert_cast(user)
 		return
 
 	perform(targets,user=user)
 
-/obj/effect/proc_holder/spell/aoe_turf/choose_targets(mob/user = usr, automate = FALSE)
+/obj/effect/proc_holder/spell/aoe_turf/choose_targets(mob/user = usr)
 	var/list/targets = list()
 
 	for(var/turf/target in view_or_range(range,user,selection_type))
@@ -478,8 +477,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 			targets += target
 
 	if(!targets.len) //doesn't waste the spell
-		if(!automate)
-			revert_cast()
+		revert_cast()
 		return
 
 	perform(targets,user=user)
@@ -524,10 +522,9 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/spell/self //Targets only the caster. Good for buffs and heals, but probably not wise for fireballs (although they usually fireball themselves anyway, honke)
 	range = -1 //Duh
 
-/obj/effect/proc_holder/spell/self/choose_targets(mob/user = usr, automate = FALSE)
+/obj/effect/proc_holder/spell/self/choose_targets(mob/user = usr)
 	if(!user)
-		if(!automate)
-			revert_cast()
+		revert_cast()
 		return
 	perform(null,user=user)
 
@@ -543,7 +540,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	school = "restoration"
 	sound = 'sound/magic/staff_healing.ogg'
 
-/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/living/carbon/human/user) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
+/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/user = usr) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
 	//Also, notice the lack of a "for()" statement that looks through the targets. This is, again, because the spell can only have a single target.
 	user.visible_message("<span class='warning'>A wreath of gentle light passes over [user]!</span>", "<span class='notice'>You wreath yourself in healing light!</span>")
 	user.adjustBruteLoss(-10)
@@ -583,10 +580,9 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	spells_to_copy = list()
 	return
 
-/obj/effect/proc_holder/spell/passive/crucible/choose_targets(mob/user = usr, automate = FALSE)
+/obj/effect/proc_holder/spell/passive/crucible/choose_targets(mob/user = usr)
 	if(!user)
-		if(!automate)
-			revert_cast()
+		revert_cast()
 		return
 	perform(null,user=user)
 
@@ -594,9 +590,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	if(!spell || !enabled)
 		return
 	var/copies = 0
-	for(var/obj/effect/proc_holder/spell/spells in usr.mind.spell_list)
+	for(var/obj/effect/proc_holder/spell/spells in user.mind.spell_list)
 		if(spells.recharging && spells != src)
-			to_chat(world, "<span class='warning'>ADDED [spell] TO spells_to_copy</span>")
 			copies++
 	for(var/i in 0 to copies)
 		spells_to_copy += spell
@@ -605,6 +600,5 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	..()
 	if(spells_to_copy.len)
 		var/obj/effect/proc_holder/spell/copied_spell = pick(spells_to_copy)
-		to_chat(world, "<span class='warning'>CASTING [copied_spell] ON PROCESS</span>")
 		spells_to_copy.Remove(copied_spell)
-		copied_spell.choose_targets(automate = TRUE)
+		copied_spell.choose_targets(user)
