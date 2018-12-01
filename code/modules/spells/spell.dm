@@ -1,5 +1,6 @@
-#define TARGET_CLOSEST 1
-#define TARGET_RANDOM 2
+#define TARGET_USERPICK 1
+#define TARGET_CLOSEST 2
+#define TARGET_RANDOM 3
 
 
 /obj/effect/proc_holder
@@ -127,6 +128,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/player_lock = TRUE //If it can be used by simple mobs
 	var/avoid_recieve = FALSE //if true, other spells will not get spellrecieve() from this spell getting casted.
 
+	var/target_priority = TARGET_USERPICK //how choose_target will pick the target
+
 	var/overlay = 0
 	var/overlay_icon = 'icons/obj/wizard.dmi'
 	var/overlay_icon_state = "spell"
@@ -234,6 +237,18 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				return FALSE
 	return TRUE
 
+/obj/effect/proc_holder/spell/proc/los_check(mob/A,mob/B)
+	//Checks for obstacles from A to B
+	var/obj/dummy = new(A.loc)
+	dummy.pass_flags |= PASSTABLE
+	for(var/turf/turf in getline(A,B))
+		for(var/atom/movable/AM in turf)
+			if(!AM.CanPass(dummy,turf,1))
+				qdel(dummy)
+				return 0
+	qdel(dummy)
+	return 1
+
 /obj/effect/proc_holder/spell/proc/invocation(mob/user = usr) //spelling the spell out and setting it on recharge/reducing charges amount
 	switch(invocation_type)
 		if("shout")
@@ -269,7 +284,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		choose_targets()
 	return 1
 
-/obj/effect/proc_holder/spell/proc/choose_targets(mob/user = usr) //depends on subtype - /targeted or /aoe_turf
+/obj/effect/proc_holder/spell/proc/choose_targets(mob/user = usr, priority = target_priority) //depends on subtype - /targeted or /aoe_turf //see target_priority for info on that
 	return
 
 /obj/effect/proc_holder/spell/proc/can_target(mob/living/target)
@@ -392,14 +407,12 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	var/max_targets = 1 //leave 0 for unlimited targets in range, 1 for one selectable target in range, more for limited number of casts (can all target one guy, depends on target_ignore_prev) in range
 	var/target_ignore_prev = 1 //only important if max_targets > 1, affects if the spell can be cast multiple times at one person from one cast
 	var/include_user = 0 //if it includes usr in the target list
-	var/random_target = 0 // chooses random viable target instead of asking the caster
-	var/random_target_priority = TARGET_CLOSEST // if random_target is enabled how it will pick the target
 
 
 /obj/effect/proc_holder/spell/aoe_turf //affects all turfs in view or range (depends)
 	var/inner_radius = -1 //for all your ring spell needs
 
-/obj/effect/proc_holder/spell/targeted/choose_targets(mob/user = usr)
+/obj/effect/proc_holder/spell/targeted/choose_targets(mob/user = usr, priority = target_priority)
 	var/list/targets = list()
 
 	switch(max_targets)
@@ -424,21 +437,22 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 				//targets += input("Choose the target for the spell.", "Targeting") as mob in possible_targets
 				//Adds a safety check post-input to make sure those targets are actually in range.
 				var/mob/M
-				if(!random_target)
-					M = input("Choose the target for the spell.", "Targeting") as null|mob in possible_targets
-				else
-					switch(random_target_priority)
-						if(TARGET_RANDOM)
-							M = pick(possible_targets)
-						if(TARGET_CLOSEST)
-							for(var/mob/living/L in possible_targets)
-								if(M)
-									if(get_dist(user,L) < get_dist(user,M))
-										if(los_check(user,L))
-											M = L
-								else
+				switch(priority)
+					if(TARGET_USERPICK)
+						M = input("Choose the target for the spell.", "Targeting") as null|mob in possible_targets
+					if(TARGET_RANDOM)
+						if(!phase_allowed && istype(user.loc, /obj/effect/dummy))//sadly, we need a tiny bit of sanity for jaunt.
+							return //just don't jaunt more times. sorry.
+						M = pick(possible_targets)
+					if(TARGET_CLOSEST)
+						for(var/mob/living/L in possible_targets)
+							if(M)
+								if(get_dist(user,L) < get_dist(user,M))
 									if(los_check(user,L))
 										M = L
+							else
+								if(los_check(user,L))
+									M = L
 				if(M in view_or_range(range, user, selection_type))
 					targets += M
 
@@ -467,7 +481,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 	perform(targets,user=user)
 
-/obj/effect/proc_holder/spell/aoe_turf/choose_targets(mob/user = usr)
+/obj/effect/proc_holder/spell/aoe_turf/choose_targets(mob/user = usr, priority = target_priority)
 	var/list/targets = list()
 
 	for(var/turf/target in view_or_range(range,user,selection_type))
@@ -490,18 +504,6 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 		return 0
 	return 1
 
-/obj/effect/proc_holder/spell/targeted/proc/los_check(mob/A,mob/B)
-	//Checks for obstacles from A to B
-	var/obj/dummy = new(A.loc)
-	dummy.pass_flags |= PASSTABLE
-	for(var/turf/turf in getline(A,B))
-		for(var/atom/movable/AM in turf)
-			if(!AM.CanPass(dummy,turf,1))
-				qdel(dummy)
-				return 0
-	qdel(dummy)
-	return 1
-
 /obj/effect/proc_holder/spell/proc/can_cast(mob/user = usr)
 	if(((!user.mind) || !(src in user.mind.spell_list)) && !(src in user.mob_spell_list))
 		return FALSE
@@ -522,7 +524,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 /obj/effect/proc_holder/spell/self //Targets only the caster. Good for buffs and heals, but probably not wise for fireballs (although they usually fireball themselves anyway, honke)
 	range = -1 //Duh
 
-/obj/effect/proc_holder/spell/self/choose_targets(mob/user = usr)
+/obj/effect/proc_holder/spell/self/choose_targets(mob/user = usr, priority = target_priority)
 	if(!user)
 		revert_cast()
 		return
@@ -540,7 +542,7 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	school = "restoration"
 	sound = 'sound/magic/staff_healing.ogg'
 
-/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/user = usr) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
+/obj/effect/proc_holder/spell/self/basic_heal/cast(mob/living/carbon/human/user) //Note the lack of "list/targets" here. Instead, use a "user" var depending on mob requirements.
 	//Also, notice the lack of a "for()" statement that looks through the targets. This is, again, because the spell can only have a single target.
 	user.visible_message("<span class='warning'>A wreath of gentle light passes over [user]!</span>", "<span class='notice'>You wreath yourself in healing light!</span>")
 	user.adjustBruteLoss(-10)
@@ -552,10 +554,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 
 /obj/effect/proc_holder/spell/passive/cast(mob/user = usr)
 	if(!enabled)
-		to_chat(user, "<span class='warning'><b>[src]</b> has been <b>enabled</b>.</span>")
+		to_chat(user, "<span class='notice'><b>[src]</b> has been <b>enabled</b>.</span>")
 		enabled = TRUE
 	else
-		to_chat(user, "<span class='warning'><b>[src]</b> has been <b>disabled</b>.</span>")
+		to_chat(user, "<span class='notice'><b>[src]</b> has been <b>disabled</b>.</span>")
 		ondisable()
 		enabled = FALSE
 	return
@@ -571,6 +573,8 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	invocation = "PROCELLAE MILLESIMUM!!"
 	invocation_type = "shout"
 	avoid_recieve = TRUE
+	level_max = 1
+	charge_max = 10
 
 	school = "evocation"
 	sound = 'sound/magic/staff_healing.ogg'
@@ -580,13 +584,13 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	spells_to_copy = list()
 	return
 
-/obj/effect/proc_holder/spell/passive/crucible/choose_targets(mob/user = usr)
+/obj/effect/proc_holder/spell/passive/crucible/choose_targets(mob/user = usr, priority = target_priority)
 	if(!user)
 		revert_cast()
 		return
 	perform(null,user=user)
 
-/obj/effect/proc_holder/spell/passive/crucible/spellrecieve(spell)
+/obj/effect/proc_holder/spell/passive/crucible/spellrecieve(mob/user = usr, spell)
 	if(!spell || !enabled)
 		return
 	var/copies = 0
@@ -596,9 +600,10 @@ GLOBAL_LIST_INIT(spells, typesof(/obj/effect/proc_holder/spell)) //needed for th
 	for(var/i in 0 to copies)
 		spells_to_copy += spell
 
-/obj/effect/proc_holder/spell/passive/crucible/process()
+/obj/effect/proc_holder/spell/passive/crucible/process(mob/user = usr)
 	..()
 	if(spells_to_copy.len)
 		var/obj/effect/proc_holder/spell/copied_spell = pick(spells_to_copy)
 		spells_to_copy.Remove(copied_spell)
-		copied_spell.choose_targets(user)
+		copied_spell.choose_targets(user, priority = TARGET_RANDOM)//forces a random target!! wabbajack wabbajack!
+		//also, this is kinda dangerous. choose target has a bit that refunds if it doesn't find targets. that's why i made a check that doesn't refund if a proc is manually changing the priority like this. nice.

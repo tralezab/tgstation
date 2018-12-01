@@ -177,11 +177,12 @@
 	action_icon_state = "sintouch"
 	action_background_icon_state = "bg_demon"
 	phase_allowed = FALSE
-	random_target = TRUE
-	random_target_priority = TARGET_RANDOM
+	target_priority = TARGET_RANDOM
 	max_targets = 3
 	invocation = "TASTE SIN AND INDULGE!!"
 	invocation_type = "shout"
+
+//TEST
 
 /obj/effect/proc_holder/spell/targeted/sintouch/ascended
 	name = "Greater sin touch"

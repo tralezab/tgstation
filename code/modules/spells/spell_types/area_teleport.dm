@@ -3,7 +3,6 @@
 	desc = "This spell teleports you to a type of area of your selection."
 	nonabstract_req = TRUE
 
-	var/randomise_selection = FALSE //if it lets the usr choose the teleport loc or picks it from the list
 	var/invocation_area = TRUE //if the invocation appends the selected area
 	var/sound1 = 'sound/weapons/zapbang.ogg'
 	var/sound2 = 'sound/weapons/zapbang.ogg'
@@ -22,10 +21,11 @@
 /obj/effect/proc_holder/spell/targeted/area_teleport/before_cast(list/targets)
 	var/A = null
 
-	if(!randomise_selection)
-		A = input("Area to teleport to", "Teleport", A) as null|anything in GLOB.teleportlocs
-	else
-		A = pick(GLOB.teleportlocs)
+	switch(target_priority)
+		if(TARGET_USERPICK)
+			A = input("Area to teleport to", "Teleport", A) as null|anything in GLOB.teleportlocs
+		else//frick no i'm not calculating the closest area
+			A = pick(GLOB.teleportlocs)
 	if(!A)
 		return
 	var/area/thearea = GLOB.teleportlocs[A]

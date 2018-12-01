@@ -24,7 +24,7 @@
 		/mob/living/simple_animal/hostile/poison/giant_spider/hunter/viper,\
 		/mob/living/simple_animal/hostile/construct/armored)
 
-/obj/effect/proc_holder/spell/targeted/shapeshift/cast(list/targets,mob/user = usr)
+/obj/effect/proc_holder/spell/targeted/shapeshift/cast(list/targets,mob/user = usr, priority = TARGET_USERPICK)
 	if(src in user.mob_spell_list)
 		user.mob_spell_list.Remove(src)
 		user.mind.AddSpell(src)
@@ -36,7 +36,11 @@
 			for(var/path in possible_shapes)
 				var/mob/living/simple_animal/A = path
 				animal_list[initial(A.name)] = path
-			var/new_shapeshift_type = input(M, "Choose Your Animal Form!", "It's Morphing Time!", null) as null|anything in animal_list
+			var/new_shapeshift_type
+			if(target_priority != TARGET_USERPICK)
+				new_shapeshift_type = pick(animal_list)
+			else
+				new_shapeshift_type = input(M, "Choose Your Animal Form!", "It's Morphing Time!", null) as null|anything in animal_list
 			if(shapeshift_type)
 				return
 			shapeshift_type = new_shapeshift_type
@@ -78,7 +82,7 @@
 	desc = "Take on the shape a lesser ash drake."
 	invocation = "RAAAAAAAAWR!"
 	convert_damage = FALSE
-	
+
 
 	shapeshift_type = /mob/living/simple_animal/hostile/megafauna/dragon/lesser
 
@@ -170,3 +174,4 @@
 /datum/soullink/shapeshift/sharerDies(gibbed, mob/living/sharer)
 	if(source)
 		source.shapeDeath(gibbed)
+//TEST

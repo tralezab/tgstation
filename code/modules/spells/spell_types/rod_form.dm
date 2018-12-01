@@ -50,3 +50,4 @@
 		return
 	L.visible_message("<span class='danger'>[L] is penetrated by an immovable rod!</span>" , "<span class='userdanger'>The rod penetrates you!</span>" , "<span class ='danger'>You hear a CLANG!</span>")
 	L.adjustBruteLoss(70 + damage_bonus)
+//TEST

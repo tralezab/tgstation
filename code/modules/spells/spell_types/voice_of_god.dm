@@ -13,14 +13,16 @@
 	var/list/spans = list("colossus","yell")
 	var/speech_sound = 'sound/magic/clockwork/invoke_general.ogg'
 
-/obj/effect/proc_holder/spell/voice_of_god/can_cast(mob/user = usr)
+/obj/effect/proc_holder/spell/voice_of_god/can_cast(mob/user = usr, quiet = FALSE)
 	if(!user.can_speak())
-		to_chat(user, "<span class='warning'>You are unable to speak!</span>")
+		if(!quiet)
+			to_chat(user, "<span class='warning'>You are unable to speak!</span>")
 		return FALSE
 	return TRUE
 
 /obj/effect/proc_holder/spell/voice_of_god/choose_targets(mob/user = usr)
-	perform(user=user)
+	if(can_cast(quiet = TRUE))//preventing some real edge cases with spell copying
+		perform(user=user)
 /obj/effect/proc_holder/spell/voice_of_god/perform(list/targets, recharge = 1, mob/user = usr)
 	command = input(user, "Speak with the Voice of God", "Command")
 	if(QDELETED(src) || QDELETED(user))
@@ -42,3 +44,4 @@
 	cooldown_mod = 0.5
 	spans = list("clown")
 	speech_sound = 'sound/spookoween/scary_horn2.ogg'
+//TEST

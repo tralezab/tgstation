@@ -94,3 +94,4 @@
 		trail.icon_state = proj_trail_icon_state
 		trail.density = FALSE
 		QDEL_IN(trail, proj_trail_lifespan)
+//TEST

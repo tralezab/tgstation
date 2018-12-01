@@ -87,6 +87,65 @@
 
 /obj/effect/proc_holder/spell/aimed/proc/ready_projectile(obj/item/projectile/P, atom/target, mob/user, iteration)
 	return
+//AND DEFINITELY TEST THIS JESUS
+//putting this at the bottom because it would only ever get procced in rarer cases
+/obj/effect/proc_holder/spell/aimed/choose_targets(mob/user = usr, priority = target_priority)//...and that rare case is priority targets. it chooses much like targeted would.
+	var/list/targets = list()
+
+	if(range < 0)
+		targets += user
+	else
+		var/possible_targets = list()
+		for(var/mob/living/M in view_or_range(range, user, selection_type))
+			if(!include_user && user == M)
+				continue
+			if(!can_target(M))
+				continue
+			possible_targets += M
+
+		var/mob/M
+		switch(priority)
+			if(TARGET_USERPICK)//oh fuck off
+				Click()
+				return
+			if(TARGET_RANDOM)
+				M = pick(possible_targets)
+			if(TARGET_CLOSEST)
+				for(var/mob/living/L in possible_targets)
+					if(M)
+						if(get_dist(user,L) < get_dist(user,M))
+							if(los_check(user,L))
+								M = L
+					else
+						if(los_check(user,L))
+							M = L
+		if(M in view_or_range(range, user, selection_type))
+			targets += M
+
+		else
+			var/list/possible_targets = list()
+			for(var/mob/living/target in view_or_range(range, user, selection_type))
+				if(!can_target(target))
+					continue
+				possible_targets += target
+			for(var/i=1,i<=max_targets,i++)
+				if(!possible_targets.len)
+					break
+				if(target_ignore_prev)
+					var/target = pick(possible_targets)
+					possible_targets -= target
+					targets += target
+				else
+					targets += pick(possible_targets)
+
+	if(!include_user && (user in targets))
+		targets -= user
+
+	if(!targets.len) //doesn't waste the spell
+		revert_cast(user)
+		return
+
+	perform(targets, ran_out, user = ranged_ability_user)
 
 /obj/effect/proc_holder/spell/aimed/lightningbolt
 	name = "Lightning Bolt"

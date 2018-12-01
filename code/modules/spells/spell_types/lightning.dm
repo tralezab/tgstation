@@ -9,7 +9,7 @@
 	range = 7
 	cooldown_min = 30
 	selection_type = "view"
-	random_target = TRUE
+	target_priority = TARGET_RANDOM
 	var/ready = FALSE
 	var/static/mutable_appearance/halo
 	var/sound/Snd // so far only way i can think of to stop a sound, thank MSO for the idea.
@@ -84,3 +84,5 @@
 		var/mob/living/next = pick(possible_targets)
 		if(next)
 			Bolt(current,next,max((bolt_energy-5),5),bounces-1,user)
+
+//TEST THIS SPELL
