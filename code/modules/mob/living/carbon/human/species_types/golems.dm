@@ -807,3 +807,23 @@
 /datum/species/golem/plastic/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	C.ventcrawler = initial(C.ventcrawler)
+
+/datum/species/golem/snow //do you wanna build a snowman~
+	name = "Snow Golem"
+	id = "snow golem"
+	burnmod = 2 // don't get burned
+		inherent_traits = list(TRAIT_RESISTCOLD,TRAIT_NOBREATH,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_RADIMMUNE,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER,TRAIT_NOGUNS)
+	special_names = list("Abominable Snowman", "Frosty the Snowman", "Olaf")
+	info_text = "As a <span class='danger'>Snow Golem</span>, you are capable of bringing holiday cheer to all the boys and girls. You heal in the cold, and <span class='userdanger'>MELT</span> if it gets too warm..."
+
+/datum/species/golem/snow/check_roundstart_eligible()
+	if(SSevents.holidays && SSevents.holidays[CHRISTMAS])
+		return TRUE
+	return ..()
+
+/datum/species/golem/cloth/random_name(gender,unique,lastname)
+	var/golem_surname = pick(GLOB.first_names)
+	var/golem_name = "[golem_surname] the Snowman"
+	if(special_names && special_names.len && prob(special_name_chance))
+		golem_name = pick(special_names)
+	return golem_name
