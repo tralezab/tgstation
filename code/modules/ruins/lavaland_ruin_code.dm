@@ -54,6 +54,7 @@
 		/obj/item/stack/sheet/glass 	            = /datum/species/golem/glass,
 		/obj/item/stack/sheet/plasteel 	            = /datum/species/golem/plasteel,
 		/obj/item/stack/sheet/mineral/sandstone	    = /datum/species/golem/sand,
+		/obj/item/stack/sheet/mineral/snow          = /datum/species/golem/snow,
 		/obj/item/stack/sheet/mineral/plasma	    = /datum/species/golem/plasma,
 		/obj/item/stack/sheet/mineral/diamond	    = /datum/species/golem/diamond,
 		/obj/item/stack/sheet/mineral/gold	        = /datum/species/golem/gold,
@@ -71,11 +72,18 @@
 		/obj/item/stack/sheet/mineral/adamantine	= /datum/species/golem/adamantine,
 		/obj/item/stack/sheet/plastic	            = /datum/species/golem/plastic,
 		/obj/item/stack/tile/brass					= /datum/species/golem/clockwork)
-
+	
 	if(istype(I, /obj/item/stack))
 		var/obj/item/stack/O = I
 		var/species = golem_shell_species_types[O.merge_type]
 		if(species)
+			var/holiday_check = species.holiday_preference
+			if(species.holiday_check)//if the golem can only be spawned during a holiday
+				if(!(SSevents.holidays && SSevents.holidays[holiday_check]))//and it's not that holiday
+					switch(holiday_check)
+						if(CHRISTMAS)
+							to_chat(user, "You don't feel jolly enough to build a golem out of this material.")
+					return
 			if(O.use(10))
 				to_chat(user, "You finish up the golem shell with ten sheets of [O].")
 				new shell_type(get_turf(src), species, user)
