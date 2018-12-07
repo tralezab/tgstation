@@ -72,13 +72,13 @@
 		/obj/item/stack/sheet/mineral/adamantine	= /datum/species/golem/adamantine,
 		/obj/item/stack/sheet/plastic	            = /datum/species/golem/plastic,
 		/obj/item/stack/tile/brass					= /datum/species/golem/clockwork)
-	
+
 	if(istype(I, /obj/item/stack))
 		var/obj/item/stack/O = I
-		var/species = golem_shell_species_types[O.merge_type]
+		var/datum/species/golem/species = golem_shell_species_types[O.merge_type]
 		if(species)
 			var/holiday_check = species.holiday_preference
-			if(species.holiday_check)//if the golem can only be spawned during a holiday
+			if(holiday_check)//if the golem can only be spawned during a holiday
 				if(!(SSevents.holidays && SSevents.holidays[holiday_check]))//and it's not that holiday
 					switch(holiday_check)
 						if(CHRISTMAS)
