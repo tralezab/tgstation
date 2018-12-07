@@ -25,6 +25,7 @@
 	fixed_mut_color = "aaa"
 	var/info_text = "As an <span class='danger'>Iron Golem</span>, you don't have any special traits."
 	var/random_eligible = TRUE //If false, the golem subtype can't be made through golem mutation toxin
+	var/holiday_preference //set this to a holiday define, and it can only be created if it is that holiday.
 
 	var/prefix = "Iron"
 	var/list/special_names = list("Tarkus")
@@ -808,12 +809,13 @@
 	. = ..()
 	C.ventcrawler = initial(C.ventcrawler)
 
-/datum/species/golem/snow //do you wanna build a snowman~
+/datum/species/golem/snow //frosty the snowman!
 	name = "Snow Golem"
 	id = "snow golem"
 	burnmod = 2 // don't get burned
-		inherent_traits = list(TRAIT_RESISTCOLD,TRAIT_NOBREATH,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_RADIMMUNE,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER,TRAIT_NOGUNS)
+	inherent_traits = list(TRAIT_RESISTCOLD,TRAIT_NOBREATH,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_RADIMMUNE,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER,TRAIT_NOGUNS)
 	special_names = list("Abominable Snowman", "Frosty the Snowman", "Olaf")
+	holiday_preference = CHRISTMAS
 	info_text = "As a <span class='danger'>Snow Golem</span>, you are capable of bringing holiday cheer to all the boys and girls. You heal in the cold, and <span class='userdanger'>MELT</span> if it gets too warm..."
 
 /datum/species/golem/snow/check_roundstart_eligible()
@@ -821,7 +823,35 @@
 		return TRUE
 	return ..()
 
-/datum/species/golem/cloth/random_name(gender,unique,lastname)
+//extinguishes itself, but takes a large amount of damage doing so.
+/datum/species/golem/snow/spec_life(mob/living/carbon/human/H)
+	if(H.on_fire)
+		L.ExtinguishMob()
+		L.adjust_fire_stacks(-10)
+		var/turf/T = get_turf(H)
+		if(T)
+			T.MakeSlippery(TURF_WET_WATER, min_wet_time = 100, wet_time_to_add = 50)
+		adjustFireLoss(10) //this is 20 with the burn mod
+	var/datum/gas_mixture/environment = loc.return_air()
+	if(environment < BODYTEMP_COLD_DAMAGE_LIMIT)
+		adjustFireLoss(-2)
+	..()
+
+/datum/species/golem/snow/spec_death(gibbed, mob/living/carbon/human/H)
+	if(H.on_fire)
+		H.visible_message("<span class='danger'>[H] melts!</span>")
+		var/turf/T = get_turf(H)
+		if(T)
+			T.MakeSlippery(TURF_WET_WATER, min_wet_time = 100, wet_time_to_add = 50)
+	else
+		H.visible_message("<span class='danger'>[H] falls apart into a pile of snow!</span>")
+		for(var/i=1, i <= rand(3,5), i++)
+			new /obj/item/stack/sheet/mineral/snow(get_turf(H))
+	for(var/obj/item/W in H)
+		H.dropItemToGround(W)
+	qdel(H)
+
+/datum/species/golem/snow/random_name(gender,unique,lastname)
 	var/golem_surname = pick(GLOB.first_names)
 	var/golem_name = "[golem_surname] the Snowman"
 	if(special_names && special_names.len && prob(special_name_chance))
