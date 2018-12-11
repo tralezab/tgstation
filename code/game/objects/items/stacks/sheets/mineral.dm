@@ -14,7 +14,7 @@ Mineral Sheets
 		- Plastitanium
 	Others:
 		- Adamantine
-		- Mythril
+		- Unobtainium
 		- Enriched Uranium
 		- Abductor
 */
@@ -372,15 +372,15 @@ GLOBAL_LIST_INIT(adamantine_recipes, list(
 	. = ..()
 
 /*
- * Mythril
+ * Unobtainium
  */
-/obj/item/stack/sheet/mineral/mythril
-	name = "mythril"
-	icon_state = "sheet-mythril"
-	item_state = "sheet-mythril"
-	singular_name = "mythril sheet"
+/obj/item/stack/sheet/mineral/unobtainium
+	name = "unobtainium"
+	icon_state = "sheet-unobtainium"
+	item_state = "sheet-unobtainium"
+	singular_name = "unobtainium sheet"
 	novariants = TRUE
-	merge_type = /obj/item/stack/sheet/mineral/mythril
+	merge_type = /obj/item/stack/sheet/mineral/unobtainium
 
 /*
  * Alien Alloy
