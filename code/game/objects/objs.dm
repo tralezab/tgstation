@@ -18,6 +18,7 @@
 	var/acid_level = 0 //how much acid is on that obj
 
 	var/persistence_replacement //have something WAY too amazing to live to the next round? Set a new path here. Overuse of this var will make me upset.
+	var/special_transform_mob //does this mob have a !special! mob to turn into if animated? this is the PATH. example: animating books makes Novellamentals instead of normal mimics.
 	var/current_skin //Has the item been reskinned?
 	var/list/unique_reskin //List of options to reskin.
 
