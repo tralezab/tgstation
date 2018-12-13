@@ -287,6 +287,8 @@
 						to_chat(S, "<span class='userdanger'>You are an animate statue. You cannot move when monitored, but are nearly invincible and deadly when unobserved! Do not harm [owner], your creator.</span>")
 				P.forceMove(S)
 				return
+		else if(!isnull(special_transform_mob))
+			new special_transform_mob(loc, src, owner)
 		else
 			var/obj/O = src
 			if(istype(O, /obj/item/gun))
