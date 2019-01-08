@@ -123,6 +123,8 @@ GLOBAL_LIST_INIT(turfs_without_ground, typecacheof(list(
 
 #define isswarmer(A) (istype(A, /mob/living/simple_animal/hostile/swarmer))
 
+#define ismuta(A) (istype(A, /mob/living/simple_animal/hostile/mutamorph))
+
 #define isguardian(A) (istype(A, /mob/living/simple_animal/hostile/guardian))
 
 #define isclockmob(A) (istype(A, /mob/living/simple_animal/hostile/clockwork))
