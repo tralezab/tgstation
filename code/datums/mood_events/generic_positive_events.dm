@@ -23,6 +23,19 @@
 	mood_change = 3
 	timeout = 3000
 
+/datum/mood_event/pet_kitty
+	description = "<span class='nicegreen'>This Kitty-witty is so CUTE!!</span>\n" //creeps get it when they are around their obsession
+	mood_change = 3
+	timeout = 3000
+
+/datum/mood_event/pet_kitty/add_effects(name)
+	if(name == "cat")
+		name = "kitty"
+	name = replacetext(name)
+	var/list/KITTY = list("w", name)
+	var/cutename = uppertext(KITTY.Join(""))
+	description = "<span class='nicegreen'>This [name]-[cutename] is so CUTE!!</span>\n"
+
 /datum/mood_event/pet_corgi
 	description = "<span class='nicegreen'>Corgis are adorable! I can't stop petting them!</span>\n"
 	mood_change = 3
