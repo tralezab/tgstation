@@ -59,6 +59,11 @@
 		..()
 	return
 
+/mob/living/simple_animal/hostile/morph/Login()
+	..()
+	if(morphed)
+		restore() //fixes some issues with NPC morphs getting players stuck in invisible sprites
+
 /mob/living/simple_animal/hostile/morph/med_hud_set_health()
 	if(morphed && !isliving(form))
 		var/image/holder = hud_list[HEALTH_HUD]
