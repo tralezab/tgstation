@@ -813,9 +813,9 @@
 /datum/species/golem/telecrystal
 	name = "Telecrystal Golem"
 	id = "telecrystal golem"
-	fixed_mut_color = "f00"
+	limbs_id = "crystal"
+	sexes = FALSE
 	meat = /obj/item/stack/telecrystal
-	cost_to_build = 20 //all 20 telecrystals
 	info_text = "As a <span class='danger'>Telecrystal Golem</span>, you are immortal, but your powers must be \"purchased\". You can be crushed, stabbed, shot, electrocuted, poisoned, frozen, burned, it does not matter: you will not die. The reverberations of your form cause you to only be able to speak one line for minutes at a time."
 	var/time_crit = 0
 	var/revive_timer = 300 //deciseconds. when the golem has been in crit for this long, they gets healed back up to 20 health.
