@@ -1129,3 +1129,226 @@ GLOBAL_LIST_INIT(arcade_prize_pool, list(
 #undef ORION_STATUS_NORMAL
 #undef ORION_STATUS_GAMEOVER
 #undef ORION_STATUS_MARKET
+
+//adventure! you spawn in a dungeon with a monster trying to find you. find the keys and escape!
+
+#define ROOM_SMALLROOM "smallroom"
+#define ROOM_HALLWAY "hallway"
+#define ROOM_WALL "wall"
+
+#define ITEMS_IN_ROOM 1
+#define EXITS_IN_ROOM 2
+
+#define ITEM_TELEPOTION "telepotion"
+#define ITEM_KEY "key"
+
+/obj/machinery/computer/arcade/adventure
+	name = "arcade machine"
+	desc = "Does not support Pinball."
+	icon_state = "arcade"
+	circuit = /obj/item/circuitboard/computer/arcade/adventure
+	var/message = "Hint: find the keys to escape!"
+	var/keys_needed = 5 //how many will be spawned on the map.
+	var/list/inventory = list()
+	var/gameover = FALSE
+	var/list/dungeon_map
+	var/player_x
+	var/player_y
+	var/dimensions = 3 //how wide the dungeon is, or how the dungeon map figures where the edges are
+
+/obj/machinery/computer/arcade/adventure/Reset()
+	dimensions = rand(3, 4)
+	dungeon_map = generate_map()
+	player_x = rand(1, dimensions)
+	player_y = rand(1, dimensions)
+	inventory = list()
+	gameover = FALSE
+	
+
+/obj/machinery/computer/arcade/adventure/proc/generate_map()
+	. = list()
+	for(var/i in 1 to dimensions+2 * dimensions+2)
+		if(i <= dimensions + 2 || i >= dimensions)//first and last rows will always be the walls of the dungeon
+			. += ROOM_WALL
+		else
+			. += pick(ROOM_SMALLROOM, ROOM_HALLWAY)
+		.[i] = list(list(), list())//first list is items, second list is directions you can enter and leave
+		if(prob(10)) //add a potion
+			.[i][ITEMS_IN_ROOM] += ITEM_TELEPOTION
+			
+	for(var/keys in 1 to keys_needed)
+		.[rand(1, dimensions * dimensions)][ITEMS_IN_ROOM] += ITEM_KEY
+		
+
+/obj/machinery/computer/arcade/adventure/ui_interact(mob/user)
+	. = ..()
+	var/dat = "<a href='byond://?src=[REF(src)];close=1'>Close</a>"
+	dat += "<center><h4>[enemy_name]</h4></center>"
+
+	dat += "<br><center><h3>[temp]</h3></center>"
+	dat += "<br><center>Health: [player_hp] | Magic: [player_mp] | Enemy Health: [enemy_hp]</center>"
+
+	if (gameover)
+		dat += "<center><b><a href='byond://?src=[REF(src)];newgame=1'>New Game</a>"
+	else
+		dat += "<center><b><a href='byond://?src=[REF(src)];attack=1'>Attack</a> | "
+		dat += "<a href='byond://?src=[REF(src)];heal=1'>Heal</a> | "
+		dat += "<a href='byond://?src=[REF(src)];charge=1'>Recharge Power</a>"
+
+	dat += "</b></center>"
+	var/datum/browser/popup = new(user, "arcade", "Space Villain 2000")
+	popup.set_content(dat)
+	popup.set_title_image(user.browse_rsc_icon(icon, icon_state))
+	popup.open()
+
+/obj/machinery/computer/arcade/battle/Topic(href, href_list)
+	if(..())
+		return
+
+	if (!blocked && !gameover)
+		if (href_list["attack"])
+			blocked = TRUE
+			var/attackamt = rand(2,6)
+			temp = "You attack for [attackamt] damage!"
+			playsound(loc, 'sound/arcade/hit.ogg', 50, 1, extrarange = -3, falloff = 10)
+			updateUsrDialog()
+			if(turtle > 0)
+				turtle--
+
+			sleep(10)
+			enemy_hp -= attackamt
+			arcade_action(usr)
+
+		else if (href_list["heal"])
+			blocked = TRUE
+			var/pointamt = rand(1,3)
+			var/healamt = rand(6,8)
+			temp = "You use [pointamt] magic to heal for [healamt] damage!"
+			playsound(loc, 'sound/arcade/heal.ogg', 50, 1, extrarange = -3, falloff = 10)
+			updateUsrDialog()
+			turtle++
+
+			sleep(10)
+			player_mp -= pointamt
+			player_hp += healamt
+			blocked = TRUE
+			updateUsrDialog()
+			arcade_action(usr)
+
+		else if (href_list["charge"])
+			blocked = TRUE
+			var/chargeamt = rand(4,7)
+			temp = "You regain [chargeamt] points"
+			playsound(loc, 'sound/arcade/mana.ogg', 50, 1, extrarange = -3, falloff = 10)
+			player_mp += chargeamt
+			if(turtle > 0)
+				turtle--
+
+			updateUsrDialog()
+			sleep(10)
+			arcade_action(usr)
+
+	if (href_list["close"])
+		usr.unset_machine()
+		usr << browse(null, "window=arcade")
+
+	else if (href_list["newgame"]) //Reset everything
+		temp = "New Round"
+		player_hp = 30
+		player_mp = 10
+		enemy_hp = 45
+		enemy_mp = 20
+		gameover = FALSE
+		turtle = 0
+
+		if(obj_flags & EMAGGED)
+			Reset()
+			obj_flags &= ~EMAGGED
+
+	add_fingerprint(usr)
+	updateUsrDialog()
+	return
+
+/obj/machinery/computer/arcade/battle/proc/arcade_action(mob/user)
+	if ((enemy_mp <= 0) || (enemy_hp <= 0))
+		if(!gameover)
+			gameover = TRUE
+			temp = "You have escaped the dungeon! Rejoice!"
+			playsound(loc, 'sound/arcade/win.ogg', 50, 1, extrarange = -3, falloff = 10)
+
+			if(obj_flags & EMAGGED)
+				new /obj/effect/spawner/newbomb/timer/syndicate(loc)
+				new /obj/item/clothing/head/collectable/petehat(loc)
+				message_admins("[ADMIN_LOOKUPFLW(usr)] has outbombed Cuban Pete and been awarded a bomb.")
+				log_game("[key_name(usr)] has outbombed Cuban Pete and been awarded a bomb.")
+				Reset()
+				obj_flags &= ~EMAGGED
+			else
+				prizevend(user)
+			SSblackbox.record_feedback("nested tally", "arcade_results", 1, list("win", (obj_flags & EMAGGED ? "emagged":"normal")))
+
+
+	else if ((obj_flags & EMAGGED) && (turtle >= 4))
+		var/boomamt = rand(5,10)
+		temp = "[enemy_name] throws a bomb, exploding you for [boomamt] damage!"
+		playsound(loc, 'sound/arcade/boom.ogg', 50, 1, extrarange = -3, falloff = 10)
+		player_hp -= boomamt
+
+	else if ((enemy_mp <= 5) && (prob(70)))
+		var/stealamt = rand(2,3)
+		temp = "[enemy_name] steals [stealamt] of your power!"
+		playsound(loc, 'sound/arcade/steal.ogg', 50, 1, extrarange = -3, falloff = 10)
+		player_mp -= stealamt
+		updateUsrDialog()
+
+		if (player_mp <= 0)
+			gameover = TRUE
+			sleep(10)
+			temp = "You have been drained! GAME OVER"
+			playsound(loc, 'sound/arcade/lose.ogg', 50, 1, extrarange = -3, falloff = 10)
+			if(obj_flags & EMAGGED)
+				usr.gib()
+			SSblackbox.record_feedback("nested tally", "arcade_results", 1, list("loss", "mana", (obj_flags & EMAGGED ? "emagged":"normal")))
+
+	else if ((enemy_hp <= 10) && (enemy_mp > 4))
+		temp = "[enemy_name] heals for 4 health!"
+		playsound(loc, 'sound/arcade/heal.ogg', 50, 1, extrarange = -3, falloff = 10)
+		enemy_hp += 4
+		enemy_mp -= 4
+
+	else
+		var/attackamt = rand(3,6)
+		temp = "[enemy_name] attacks for [attackamt] damage!"
+		playsound(loc, 'sound/arcade/hit.ogg', 50, 1, extrarange = -3, falloff = 10)
+		player_hp -= attackamt
+
+	if ((player_mp <= 0) || (player_hp <= 0))
+		gameover = TRUE
+		playsound(loc, 'sound/arcade/lose.ogg', 50, 1, extrarange = -3, falloff = 10)
+		if(obj_flags & EMAGGED)
+			usr.gib()
+		SSblackbox.record_feedback("nested tally", "arcade_results", 1, list("loss", "hp", (obj_flags & EMAGGED ? "emagged":"normal")))
+
+	blocked = FALSE
+	return
+
+
+/obj/machinery/computer/arcade/battle/emag_act(mob/user)
+	if(obj_flags & EMAGGED)
+		return
+	to_chat(user, "<span class='warning'>A mesmerizing Rhumba beat starts playing from the arcade machine's speakers!</span>")
+	temp = "If you die in the game, you die for real!"
+	player_hp = 30
+	player_mp = 10
+	enemy_hp = 45
+	enemy_mp = 20
+	gameover = FALSE
+	blocked = FALSE
+
+	obj_flags |= EMAGGED
+
+	enemy_name = "Cuban Pete"
+	name = "Outbomb Cuban Pete"
+
+
+	updateUsrDialog()
