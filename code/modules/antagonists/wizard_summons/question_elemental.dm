@@ -8,7 +8,7 @@
 	response_help  = "puts their hand through"
 	response_disarm = "flails at"
 	response_harm   = "punches"
-	icon = 'icons/mob/lavaland/64x64megafauna.dmi'
+	icon = 'icons/mob/mob.dmi'
 	icon_state = "question_mark"
 	icon_living = "question_mark"
 	mob_biotypes = list(MOB_SPIRIT)
@@ -34,7 +34,6 @@
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	bloodcrawl = BLOODCRAWL_EAT
 	del_on_death = 1
-	pixel_x = -16
 	var/phased = FALSE
 
 /mob/living/simple_animal/question_elemental/Login()
@@ -55,6 +54,11 @@
 	if(message && !phased)
 		phaseout()
 
+/mob/living/simple_animal/question_elemental/Hear(message, atom/movable/speaker, message_language, raw_message, radio_freq, list/spans, message_mode)
+	. = ..()
+	if(copytext(message, length(message)) != "?" && phased)
+		phasein()
+
 /mob/living/simple_animal/question_elemental/treat_message(message)
 	message = ..(message)
 	//how could a question elemental say something that isn't a question? Does that make any sort of sense to you?
@@ -67,9 +71,6 @@
 	if(src.notransform)
 		to_chat(src, "<span class='warning'>Are you sure you're done feasting on your last target?</span>")
 		return 0
-	T.visible_message("<span class='warning'>Is [T] shimmering..?</span>")
-	if(!do_after(src, 20, target = T))
-		return
 	if(!T)
 		return
 	forceMove(T)
@@ -138,36 +139,6 @@
 			to_chat(src, "<span class='danger'>Where did your meal go!?</span>")
 	return 1
 
-/obj/effect/proc_holder/spell/targeted/questionwalk
-	name = "Questionable Advance?"
-	desc = "Since when did this grant unlimited movement? Why can you only exit when someone doesn't ask a question? You can enter by asking a question?"
-	charge_max = 0
-	clothes_req = FALSE
-	antimagic_allowed = TRUE
-	phase_allowed = TRUE
-	selection_type = "range"
-	range = -1
-	include_user = TRUE
-	cooldown_min = 0
-	overlay = null
-	action_icon = 'icons/mob/actions/actions_minor_antag.dmi'
-	action_icon_state = "ninja_cloak"
-	action_background_icon_state = "bg_alien"
-	var/ready_to_emerge = FALSE
-
-/obj/effect/proc_holder/spell/targeted/questionwalk/cast(list/targets,mob/living/user = usr)
-	if(!istype(user, /mob/living/simple_animal/question_elemental))
-		return
-	var/mob/living/simple_animal/question_elemental/elemental = user
-	if(istype(elemental.loc, /obj/effect/dummy/phased_mob/question))
-		to_chat(elemental, "<span class='warning'>Have you asked a question to go back to questionwalking yet?</span>")
-		return
-	else
-		if(ready_to_emerge)
-			user.phasein(get_turf(elemental))
-		else
-			to_chat(elemental, "<span class='warning'>Are you sure someone has asked a question in the last 5 seconds?</span>")
-
 /obj/effect/dummy/phased_mob/question
 	name = "anomaly?"
 	icon = 'icons/effects/effects.dmi'
@@ -193,8 +164,6 @@
 
 /obj/effect/dummy/phased_mob/question/process()
 	if(!jaunter)
-		qdel(src)
-	if(jaunter.loc != src)
 		qdel(src)
 
 /obj/effect/dummy/phased_mob/question/ex_act()
