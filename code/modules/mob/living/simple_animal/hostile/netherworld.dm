@@ -120,6 +120,7 @@
 		var/mob/living/simple_animal/hostile/netherworld/striderfoot/needs_to_sync = ii
 		needs_to_sync.feet = feet - needs_to_sync //refers to all related feet then removes itself
 		needs_to_sync.core = src//then it links the core to itself
+		//beams from the core to the joints to the feet
 
 /mob/living/simple_animal/hostile/netherworld/strider/Move(NewLoc, direct)
 	if(fallen)
@@ -141,10 +142,12 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	attacktext = "punches"
+	anchored = TRUE
 	var/mob/living/simple_animal/hostile/netherworld/strider/core
 	var/list/feet = list() //all other feet, it will choose the furthest away one to control when switching.
 	var/datum/action/innate/spider/rangeswap/rangeswap
 	var/leg_effect //also doubles as the check on whether the leg is up or not
+	var/stompsound = 'sound/effects/explosion1.ogg'
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/Login()
 	..()
@@ -165,8 +168,14 @@
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/lower_leg()
 	if(!leg_effect)
 		return
-	pixel_y += 64
+	playsound(src, stompsound, 50, 1, -1)
+	explosion1.ogg
+	pixel_y = initial(pixel_y)
 	qdel(leg_effect)
+	for(var/mob/living/L in src.loc)
+		visible_message("[L] is violently crushed by [src]!")
+		L.Paralyze(7 SECONDS)
+		L.apply_effect(EFFECT_STUTTER, 7 SECONDS)
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
 	var/inrange = TRUE
@@ -181,19 +190,24 @@
 			furthest_leg_dist = leg_dist
 	if(inrange)
 		. = ..()
-		return .//figure out if this is needed later
+		joint.update_joint()
+		return . //figure out if this is needed later
 	else
 		if(ckey)
 			if(core.rangeswap)
 				furthest_leg.ckey = ckey
-				//find the furthest away leg and become it
 			else
 				to_chat(src, "<span class='swarmer'>Your leg is out of range! You need to bring another leg closer!</span>")
-				return 0 //figure out if this is false later
+				return 0 //figure out if this is needed later
 		else
 			lower_leg()
 			furthest_leg.raise_leg()
-				
+
+/mob/living/simple_animal/hostile/netherworld/striderfoot/say(message, bubble_type, var/list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+	if(!core)
+		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to talk")
+	core.say(message, bubble_type, spans, sanitize, language, ignore_spam, forced)
+
 /datum/action/innate/spider/rangeswap
 	name = "Toggle Rangeswap"
 	desc = "Toggles whether this leg will switch to the furthest leg when it tries to leave the max range of the leg. Great for moving around, but during combat this will fuck you."
@@ -209,27 +223,36 @@
 /datum/action/innate/spider/rangeswap/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
 	if(!S.core)
-		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot")
+		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to rangeswap")
 		return
 	if(S.core.rangeswap == FALSE)
 		S.core.rangeswap = TRUE
 	else
 		S.core.rangeswap = FALSE
 
-/obj/effect/stomp_warn
+
+
+/obj/effect/attached/joint
 	icon_state = "lavastaff_warn"
 	layer = BELOW_MOB_LAYER
 	light_range = 1
+
+/obj/effect/attached/stomp_warn
+	icon_state = "lavastaff_warn"
+	layer = BELOW_MOB_LAYER
+	light_range = 1
+
+/obj/effect/attached
 	var/mob/living/createdby
 	var/datum/component/mobhook
 
-/obj/effect/stomp_warn/Initialize(mapload, createdby)
+/obj/effect/attached/Initialize(mapload, link_to)
 	..(mapload)
-	src.createdby = createdby
-	mobhook = src.createdby.AddComponent(/datum/component/redirect, list(COMSIG_MOVABLE_MOVED), CALLBACK(src, .proc/on_mob_move))
+	src.link_to = link_to
+	mobhook = src.link_to.AddComponent(/datum/component/redirect, list(COMSIG_MOVABLE_MOVED), CALLBACK(src, .proc/on_mob_move))
 
 /obj/effect/stomp_warn/attackwarn/proc/on_mob_move()
-	var/target_turf = get_turf(createdby)
+	var/target_turf = get_turf(link_to)
 	if(istype(target_turf, /turf))
 		forceMove(target_turf)
 
