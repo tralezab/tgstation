@@ -64,6 +64,59 @@
 	attacktext = "punches"
 	deathmessage = "falls apart into a fine dust."
 
+//dimension strider//
+//the mob itself cannot be hurt as it is in the air but it has legs that can be damaged to bring the strider to the ground, where it then can be killed.
+//the mob controls the legs and moves them to move the mob itself, which is between the two legs. it can toggle switching to the other leg when that leg
+//leaves the range of the mob for quick "walking" or have it toggled off to try and step on a foe.//
+
+//login logout
+/mob/living/simple_animal/hostile/netherworld/strider
+	name = "dimension strider"
+	desc = "A very large, long legged creature that saps the essense of the dimension it resides."
+	icon_state = "blank-body"
+	icon_living = "blank-body"
+	icon_dead = "blank-dead"
+	gold_core_spawnable = NO_SPAWN //change or have a neutered version for xenobio?
+	health = 100
+	maxHealth = 100
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	deathmessage = "melts into a sickly goo."
+	AIStatus = AI_OFF
+	var/playstyle_string = "<span class='swarmer'>As a dimension strider, I have two massive legs that I must move to get around, and if they are damaged will make me fall and be vulnerable. I can stomp on attackers before that happens.</span>"
+
+	var/legrange = 5
+	var/list/feet = list()
+	var/legdamage = 50 //two stomps to kill someone without armor, easy because the stomp stuns.
+
+/mob/living/simple_animal/hostile/netherworld/strider/Initialize()
+	..()
+	create_legs(2)
+
+/mob/living/simple_animal/hostile/netherworld/strider/proc/create_legs(amt_to_add = 2)
+	for(var/i in 1 to amt_to_add) //loop that generates the feet
+		var/newguy = new /mob/living/simple_animal/hostile/netherworld/striderfoot(loc)
+		total_imlagres += newguy
+	for(var/mob/living/ii in total_imlagres) //loop that relates them
+		var/mob/living/simple_animal/hostile/netherworld/imlagre/needs_to_sync = ii
+		needs_to_sync.linked_imlagres = total_imlagres - needs_to_sync //refers to all related imlagres then removes itself
+
+/mob/living/simple_animal/hostile/netherworld/striderfoot
+	name = "dimension strider foot"
+	desc = "The base of a very large creature. Attacking this would probably bring down the beast!"
+	icon_state = "blank-body"
+	icon_living = "blank-body"
+	icon_dead = "blank-dead"
+	gold_core_spawnable = NO_SPAWN
+	health = 100
+	maxHealth = 100
+	melee_damage_lower = 5
+	melee_damage_upper = 10
+	attacktext = "punches"
+	deathmessage = "falls apart into a fine dust."
+	var/one_with_legs
+	var/list/feet = list()
+
 /obj/structure/spawner/nether
 	name = "netherworld link"
 	desc = null //see examine()
