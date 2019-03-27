@@ -154,19 +154,13 @@
 	var/mob/living/simple_animal/hostile/netherworld/strider/core
 	var/list/feet = list() //all other feet, it will choose the furthest away one to control when switching.
 	var/datum/action/innate/spider/rangeswap/rangeswap
-	var/leg_effect //also doubles as the check on whether the leg is up or not
+	var/leg_effect //also doubles as the check on whether the leg is up or not by it's existence
 	var/obj/effect/attached/joint/joint
 	var/stompsound = 'sound/effects/explosion1.ogg'
 
-/mob/living/simple_animal/hostile/netherworld/striderfoot/Login()
-	..()
-	//the player has taken control of the leg, lets raise it
-	raise_leg()
+	//raise_leg()//add an action button for raising and lowering the leg, to stomp people
 
-/mob/living/simple_animal/hostile/netherworld/striderfoot/Logout()
-	..()
-	//and now the player has either left the leg to control another or has fallen down
-	lower_leg()
+	//lower_leg()
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/raise_leg()
 	if(!isnull(leg_effect))
@@ -200,6 +194,15 @@
 			furthest_leg_dist = leg_dist
 	if(allow_movement)
 		..()
+		//todo:switch this to angles. this is moving the core to be between the two legs but can be bad because it's going in the dir //round(Get_Angle(src, core))
+		var/distance_to_core = get_dist(src, furthest_leg)/2 //halfway the distance, so between the legs
+		var/turf/T = get_turf(src)
+		for(var/i in 1 to distance_to_core)
+			T = get_step(T, get_dir(src, furthest_leg))
+		if(!core)
+			to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to move (calculate new core pos)")
+		if(T)
+			core.forceMove(T)
 		for(var/datum/beam/connector in core.beams)
 			connector.recalculate()
 		return TRUE
@@ -254,15 +257,44 @@
 	light_range = 1
 
 /obj/effect/attached
+	//the effect attaches to this mob, following it
 	var/mob/living/linked
-	var/datum/component/mobhook//
+	var/datum/component/mobhook
+	//optionally, the icon of the effect can be offset pointing towards a different mob (not the linked)
+	var/mob/living/pixel_towards_mob
+	var/pixel_towards_x = 0
+	var/pixel_towards_y = 0
 
-/obj/effect/attached/Initialize(mapload, linked)
+/obj/effect/attached/Initialize(mapload, linked, pixeltowardsmob, pixeltowardsx = 16,pixeltowardsy = 16)
 	..(mapload)
+	pixel_towards_mob = pixel_towards
+	pixel_towards_x = pixeltowardsx
+	pixel_towards_y = pixeltowardsy
 	src.linked = linked
 	mobhook = src.linked.AddComponent(/datum/component/redirect, list(COMSIG_MOVABLE_MOVED = CALLBACK(src, .proc/on_linked_move)))
 
 /obj/effect/attached/proc/on_linked_move()
+	if(pixel_towards_mob)
+		//reset, then offset our icon towards the pixel_towards_mob
+		pixel_x = initial(pixel_x)
+		pixel_y = initial(pixel_y)
+		var/pixel_x_pos = TRUE
+		var/pixel_y_pos = TRUE
+		var/towardsmobdir = get_dir(linked, pixel_towards_mob)//DIRECTION TO THE MOB ADD PIXEL POS OR NEG
+		switch(towardsmobdir)
+			if(SOUTHEAST)
+				pixel_y_pos = FALSE
+			if(SOUTH)
+				pixel_y_pos = FALSE
+			if(SOUTHWEST)
+				pixel_x_pos = FALSE
+				pixel_y_pos = FALSE
+			if(WEST)
+				pixel_x_pos = FALSE
+			if(NORTHWEST)
+				pixel_x_pos = FALSE
+		pixel_x = pixel_x_pos ? "pixel_x + pixel_towards_x" : "pixel_x - pixel_towards_x"
+		pixel_y = pixel_y_pos ? "pixel_y + pixel_towards_y" : "pixel_y - pixel_towards_y"
 	var/target_turf = get_turf(linked)
 	if(istype(target_turf, /turf))
 		forceMove(target_turf)
