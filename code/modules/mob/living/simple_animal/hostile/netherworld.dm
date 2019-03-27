@@ -91,6 +91,7 @@
 	var/last_ckey //used so we don't send the playstyle_string to the strider every time they login to the core
 	var/legrange = 5
 	var/list/feet = list()
+	var/list/beams = list() //TODO: update this when the leg moves
 	var/legdamage = 50 //two stomps to kill someone without armor, easy because the stomp stuns.
 
 /mob/living/simple_animal/hostile/netherworld/strider/Initialize()
@@ -101,7 +102,7 @@
 	. = ..()
 	if(ckey != last_ckey)
 		to_chat(src, playstyle_string)
-		AiStatus = AI_OFF
+		AIStatus = AI_OFF
 	last_ckey = ckey
 	if(!fallen) //we have become this mob but the mob is not on the ground, so just go back to controlling a foot.
 		var/mob/living/picked_foot = pick(feet)
@@ -120,6 +121,9 @@
 		var/mob/living/simple_animal/hostile/netherworld/striderfoot/needs_to_sync = ii
 		needs_to_sync.feet = feet - needs_to_sync //refers to all related feet then removes itself
 		needs_to_sync.core = src//then it links the core to itself
+		var/datum/beam/connection = new(core, needs_to_sync, time = INFINITY, beam_icon_state = "medbeam", beam_sleep_time = null)//TODO: beam core > joints, not core > foot
+		connection.Draw()
+		beams += connection
 		//beams from the core to the joints to the feet
 
 /mob/living/simple_animal/hostile/netherworld/strider/Move(NewLoc, direct)
@@ -128,7 +132,10 @@
 	else
 		var/mob/living/picked_foot = pick(feet)
 		picked_foot.ckey = ckey
-		
+	return 0
+
+/mob/living/simple_animal/hostile/netherworld/strider/proc/try_get_up()
+	to_chat(world, "try get up triggered")
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot
 	name = "dimension strider foot"
@@ -143,10 +150,12 @@
 	melee_damage_upper = 10
 	attacktext = "punches"
 	anchored = TRUE
+	speed = 0 //a bit faster since the legs must sit planted while the other moves to get around
 	var/mob/living/simple_animal/hostile/netherworld/strider/core
 	var/list/feet = list() //all other feet, it will choose the furthest away one to control when switching.
 	var/datum/action/innate/spider/rangeswap/rangeswap
 	var/leg_effect //also doubles as the check on whether the leg is up or not
+	var/obj/effect/attached/joint/joint
 	var/stompsound = 'sound/effects/explosion1.ogg'
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/Login()
@@ -160,45 +169,47 @@
 	lower_leg()
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/raise_leg()
-	if(leg_effect)
+	if(!isnull(leg_effect))
 		return
-	pixel_y += 64
-	leg_effect = new /obj/effect/stomp_warn(get_turf(src))
+	pixel_y += 16
+	leg_effect = new /obj/effect/attached/stomp_warn(get_turf(src), src)
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/lower_leg()
-	if(!leg_effect)
+	if(isnull(leg_effect))
 		return
 	playsound(src, stompsound, 50, 1, -1)
-	explosion1.ogg
 	pixel_y = initial(pixel_y)
 	qdel(leg_effect)
 	for(var/mob/living/L in src.loc)
+		if(istype(L, /mob/living/simple_animal/hostile/netherworld/striderfoot))
+			continue//you cannot crush yourself
 		visible_message("[L] is violently crushed by [src]!")
 		L.Paralyze(7 SECONDS)
 		L.apply_effect(EFFECT_STUTTER, 7 SECONDS)
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
-	var/inrange = TRUE
+	var/allow_movement = TRUE
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg
 	var/furthest_leg_dist
 	for(var/mob/living/other_foot in feet)
-		var/leg_dist = get_dist(src, other_foot)
-		if(leg_dist > legrange)
-			inrange = FALSE
+		var/leg_dist = get_dist(NewLoc, other_foot)//make sure wherever we're going is still in range.
+		if(leg_dist >= core.legrange)
+			allow_movement = FALSE
 		if(leg_dist > furthest_leg_dist)
 			furthest_leg = other_foot
 			furthest_leg_dist = leg_dist
-	if(inrange)
-		. = ..()
-		joint.update_joint()
-		return . //figure out if this is needed later
+	if(allow_movement)
+		..()
+		for(var/datum/beam/connector in core.beams)
+			connector.recalculate()
+		return TRUE
 	else
 		if(ckey)
 			if(core.rangeswap)
 				furthest_leg.ckey = ckey
 			else
 				to_chat(src, "<span class='swarmer'>Your leg is out of range! You need to bring another leg closer!</span>")
-				return 0 //figure out if this is needed later
+				return FALSE
 		else
 			lower_leg()
 			furthest_leg.raise_leg()
@@ -210,15 +221,15 @@
 
 /datum/action/innate/spider/rangeswap
 	name = "Toggle Rangeswap"
-	desc = "Toggles whether this leg will switch to the furthest leg when it tries to leave the max range of the leg. Great for moving around, but during combat this will fuck you."
+	desc = "Toggles whether this leg will switch to the furthest leg when it tries to leave the max range of the leg. Great for moving around, but during combat this will mess you up."
 	check_flags = AB_CHECK_CONSCIOUS
 	button_icon_state = "lay_eggs"
 
 /datum/action/innate/spider/rangeswap/IsAvailable()
 	. = ..()
 	if(!. || !istype(owner, /mob/living/simple_animal/hostile/netherworld/striderfoot))
-		return 0
-	return 1
+		. = FALSE
+	return .
 
 /datum/action/innate/spider/rangeswap/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
@@ -243,16 +254,16 @@
 	light_range = 1
 
 /obj/effect/attached
-	var/mob/living/createdby
-	var/datum/component/mobhook
+	var/mob/living/linked
+	var/datum/component/mobhook//
 
-/obj/effect/attached/Initialize(mapload, link_to)
+/obj/effect/attached/Initialize(mapload, linked)
 	..(mapload)
-	src.link_to = link_to
-	mobhook = src.link_to.AddComponent(/datum/component/redirect, list(COMSIG_MOVABLE_MOVED), CALLBACK(src, .proc/on_mob_move))
+	src.linked = linked
+	mobhook = src.linked.AddComponent(/datum/component/redirect, list(COMSIG_MOVABLE_MOVED = CALLBACK(src, .proc/on_linked_move)))
 
-/obj/effect/stomp_warn/attackwarn/proc/on_mob_move()
-	var/target_turf = get_turf(link_to)
+/obj/effect/attached/proc/on_linked_move()
+	var/target_turf = get_turf(linked)
 	if(istype(target_turf, /turf))
 		forceMove(target_turf)
 
