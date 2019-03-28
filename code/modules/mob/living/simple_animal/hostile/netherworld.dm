@@ -112,18 +112,22 @@
 	addtimer(CALLBACK(src, .proc/try_get_up), 50)
 
 /mob/living/simple_animal/hostile/netherworld/strider/proc/create_legs(amt_to_add = 2)
-	var/spawnspot = EAST
+	var/spawndir = EAST
 	for(var/i in 1 to amt_to_add) //loop that generates the feet
-		var/newguy = new /mob/living/simple_animal/hostile/netherworld/striderfoot(get_step(loc, spawnspot))
+		var/turf/spawnspot = get_step(loc, spawndir)
+		if(!spawnspot)
+			spawnspot = get_turf(src)
+		var/newguy = new /mob/living/simple_animal/hostile/netherworld/striderfoot(spawnspot)
 		if(spawnspot == EAST)//moves the legs out of the damn way
 			spawnspot = WEST
 		else
 			spawnspot = EAST
 		feet += newguy //add the feet to src's feet list
-	for(var/mob/living/ii in feet) //loop that relates them, takes from the src's list of feet and fills the feet's list of feet
+	for(var/mob/living/ii in feet) //loop that relates them, creates joints and beams
 		var/mob/living/simple_animal/hostile/netherworld/striderfoot/needs_to_sync = ii
 		needs_to_sync.feet = feet - needs_to_sync //refers to all related feet then removes itself
-		needs_to_sync.core = src//then it links the core to itself
+		needs_to_sync.core = src
+		needs_to_sync.core.joint = new /obj/effect/attached/joint(get_turf(needs_to_sync))
 		var/datum/beam/connection = new(src, needs_to_sync, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)//TODO: beam core > joints, not core > foot
 		connection.Draw()
 		beams += connection
@@ -197,8 +201,6 @@
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/lower_leg()
 	if(!raised)
 		return
-	for(var/datum/beam/connector in core.beams)
-		connector.recalculate()
 	raised = FALSE
 	playsound(src, stompsound, 50, 1, -1)
 	pixel_y = initial(pixel_y)
@@ -222,12 +224,12 @@
 			furthest_leg_dist = leg_dist
 	return furthest_leg
 
-/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
+/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)//TODO: you didn't finish the angle core placement
 	if(!raised)
 		raise_leg()
 		return FALSE
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg = get_furthest_leg()
-	if(get_dist(NewLoc, furthest_leg) >= core.legrange)//make sure wherever we're going is still in range.
+	if(get_dist(NewLoc, furthest_leg) >= core.legrange)//if you are trying to move where you cannot
 		if(!ckey)
 			lower_leg()
 			furthest_leg.raise_leg()
@@ -235,23 +237,49 @@
 		if(!core.rangeswap)
 			to_chat(src, "<span class='swarmer'>You can't reach that far! You need to bring another leg closer!</span>")
 			return FALSE
-		else
-			lower_leg()
-			furthest_leg.raise_leg()
-			furthest_leg.ckey = ckey
-			return FALSE
+		lower_leg()
+		furthest_leg.raise_leg()
+		furthest_leg.ckey = ckey
+		return FALSE
 	..()
-	//TODO:switch this to angles. judging by dir leads to problems in dir's inaccuracy //round(Get_Angle(src, core))
-	var/distance_to_core = get_dist(src, furthest_leg)/2 //halfway the distance, so between the legs
-	var/turf/T = get_turf(src)
-	for(var/i in 1 to distance_to_core)
-		T = get_step(T, get_dir(src, furthest_leg))
-	if(!core)
-		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to move (calculate new core pos)")
-		return
-	if(T)
-		core.forceMove(T)
-	for(var/datum/beam/connector in core.beams)
+	//we need to position the core between the new legs after the movement, a lot of this is from the beam code since it does the same thing
+	var/DX = (32*target.x+target.pixel_x)-(32*origin.x+origin.pixel_x)
+	var/DY = (32*target.y+target.pixel_y)-(32*origin.y+origin.pixel_y)
+	var/N = 0
+	var/length = round(sqrt((DX)**2+(DY)**2))/2 //hypotenuse of the triangle formed by target and origin's displacement, divided by 2 because we don't need the core to be at the target leg
+	for(N in 0 to length-1 step 32)//-1 as we want < not <=, but we want the speed of X in Y to Z and step X
+		if(QDELETED(core))
+			break
+		var/mob/living/simple_animal/hostile/netherworld/strider/X = core
+		X.forceMove(origin)
+
+		//Calculate pixel offsets (If necessary)
+		var/Pixel_x
+		var/Pixel_y
+		if(DX == 0)
+			Pixel_x = 0
+		else
+			Pixel_x = round(sin(Angle)+32*sin(Angle)*(N+16)/32)
+		if(DY == 0)
+			Pixel_y = 0
+		else
+			Pixel_y = round(cos(Angle)+32*cos(Angle)*(N+16)/32)
+
+		//Position the core if we are finished travelling to the point
+		if(N+32>length)
+		var/a
+		if(abs(Pixel_x)>32)
+			a = Pixel_x > 0 ? round(Pixel_x/32) : CEILING(Pixel_x/32, 1)
+			X.x += a
+			Pixel_x %= 32
+		if(abs(Pixel_y)>32)
+			a = Pixel_y > 0 ? round(Pixel_y/32) : CEILING(Pixel_y/32, 1)
+			X.y += a
+			Pixel_y %= 32
+
+		X.pixel_x = Pixel_x
+		X.pixel_y = Pixel_y
+	for(var/datum/beam/connector in core.beams)//core moved, lets then update the beams connecting the joints and feet
 		connector.recalculate()
 	return TRUE
 
@@ -300,19 +328,21 @@
 
 /datum/action/innate/strider/switch_leg
 	name = "Switch leg"
-	desc = "Switches to another leg. Great to do this if you are getting attacked!"
+	desc = "Switches to another leg, for some advanced movement."
 	button_icon_state = "lay_eggs"
 
 /datum/action/innate/strider/switch_leg/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
-	if(S.raised)
-		S.lower_leg()
-	else
-		S.raise_leg()
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg = get_furthest_leg()
+	furthest_leg.ckey = ckey
 
 /datum/action/innate/strider/go_to_core
 	name = "Go to core"
-	desc = "Look from your core. You won't be able to do much from it beyond looking, though."
+	desc = "Look from your core. Nice for getting a look at your surroundings."
+
+/datum/action/innate/strider/go_to_core/Activate()
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
+	S.core.ckey = ckey
 
 /obj/effect/attached/joint
 	icon = 'icons/mob/animal.dmi'
@@ -334,7 +364,7 @@
 	var/pixel_towards_x = 0
 	var/pixel_towards_y = 0
 
-/obj/effect/attached/Initialize(mapload, linked, pixeltowardsmob, pixeltowardsx = 16,pixeltowardsy = 16)
+/obj/effect/attached/Initialize(mapload, linked, pixeltowardsmob, pixeltowardsx = 0,pixeltowardsy = 0)
 	..(mapload)
 	pixel_towards_mob = pixeltowardsmob
 	pixel_towards_x = pixeltowardsx
@@ -349,7 +379,7 @@
 		pixel_y = initial(pixel_y)
 		var/pixel_x_pos = TRUE
 		var/pixel_y_pos = TRUE
-		var/towardsmobdir = get_dir(linked, pixel_towards_mob)//DIRECTION TO THE MOB ADD PIXEL POS OR NEG
+		var/towardsmobdir = get_dir(linked, pixel_towards_mob)
 		switch(towardsmobdir)
 			if(SOUTHEAST)
 				pixel_y_pos = FALSE
