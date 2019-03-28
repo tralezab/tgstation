@@ -81,7 +81,7 @@
 	deathmessage = "melts into a sickly goo."
 	AIStatus = AI_OFF
 	del_on_death = TRUE
-	//pixel_y = 64
+	pixel_y = 80//please work fuck
 	var/playstyle_string = "<span class='swarmer'>As a dimension strider, I have two massive legs that I must move to get around, and if they are damaged they make me fall and be vulnerable to attacks myself. I can stomp on attackers before that happens with my legs.</span>"
 	var/fallen = FALSE
 	var/rangeswap = FALSE //see the action button of the same name for an explanation on what this does
@@ -212,7 +212,17 @@
 	for(var/mob/living/L in src.loc)
 		if(istype(L, /mob/living/simple_animal/hostile/netherworld/striderfoot))
 			continue//you cannot crush yourself
+		playsound(L, 'sound/effects/blobattack.ogg', 60)
 		visible_message("[L] is violently crushed by [src]!")
+		if(MOB_ORGANIC in L.mob_biotypes)
+			new /obj/effect/decal/cleanable/blood(L)
+			for(var/splurts in 1 to 2)//two lines in total
+				var/bloodsplurt = pick(GLOB.alldirs)
+				var/turf/bloodturf = get_step(L, bloodsplurt)
+				for(var/i in 1 to 3)
+					new /obj/effect/decal/cleanable/blood(bloodturf)
+					bloodturf = get_step(bloodturf, bloodsplurt)
+		L.adjustBruteLoss(legdamage)
 		L.Paralyze(7 SECONDS)
 		L.apply_effect(EFFECT_STUTTER, 7 SECONDS)
 
