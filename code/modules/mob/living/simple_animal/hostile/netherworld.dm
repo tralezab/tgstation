@@ -127,10 +127,12 @@
 		var/mob/living/simple_animal/hostile/netherworld/striderfoot/needs_to_sync = ii
 		needs_to_sync.feet = feet - needs_to_sync //refers to all related feet then removes itself
 		needs_to_sync.core = src
-		needs_to_sync.core.joint = new /obj/effect/attached/joint(get_turf(needs_to_sync))
-		var/datum/beam/connection = new(src, needs_to_sync, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)//TODO: beam core > joints, not core > foot
-		connection.Draw()
-		beams += connection
+		needs_to_sync.joint = new /obj/effect/attached/joint(get_turf(needs_to_sync), needs_to_sync, src, 16, 16)
+		var/datum/beam/connection1 = new(src, needs_to_sync.joint, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)
+		var/datum/beam/connection2 = new(needs_to_sync.joint, needs_to_sync, joint, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)
+		connection1.Draw()
+		connection2.Draw()
+		beams = beams + connection1 + connection2
 		//beams from the core to the joints to the feet
 
 /mob/living/simple_animal/hostile/netherworld/strider/Move(NewLoc, direct)
@@ -224,7 +226,7 @@
 			furthest_leg_dist = leg_dist
 	return furthest_leg
 
-/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)//TODO: you didn't finish the angle core placement
+/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
 	if(!raised)
 		raise_leg()
 		return FALSE
@@ -250,6 +252,8 @@
 	for(N in 0 to length-1 step 32)//-1 as we want < not <=, but we want the speed of X in Y to Z and step X
 		if(QDELETED(core))
 			break
+		if(!(N+32>length))//we aren't looking to make a beam, we're looking to put the core at the end of the line.
+			continue
 		var/mob/living/simple_animal/hostile/netherworld/strider/X = core
 		X.forceMove(origin)
 
@@ -265,8 +269,7 @@
 		else
 			Pixel_y = round(cos(Angle)+32*cos(Angle)*(N+16)/32)
 
-		//Position the core if we are finished travelling to the point
-		if(N+32>length)
+		//Position the core
 		var/a
 		if(abs(Pixel_x)>32)
 			a = Pixel_x > 0 ? round(Pixel_x/32) : CEILING(Pixel_x/32, 1)
@@ -279,7 +282,7 @@
 
 		X.pixel_x = Pixel_x
 		X.pixel_y = Pixel_y
-	for(var/datum/beam/connector in core.beams)//core moved, lets then update the beams connecting the joints and feet
+	for(var/datum/beam/connector in core.beams)//core moved, update the beams connecting the joints and feet
 		connector.recalculate()
 	return TRUE
 
@@ -348,6 +351,7 @@
 	icon = 'icons/mob/animal.dmi'
 	icon_state = "strider-joint"
 	layer = BELOW_MOB_LAYER
+	pixel_y = 64
 
 /obj/effect/attached/stomp_warn
 	icon = 'icons/mob/animal.dmi'
