@@ -68,15 +68,12 @@
 //the mob itself cannot be hurt as it is in the air but it has legs that can be damaged to bring the strider to the ground, where it then can be killed.
 //the mob controls the legs and moves them to move the mob itself, which is between the two legs. it can toggle switching to the other leg when that leg
 //leaves the range of the mob for quick "walking" or have it toggled off to try and step on a foe.
-//i'll be referring to the mob itself (not the feet) as the core in comments//
 
-//login logout
 /mob/living/simple_animal/hostile/netherworld/strider
 	name = "dimension strider"
 	desc = "A very large, long legged creature that saps the essense of the dimension it resides."
-	icon_state = "blank-body"
-	icon_living = "blank-body"
-	icon_dead = "blank-dead"
+	icon_state = "strider-core"
+	icon_living = "strider-core"
 	gold_core_spawnable = NO_SPAWN //change or have a neutered version for xenobio?
 	health = 100
 	maxHealth = 100
@@ -84,6 +81,7 @@
 	deathmessage = "melts into a sickly goo."
 	AIStatus = AI_OFF
 	del_on_death = TRUE
+	//pixel_y = 64
 	var/playstyle_string = "<span class='swarmer'>As a dimension strider, I have two massive legs that I must move to get around, and if they are damaged they make me fall and be vulnerable to attacks myself. I can stomp on attackers before that happens with my legs.</span>"
 	var/fallen = FALSE
 	var/rangeswap = FALSE //see the action button of the same name for an explanation on what this does
@@ -91,7 +89,7 @@
 	var/last_ckey //used so we don't send the playstyle_string to the strider every time they login to the core
 	var/legrange = 5
 	var/list/feet = list()
-	var/list/beams = list() //TODO: update this when the leg moves
+	var/list/beams = list()
 	var/legdamage = 50 //two stomps to kill someone without armor, easy because the stomp stuns.
 
 /mob/living/simple_animal/hostile/netherworld/strider/Initialize()
@@ -114,14 +112,19 @@
 	addtimer(CALLBACK(src, .proc/try_get_up), 50)
 
 /mob/living/simple_animal/hostile/netherworld/strider/proc/create_legs(amt_to_add = 2)
+	var/spawnspot = EAST
 	for(var/i in 1 to amt_to_add) //loop that generates the feet
-		var/newguy = new /mob/living/simple_animal/hostile/netherworld/striderfoot(loc)
+		var/newguy = new /mob/living/simple_animal/hostile/netherworld/striderfoot(get_step(loc, spawnspot))
+		if(spawnspot == EAST)//moves the legs out of the damn way
+			spawnspot = WEST
+		else
+			spawnspot = EAST
 		feet += newguy //add the feet to src's feet list
 	for(var/mob/living/ii in feet) //loop that relates them, takes from the src's list of feet and fills the feet's list of feet
 		var/mob/living/simple_animal/hostile/netherworld/striderfoot/needs_to_sync = ii
 		needs_to_sync.feet = feet - needs_to_sync //refers to all related feet then removes itself
 		needs_to_sync.core = src//then it links the core to itself
-		var/datum/beam/connection = new(core, needs_to_sync, time = INFINITY, beam_icon_state = "medbeam", beam_sleep_time = null)//TODO: beam core > joints, not core > foot
+		var/datum/beam/connection = new(src, needs_to_sync, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)//TODO: beam core > joints, not core > foot
 		connection.Draw()
 		beams += connection
 		//beams from the core to the joints to the feet
@@ -140,8 +143,8 @@
 /mob/living/simple_animal/hostile/netherworld/striderfoot
 	name = "dimension strider foot"
 	desc = "The base of a very large creature. Attacking this would probably bring down the beast!"
-	icon_state = "otherthing"
-	icon_living = "otherthing"
+	icon_state = "strider-foot"
+	icon_living = "strider-foot"
 	gold_core_spawnable = NO_SPAWN
 	AIStatus = AI_OFF//if there is no player, the core will control the foot
 	health = 100
@@ -150,30 +153,58 @@
 	melee_damage_upper = 10
 	attacktext = "punches"
 	anchored = TRUE
-	speed = 0 //a bit faster since the legs must sit planted while the other moves to get around
+	speed = -1 //a bit faster since the legs must sit planted while the other moves to get around
+	var/raised = FALSE
 	var/mob/living/simple_animal/hostile/netherworld/strider/core
 	var/list/feet = list() //all other feet, it will choose the furthest away one to control when switching.
-	var/datum/action/innate/spider/rangeswap/rangeswap
-	var/leg_effect //also doubles as the check on whether the leg is up or not by it's existence
+	var/datum/action/innate/strider/rangeswap/rangeswap
+	var/datum/action/innate/strider/toggle_stomp/toggle_stomp
+	var/datum/action/innate/strider/switch_leg/switch_leg
+	var/datum/action/innate/strider/go_to_core/go_to_core
+	var/leg_effect
 	var/obj/effect/attached/joint/joint
 	var/stompsound = 'sound/effects/explosion1.ogg'
 
-	//raise_leg()//add an action button for raising and lowering the leg, to stomp people
+/mob/living/simple_animal/hostile/netherworld/striderfoot/Initialize()
+	. = ..()
+	rangeswap = new
+	rangeswap.Grant(src)
+	toggle_stomp = new
+	toggle_stomp.Grant(src)
+	switch_leg = new
+	switch_leg.Grant(src)
+	go_to_core = new
+	go_to_core.Grant(src)
 
-	//lower_leg()
+/mob/living/simple_animal/hostile/netherworld/striderfoot/Destroy()
+	QDEL_NULL(rangeswap)
+	QDEL_NULL(toggle_stomp)
+	QDEL_NULL(switch_leg)
+	QDEL_NULL(go_to_core)
+	return ..()
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/raise_leg()
-	if(!isnull(leg_effect))
+	if(raised)
 		return
-	pixel_y += 16
+	if(!core)
+		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to raise leg")
+	raised = TRUE
+	pixel_y += 32
+	for(var/datum/beam/connector in core.beams)
+		connector.recalculate()
 	leg_effect = new /obj/effect/attached/stomp_warn(get_turf(src), src)
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/proc/lower_leg()
-	if(isnull(leg_effect))
+	if(!raised)
 		return
+	for(var/datum/beam/connector in core.beams)
+		connector.recalculate()
+	raised = FALSE
 	playsound(src, stompsound, 50, 1, -1)
 	pixel_y = initial(pixel_y)
-	qdel(leg_effect)
+	for(var/datum/beam/connector in core.beams)
+		connector.recalculate()
+	QDEL_NULL(leg_effect)
 	for(var/mob/living/L in src.loc)
 		if(istype(L, /mob/living/simple_animal/hostile/netherworld/striderfoot))
 			continue//you cannot crush yourself
@@ -181,60 +212,71 @@
 		L.Paralyze(7 SECONDS)
 		L.apply_effect(EFFECT_STUTTER, 7 SECONDS)
 
-/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
-	var/allow_movement = TRUE
+/mob/living/simple_animal/hostile/netherworld/striderfoot/proc/get_furthest_leg()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg
-	var/furthest_leg_dist
+	var/furthest_leg_dist = 0
 	for(var/mob/living/other_foot in feet)
-		var/leg_dist = get_dist(NewLoc, other_foot)//make sure wherever we're going is still in range.
-		if(leg_dist >= core.legrange)
-			allow_movement = FALSE
+		var/leg_dist = get_dist(src, other_foot)//make sure wherever we're going is still in range.
 		if(leg_dist > furthest_leg_dist)
 			furthest_leg = other_foot
 			furthest_leg_dist = leg_dist
-	if(allow_movement)
-		..()
-		//todo:switch this to angles. this is moving the core to be between the two legs but can be bad because it's going in the dir //round(Get_Angle(src, core))
-		var/distance_to_core = get_dist(src, furthest_leg)/2 //halfway the distance, so between the legs
-		var/turf/T = get_turf(src)
-		for(var/i in 1 to distance_to_core)
-			T = get_step(T, get_dir(src, furthest_leg))
-		if(!core)
-			to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to move (calculate new core pos)")
-		if(T)
-			core.forceMove(T)
-		for(var/datum/beam/connector in core.beams)
-			connector.recalculate()
-		return TRUE
-	else
-		if(ckey)
-			if(core.rangeswap)
-				furthest_leg.ckey = ckey
-			else
-				to_chat(src, "<span class='swarmer'>Your leg is out of range! You need to bring another leg closer!</span>")
-				return FALSE
+	return furthest_leg
+
+/mob/living/simple_animal/hostile/netherworld/striderfoot/Move(NewLoc, direct)
+	if(!raised)
+		raise_leg()
+		return FALSE
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg = get_furthest_leg()
+	if(get_dist(NewLoc, furthest_leg) >= core.legrange)//make sure wherever we're going is still in range.
+		if(!ckey)
+			lower_leg()
+			furthest_leg.raise_leg()
+			return
+		if(!core.rangeswap)
+			to_chat(src, "<span class='swarmer'>You can't reach that far! You need to bring another leg closer!</span>")
+			return FALSE
 		else
 			lower_leg()
 			furthest_leg.raise_leg()
+			furthest_leg.ckey = ckey
+			return FALSE
+	..()
+	//TODO:switch this to angles. judging by dir leads to problems in dir's inaccuracy //round(Get_Angle(src, core))
+	var/distance_to_core = get_dist(src, furthest_leg)/2 //halfway the distance, so between the legs
+	var/turf/T = get_turf(src)
+	for(var/i in 1 to distance_to_core)
+		T = get_step(T, get_dir(src, furthest_leg))
+	if(!core)
+		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to move (calculate new core pos)")
+		return
+	if(T)
+		core.forceMove(T)
+	for(var/datum/beam/connector in core.beams)
+		connector.recalculate()
+	return TRUE
 
 /mob/living/simple_animal/hostile/netherworld/striderfoot/say(message, bubble_type, var/list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	if(!core)
 		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to talk")
 	core.say(message, bubble_type, spans, sanitize, language, ignore_spam, forced)
 
-/datum/action/innate/spider/rangeswap
-	name = "Toggle Rangeswap"
-	desc = "Toggles whether this leg will switch to the furthest leg when it tries to leave the max range of the leg. Great for moving around, but during combat this will mess you up."
+/datum/action/innate/strider
+	icon_icon = 'icons/mob/actions/actions_animal.dmi'
+	background_icon_state = "bg_alien"
 	check_flags = AB_CHECK_CONSCIOUS
-	button_icon_state = "lay_eggs"
 
-/datum/action/innate/spider/rangeswap/IsAvailable()
+/datum/action/innate/strider/IsAvailable()
 	. = ..()
-	if(!. || !istype(owner, /mob/living/simple_animal/hostile/netherworld/striderfoot))
+	if(!istype(owner, /mob/living/simple_animal/hostile/netherworld/striderfoot))
 		. = FALSE
 	return .
 
-/datum/action/innate/spider/rangeswap/Activate()
+/datum/action/innate/strider/rangeswap
+	name = "Toggle Rangeswap"
+	desc = "Toggles whether this leg will switch legs when out of range. Good for getting around!"
+	button_icon_state = "lay_eggs"
+
+/datum/action/innate/strider/rangeswap/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
 	if(!S.core)
 		to_chat(src, "you are severely bugged, ahelp for an admin and report this on github. Error: No core, living foot. Attempted to rangeswap")
@@ -244,15 +286,42 @@
 	else
 		S.core.rangeswap = FALSE
 
+/datum/action/innate/strider/toggle_stomp
+	name = "Toggle Stomp"
+	desc = "Raises and lowers your leg. You can only move if your leg is raised!"
+	button_icon_state = "lay_eggs"
 
+/datum/action/innate/strider/toggle_stomp/Activate()
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
+	if(S.raised)
+		S.lower_leg()
+	else
+		S.raise_leg()
+
+/datum/action/innate/strider/switch_leg
+	name = "Switch leg"
+	desc = "Switches to another leg. Great to do this if you are getting attacked!"
+	button_icon_state = "lay_eggs"
+
+/datum/action/innate/strider/switch_leg/Activate()
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
+	if(S.raised)
+		S.lower_leg()
+	else
+		S.raise_leg()
+
+/datum/action/innate/strider/go_to_core
+	name = "Go to core"
+	desc = "Look from your core. You won't be able to do much from it beyond looking, though."
 
 /obj/effect/attached/joint
-	icon_state = "lavastaff_warn"
+	icon = 'icons/mob/animal.dmi'
+	icon_state = "strider-joint"
 	layer = BELOW_MOB_LAYER
-	light_range = 1
 
 /obj/effect/attached/stomp_warn
-	icon_state = "lavastaff_warn"
+	icon = 'icons/mob/animal.dmi'
+	icon_state = "strider-warn"
 	layer = BELOW_MOB_LAYER
 	light_range = 1
 
@@ -267,7 +336,7 @@
 
 /obj/effect/attached/Initialize(mapload, linked, pixeltowardsmob, pixeltowardsx = 16,pixeltowardsy = 16)
 	..(mapload)
-	pixel_towards_mob = pixel_towards
+	pixel_towards_mob = pixeltowardsmob
 	pixel_towards_x = pixeltowardsx
 	pixel_towards_y = pixeltowardsy
 	src.linked = linked
