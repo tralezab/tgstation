@@ -86,6 +86,7 @@
 	var/fallen = FALSE
 	var/rangeswap = FALSE //see the action button of the same name for an explanation on what this does
 
+	var/effect/joint
 	var/last_ckey //used so we don't send the playstyle_string to the strider every time they login to the core
 	var/legrange = 5
 	var/list/feet = list()
@@ -129,7 +130,7 @@
 		needs_to_sync.core = src
 		needs_to_sync.joint = new /obj/effect/attached/joint(get_turf(needs_to_sync), needs_to_sync, src, 16, 16)
 		var/datum/beam/connection1 = new(src, needs_to_sync.joint, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)
-		var/datum/beam/connection2 = new(needs_to_sync.joint, needs_to_sync, joint, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)
+		var/datum/beam/connection2 = new(needs_to_sync.joint, needs_to_sync, time = INFINITY, beam_icon = 'icons/mob/animal.dmi', beam_icon_state = "strider-connector", beam_sleep_time = null)
 		connection1.Draw()
 		connection2.Draw()
 		beams = beams + connection1 + connection2
@@ -222,7 +223,7 @@
 				for(var/i in 1 to 3)
 					new /obj/effect/decal/cleanable/blood(bloodturf)
 					bloodturf = get_step(bloodturf, bloodsplurt)
-		L.adjustBruteLoss(legdamage)
+		L.adjustBruteLoss(core.legdamage)
 		L.Paralyze(7 SECONDS)
 		L.apply_effect(EFFECT_STUTTER, 7 SECONDS)
 
@@ -255,17 +256,19 @@
 		return FALSE
 	..()
 	//we need to position the core between the new legs after the movement, a lot of this is from the beam code since it does the same thing
-	var/DX = (32*target.x+target.pixel_x)-(32*origin.x+origin.pixel_x)
-	var/DY = (32*target.y+target.pixel_y)-(32*origin.y+origin.pixel_y)
+	var/turf/FootLoc = get_turf(src)
+	var/Angle = round(Get_Angle(FootLoc, furthest_leg))
+	var/DX = (32*target.x+target.pixel_x)-(32*FootLoc.x+FootLoc.pixel_x)
+	var/DY = (32*target.y+target.pixel_y)-(32*FootLoc.y+FootLoc.pixel_y)
 	var/N = 0
-	var/length = round(sqrt((DX)**2+(DY)**2))/2 //hypotenuse of the triangle formed by target and origin's displacement, divided by 2 because we don't need the core to be at the target leg
+	var/length = round(sqrt((DX)**2+(DY)**2))/2 //hypotenuse of the triangle formed by furthest leg and NewLoc's displacement, divided by 2 because we don't need the core to be at the target leg
 	for(N in 0 to length-1 step 32)//-1 as we want < not <=, but we want the speed of X in Y to Z and step X
 		if(QDELETED(core))
 			break
 		if(!(N+32>length))//we aren't looking to make a beam, we're looking to put the core at the end of the line.
 			continue
 		var/mob/living/simple_animal/hostile/netherworld/strider/X = core
-		X.forceMove(origin)
+		X.forceMove(FootLoc)
 
 		//Calculate pixel offsets (If necessary)
 		var/Pixel_x
@@ -346,8 +349,8 @@
 
 /datum/action/innate/strider/switch_leg/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
-	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg = get_furthest_leg()
-	furthest_leg.ckey = ckey
+	var/mob/living/simple_animal/hostile/netherworld/striderfoot/furthest_leg = S.get_furthest_leg()
+	furthest_leg.ckey = S.ckey
 
 /datum/action/innate/strider/go_to_core
 	name = "Go to core"
@@ -355,7 +358,7 @@
 
 /datum/action/innate/strider/go_to_core/Activate()
 	var/mob/living/simple_animal/hostile/netherworld/striderfoot/S = owner
-	S.core.ckey = ckey
+	S.core.ckey = S.ckey
 
 /obj/effect/attached/joint
 	icon = 'icons/mob/animal.dmi'
