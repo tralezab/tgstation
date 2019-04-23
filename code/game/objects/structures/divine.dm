@@ -49,3 +49,46 @@
 		icon_state = "fountain"
 	else
 		icon_state = "fountain-red"
+
+/obj/structure/heroicshrine
+	name = "shrine of heroics"
+	desc = "The shrine of Tiket-Rasolve, an old god decimated by Nar'sie. It now holds minor domain in lavaland. \"Heroes of old, arise!\""
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "fountain"
+	anchored = TRUE
+	density = TRUE
+	var/used = FALSE
+	var/cooldown = 0
+
+/obj/structure/heroicshrine/Initialize()
+	..()
+	desc = "The shrine of Tiket-Rasolve, an old god decimated by Nar'sie. It now holds minor domain in lavaland. \"Heroes of [station_name()], arise!\""
+
+/obj/structure/heroicshrine/attack_hand(mob/living/user)
+	. = ..()
+	if(.)
+		return
+	playsound(src, 'sound/weapons/genhit.ogg', 25, 1)
+	if(used)
+		to_chat(user, "<span class='warning'>The shrine is broken...</span>")
+		return
+	if(cooldown > world.time)
+		to_chat(user, "<span class='notice'>You touch the shrine but nothing happens! Maybe try again later?</span>")
+		return
+	for(var/mob/Player in GLOB.mob_list)
+		if(Player.mind && Player.stat != DEAD && !isnewplayer(Player) && !isbrain(Player) && Player.client)
+			living_crew += Player
+	var/list/living_crew = list()
+	if(living_crew.len / GLOB.joined_player_list.len >= 25)
+		to_chat(user, "<span class='bold'>\"Come back when all hope seems lost.\"</span>")
+		cooldown = world.time + 3 MINUTES//kind of an intense calculation so lets have a cooldown
+		return
+	visible_message("<span class='notice'>[src] breaks apart in a blazing light!</span>")
+	var/hero = pick("Medium", "Mascot", "Sawbones")
+	var/datum/job/J = SSjob.GetJob(hero)
+		if(!J)
+		return
+	J.total_positions++
+	to_chat(user, "<span class='bold'>\"You have sought me out in your time of need. I have summoned a [hero] to help.\"</span>")
+	used = TRUE
+	
