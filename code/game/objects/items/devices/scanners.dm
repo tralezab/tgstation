@@ -177,6 +177,8 @@ GENE SCANNER
 		if(LAZYLEN(C.get_traumas()))
 			var/list/trauma_text = list()
 			for(var/datum/brain_trauma/B in C.get_traumas())
+				if(B.hidden)
+					continue
 				var/trauma_desc = ""
 				switch(B.resilience)
 					if(TRAUMA_RESILIENCE_SURGERY)
@@ -680,12 +682,12 @@ GENE SCANNER
 	add_fingerprint(user)
 	if (!M.has_trait(TRAIT_RADIMMUNE) && !M.has_trait(TRAIT_BADDNA)) //no scanning if its a husk or DNA-less Species
 		user.visible_message("<span class='notice'>[user] has analyzed [M]'s genetic sequence.</span>")
-		
+
 		gene_scan(M, user, src)
 	else
 
 		user.visible_message("<span class='notice'>[user] failed to analyse [M]'s genetic sequence.</span>", "<span class='warning'>[M] has no readable genetic sequence!</span>")
-		
+
 
 /obj/item/sequence_scanner/afterattack(obj/O, mob/user, proximity)
 	. = ..()
