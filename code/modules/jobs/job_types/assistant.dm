@@ -35,3 +35,23 @@ Assistant
 		uniform = /obj/item/clothing/under/color/grey
 	else
 		uniform = /obj/item/clothing/under/color/random
+
+/*
+Test Subject
+*/
+/datum/job/test_subject
+	title = "Test Subject"
+	flag = ASSISTANT
+	department_flag = MEDSCI //in the loosest terms
+	faction = "Station" //see comment above
+	total_positions = 1
+	spawn_positions = 3
+	supervisors = "nobody"
+	selection_color = "#dddddd"
+	access = list()
+	minimal_access = list()
+	outfit = /datum/outfit/job/assistant
+	antag_rep = 7
+	paycheck = PAYCHECK_NONE //what did you expect? sportiflop?
+	paycheck_department = ACCOUNT_CIV
+	display_order = JOB_DISPLAY_ORDER_ASSISTANT
