@@ -51,6 +51,9 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 	var/magic_fluff_string = "<span class='holoparasite'>You draw the Coder, symbolizing bugs and errors. This shouldn't happen! Submit a bug report!</span>"
 	var/tech_fluff_string = "<span class='holoparasite'>BOOT SEQUENCE COMPLETE. ERROR MODULE LOADED. THIS SHOULDN'T HAPPEN. Submit a bug report!</span>"
 	var/carp_fluff_string = "<span class='holoparasite'>CARP CARP CARP SOME SORT OF HORRIFIC BUG BLAME THE CODERS CARP CARP CARP</span>"
+	//gamemode stuff
+	var/upgrading = FALSE//whether artifacts will upgrade the guardian
+	unupgraded_type //what it was before finding an artifact
 
 /mob/living/simple_animal/hostile/guardian/Initialize(mapload, theme)
 	GLOB.parasites += src
@@ -327,12 +330,15 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 	return FALSE
 
 /mob/living/simple_animal/hostile/guardian/proc/Recall(forced)
-	if(!summoner || loc == summoner || (cooldown > world.time && !forced))
+	if(!summoner || loc == summoner || (cooldown > world.time && !forced) || can_Recall(forced))
 		return FALSE
 	new /obj/effect/temp_visual/guardian/phase/out(loc)
 
 	forceMove(summoner)
 	cooldown = world.time + 10
+	return TRUE
+
+/mob/living/simple_animal/hostile/guardian/proc/can_Recall(forced)
 	return TRUE
 
 /mob/living/simple_animal/hostile/guardian/proc/ToggleMode()
