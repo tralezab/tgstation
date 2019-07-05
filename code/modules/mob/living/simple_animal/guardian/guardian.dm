@@ -550,6 +550,9 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 		if("Gravitokinetic")
 			pickedtype = /mob/living/simple_animal/hostile/guardian/gravitokinetic
 
+		if("Astrological")
+			pickedtype = /mob/living/simple_animal/hostile/guardian/astrological
+
 	var/list/guardians = user.hasparasites()
 	if(guardians.len && !allowmultiple)
 		to_chat(user, "<span class='holoparasite'>You already have a [mob_name]!</span>" )
@@ -581,7 +584,7 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
 	possible_guardians = list("Assassin", "Chaos", "Charger", "Dextrous", "Explosive", "Lightning", "Protector", "Ranged", "Standard", "Support", "Gravitokinetic")
 
 /obj/item/guardiancreator/choose/wizard
-	possible_guardians = list("Assassin", "Chaos", "Charger", "Dextrous", "Explosive", "Lightning", "Protector", "Ranged", "Standard", "Gravitokinetic")
+	possible_guardians = list("Assassin", "Chaos", "Charger", "Dextrous", "Explosive", "Lightning", "Protector", "Ranged", "Standard", "Gravitokinetic", "Astrological")
 	allowmultiple = TRUE
 
 /obj/item/guardiancreator/tech
@@ -658,6 +661,8 @@ GLOBAL_LIST_EMPTY(parasites) //all currently existing/living guardians
  <b>Standard</b>: Devastating close combat attacks and high damage resist. Can smash through weak walls.<br>
  <br>
  <b>Gravitokinetic</b>: Attacks will apply crushing gravity to the target. Can target the ground as well to slow targets advancing on you, but this will affect the user.<br>
+ <br>
+ <b>Astrological</b>: Exclusive to you. Attacks are laughably weak, but they summon anomalous ghost meteors that will pass through anything to strike down it's target. This cannot activate on the user, for safety reasons.<br>
  <br>
 "}
 

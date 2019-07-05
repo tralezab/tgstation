@@ -25,21 +25,27 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	for(var/i = 0; i < number; i++)
 		spawn_meteor(meteortypes)
 
-/proc/spawn_meteor(list/meteortypes)
+/proc/spawn_meteor(list/meteortypes, atom/chasing)
 	var/turf/pickedstart
-	var/turf/pickedgoal
+	var/atom/pickedgoal = chasing
+	var/chasingatom = FALSE
+	if(pickedgoal)
+		chasingatom = TRUE
 	var/max_i = 10//number of tries to spawn meteor.
 	while(!isspaceturf(pickedstart))
 		var/startSide = pick(GLOB.cardinals)
 		var/startZ = pick(SSmapping.levels_by_trait(ZTRAIT_STATION))
 		pickedstart = spaceDebrisStartLoc(startSide, startZ)
-		pickedgoal = spaceDebrisFinishLoc(startSide, startZ)
+		if(!pickedgoal)
+			pickedgoal = spaceDebrisFinishLoc(startSide, startZ)
 		max_i--
 		if(max_i<=0)
 			return
 	var/Me = pickweight(meteortypes)
 	var/obj/effect/meteor/M = new Me(pickedstart, pickedgoal)
 	M.dest = pickedgoal
+	if(chasingatom)
+		M.atomchasing = pickedgoal
 
 /proc/spaceDebrisStartLoc(startSide, Z)
 	var/starty
@@ -96,10 +102,12 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	var/meteorsound = 'sound/effects/meteorimpact.ogg'
 	var/z_original
 	var/threat = 0 // used for determining which meteors are most interesting
+	var/atom/atomchasing //if we're aiming at someone instead
 	var/lifetime = DEFAULT_METEOR_LIFETIME
 	var/timerid = null
 	var/list/meteordrop = list(/obj/item/stack/ore/iron)
 	var/dropamt = 2
+	var/ignoreturfs = FALSE //for the phantom meteor, it makes the meteor only go off when hitting someone.
 
 /obj/effect/meteor/Move()
 	if(z != z_original || loc == dest)
@@ -110,7 +118,8 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 
 	if(.)//.. if did move, ram the turf we get in
 		var/turf/T = get_turf(loc)
-		ram_turf(T)
+		if(ram_check(T))
+			ram_turf(T)
 
 		if(prob(10) && !isspaceturf(T))//randomly takes a 'hit' from ramming
 			get_hit()
@@ -134,9 +143,13 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 
 /obj/effect/meteor/Bump(atom/A)
 	if(A)
-		ram_turf(get_turf(A))
-		playsound(src.loc, meteorsound, 40, 1)
-		get_hit()
+		if(ram_check(A))
+			ram_turf(get_turf(A))
+			playsound(src.loc, meteorsound, 40, 1)
+			get_hit()
+
+/obj/effect/meteor/proc/ram_check(atom/A)
+	return TRUE
 
 /obj/effect/meteor/proc/ram_turf(turf/T)
 	//first bust whatever is in the turf
@@ -344,6 +357,23 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	..()
 	if(prob(20))
 		explosion(src.loc,2,4,6,8)
+
+//Holoparasite ghost meteor. SPOOOKY? Nah.
+/obj/effect/meteor/phantom
+	name = "phantom meteor"
+	icon_state = "flaming"
+	desc = "An unexplainable anomaly of space."
+	alpha = 175
+	hits = 1
+	hitpwr = 2
+	meteorsound = 'sound/effects/bamf.ogg'
+	meteordrop = list()
+	threat = 50
+
+/obj/effect/meteor/phantom/ram_check(turf/T)
+	if(atomchasing in T)
+		return TRUE
+	return FALSE //don't ram anything that doesn't have your target.
 
 //////////////////////////
 //Spookoween meteors
