@@ -107,7 +107,6 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	var/timerid = null
 	var/list/meteordrop = list(/obj/item/stack/ore/iron)
 	var/dropamt = 2
-	var/ignoreturfs = FALSE //for the phantom meteor, it makes the meteor only go off when hitting someone.
 
 /obj/effect/meteor/Move()
 	if(z != z_original || loc == dest)
@@ -370,10 +369,10 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	meteordrop = list()
 	threat = 50
 
-/obj/effect/meteor/phantom/ram_check(turf/T)
-	if(atomchasing in T)
+/obj/effect/meteor/phantom/ram_check(atom/A)
+	if(atomchasing in A)//we collide if our target is there...
 		return TRUE
-	return FALSE //don't ram anything that doesn't have your target.
+	return FALSE //otherwise, just pass through it.
 
 //////////////////////////
 //Spookoween meteors
