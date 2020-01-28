@@ -167,3 +167,118 @@
 /obj/item/clothing/mask/chameleon/gps/Initialize()
 	. = ..()
 	AddComponent(/datum/component/gps, "Encrypted Signal")
+
+//crystal prisoner shit//
+
+/obj/item/clothing/mask/gas/evilskull
+	name = "skull mask"
+	desc = "A very evil looking skull mask."
+	icon_state = "eskull"
+	item_state = "eskull"
+	//no armor on purpose- the crystal prisoner themselves need to be weak
+	flags_inv = HIDEEARS|HIDEEYES|HIDEFACE|HIDEFACIALHAIR
+	strip_delay = 100
+	var/image/red_eyes
+
+/obj/item/clothing/mask/gas/evilskull/Initialize()
+	. = ..()
+	red_eyes = image('icons/mob/human_face.dmi', "eyes_glow_noanim")
+	red_eyes.color = "#FF0000"
+
+/obj/item/clothing/mask/gas/evilskull/equipped(mob/user, slot, initial = FALSE)
+	..()
+	if(slot == ITEM_SLOT_MASK)
+		user.add_overlay(red_eyes)
+
+/obj/item/clothing/mask/gas/evilskull/dropped(mob/user, silent = FALSE)
+	..()
+	user.cut_overlay(red_eyes)
+
+/obj/item/clothing/suit/evilgarb
+	name = "evil robes"
+	desc = "You can't be evil if you don't look the part. Or, maybe it's that enough evil people look nice in this world and we really need a villain who is down to earth with their look, someone who is honest. Honestly evil."
+	icon_state = "evilgarb"
+	item_state = "b_suit"
+	body_parts_covered = CHEST|GROIN|LEGS|ARMS
+	flags_inv = HIDEJUMPSUIT
+
+
+//crystal prisoner base construction
+
+//throne, you sit on it to use the dungeon builder. don't lose it!
+/obj/structure/chair/evil
+	icon_state = "wooden_chair"
+	name = "dark throne"
+	desc = "What dungeon is complete without the evil throne?"
+	max_integrity = 70
+	item_chair = null
+	var/obj/machinery/computer/camera_advanced/dungeon/camera_machine
+
+/obj/structure/chair/evil/Initialize()
+	. = ..()
+	camera_machine = new(src)
+
+/obj/structure/chair/evil/post_buckle_mob(mob/living/M)
+	. = ..()
+	if(M.mind?.assigned_role == "crystal prisoner")
+		to_chat(M, "<span class='notice'>You feel the heart of the dungeon embrace you...</span>")
+		camera_machine.attack_hand(M) //this has some fail cases but they will never happen as long as one person only can buckle in
+	else
+		to_chat(M, "<span class='warning'>You feel the heart of the dungeon reject you. You should really destroy this chair.</span>")
+
+/obj/structure/chair/evil/post_unbuckle_mob(mob/living/M)
+	. = ..()
+	if(camera_machine.current_user == M)
+		camera_machine.remove_eye_control(M)
+
+/obj/structure/chair/evil/Destroy()
+	..()
+	qdel(camera_machine)
+
+/mob/camera/aiEye/remote/dungeon_construction
+	name = "all seeing eye"
+	icon = 'icons/obj/mining.dmi'
+	icon_state = "construction_drone"
+	var/tiles_count = 20 //how many tiles you can go from an area before getting pulled back to the throne
+	var/throne
+
+/mob/camera/aiEye/remote/dungeon_construction/setLoc(var/t)
+	var/area/curr_area = get_area(t)
+	if(istype(curr_area, /area/ruin/unpowered/crystal_dungeon))
+		if(tiles_count != initial(tiles_count))
+			tiles_count = 20
+		return ..()
+	tiles_count--
+	if(!tiles_count)
+		//to_chat("you got sent back")
+		forceMove(throne)
+		to_chat(world, "sent back")
+
+/obj/item/construction/rcd/dungeon //dungeon rcd, charged by the hand of darkness so different costs
+	max_matter = 300 //1 body = 30 objects
+	no_ammo_message = "<span class='warning'>You are out of power. Use the staff on the throne to recharge.</span>"
+	delay_mod = 0.5
+
+
+/obj/machinery/computer/camera_advanced/base_construction/dungeon
+	off_action = /datum/action/innate/dungeon/help //there should be no camera end here because the chair unbuckling does it
+	var/obj/item/construction/rcd/dungeon/RCD //Internal RCD. The computer passes user commands to this in order to avoid massive copypaste.
+
+	var/wallcost = 10
+	var/floorcost = 1
+	launchcost = 5
+	var/deconcost = 10
+
+	var/walldelay = 10
+	var/floordelay = 10
+	var/decondelay = 15
+
+/datum/action/innate/dungeon
+	icon_icon = 'icons/mob/actions/actions_animal.dmi'
+	background_icon_state = "bg_dungeon"
+
+/datum/action/innate/dungeon/help
+	name = "Help"
+	desc = "Use this to learn how to use the dungeon heart correctly."
+	button_icon_state = "lay_web"
+

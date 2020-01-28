@@ -29,6 +29,27 @@
 	icon_state = "terrarium_open"
 	density = TRUE
 
+/obj/structure/fluff/cracked_crystal //crystal with the prisoner inside. breaks after 10 seconds, freeing the prisoner.
+	name = "cracked crystal"
+	desc = "The crystal has cracked, and will soon open."
+	icon = 'icons/obj/lavaland/spawners64x64.dmi'
+	icon_state = "crystal_prison"
+	density = TRUE
+	deconstructible = FALSE
+	pixel_x = -16
+
+/obj/structure/fluff/cracked_crystal/Initialize()
+	. = ..()
+	filters += filter(type="drop_shadow", size=5, offset=2, color= "#FF0000") //give some way to know he's coming out
+
+/obj/structure/fluff/cracked_crystal/proc/breakfree(var/mob/living/freed, flavour)
+	new /obj/effect/decal/cleanable/glass(get_turf(src))
+	playsound('sound/effects/glassbr1.ogg', 50, TRUE, -1)
+	visible_message("<span class='warning'>[src] shatters open!")
+	freed.forceMove(get_turf(src))
+	to_chat(freed, "\n<span class='bold'>[flavour]</span>")
+	qdel(src)
+
 /obj/structure/fluff/empty_sleeper //Empty sleepers are created by a good few ghost roles in lavaland.
 	name = "empty sleeper"
 	desc = "An open sleeper. It looks as though it would be awaiting another patient, were it not broken."

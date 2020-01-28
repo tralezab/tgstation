@@ -1,5 +1,62 @@
 //Objects that spawn ghosts in as a certain role when they click on it, i.e. away mission bartenders.
 
+//Crystal prison: Spawns in broken down dungeons on lavaland. Ghosts become the crystal prisoner and are advised to begin growing a zombie army while rebuilding their dungeon.
+/obj/effect/mob_spawn/human/crystal
+	name = "crystal prison"
+	desc = "A crystal, with someone trapped inside..."
+	mob_name = "a crystal prisoner"
+	icon = 'icons/obj/lavaland/spawners64x64.dmi'
+	icon_state = "crystal_prison"
+	density = TRUE
+	roundstart = FALSE
+	death = FALSE
+	show_flavour = FALSE
+	pixel_x = -16
+	outfit = /datum/outfit/crystal_prisoner
+	short_desc = "You're the crystal prisoner!"
+	flavour_text = "I'm finally free! Yesss! Now, I must rebuild my former glory!  \
+	I may use the 'recall powers' button to refresh my knowledge on how to progress, if need be. \
+	Remember to keep up a good population of undead. They fuel all of your powers."
+	assignedrole = "crystal prisoner"
+
+/obj/effect/mob_spawn/human/crystal/special(mob/living/new_spawn)
+	var/evil_first = new_spawn.gender == MALE ? pick(GLOB.first_names_male) : pick(GLOB.first_names_female)
+	new_spawn.fully_replace_character_name(null, "[evil_first] the Crystal Prisoner")
+	if(ishuman(new_spawn))
+		var/mob/living/carbon/human/H = new_spawn
+		H.hair_color = sanitize_hexcolor("#6300FF")
+		H.skin_tone = "pitchblack"
+		H.underwear = "Nude"
+		H.update_body()
+		H.update_hair()
+
+/obj/effect/mob_spawn/human/crystal/create(ckey, newname) //starts in the crystal
+	var/obj/structure/fluff/cracked_crystal/crystal = new (get_turf(src))
+	. = ..()
+	var/mob/living/carbon/human/prisoner = .
+	to_chat(prisoner, "<span class='big bold'>[short_desc]</span>")
+	prisoner.forceMove(crystal)
+	addtimer(CALLBACK(crystal, /obj/structure/fluff/cracked_crystal/proc/breakfree, prisoner, flavour_text), 10 SECONDS)
+
+/datum/outfit/crystal_prisoner
+	name = "Crystal Prisoner"
+	uniform = null
+	suit = /obj/item/clothing/suit/evilgarb
+	back = null
+	belt = null
+	gloves = /obj/item/clothing/gloves/color/red
+	shoes = /obj/item/clothing/shoes/sandal
+	head = null
+	mask = /obj/item/clothing/mask/gas/evilskull
+	neck = null
+	ears = null
+	glasses = null
+	id = null
+	l_pocket = null
+	r_pocket = null
+	r_hand = null
+	l_hand = null
+
 //Preserved terrarium/seed vault: Spawns in seed vault structures in lavaland. Ghosts become plantpeople and are advised to begin growing plants in the room near them.
 /obj/effect/mob_spawn/human/seed_vault
 	name = "preserved terrarium"

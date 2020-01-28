@@ -266,6 +266,8 @@
 			. = "fff4e6"
 		if("orange")
 			. = "ffc905"
+		if("pitchblack")
+			. = "000000"
 
 /mob/living/carbon/proc/Digitigrade_Leg_Swap(swap_back)
 	var/body_plan_changed = FALSE

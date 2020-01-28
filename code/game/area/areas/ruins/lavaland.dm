@@ -101,3 +101,6 @@
 //ash walker nest
 /area/ruin/unpowered/ash_walkers
 	icon_state = "red"
+
+/area/ruin/unpowered/crystal_dungeon
+	name = "Crystal Dungeon"
