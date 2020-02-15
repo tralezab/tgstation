@@ -2173,3 +2173,5 @@ All effects don't start immediately, but rather get worse over time; the rate is
 		M.adjust_fire_stacks(1)
 		M.IgniteMob()
 	..()
+
+/datum/reagent/consumable/ethanol/horrorpoison

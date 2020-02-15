@@ -1,3 +1,6 @@
+
+//also contains headslugs below
+
 #define TRUE_CHANGELING_REFORM_WAIT 30 SECONDS //needs to wait 30 seconds before it can reform
 #define TRUE_CHANGELING_PASSIVE_HEAL 3 //Amount of brute damage restored per tick
 #define TRUE_CHANGELING_FORCED_REFORM 60 SECONDS
@@ -116,8 +119,24 @@
 				closest_target_distance = dist
 	if(closest_target)
 		return
+	grasp_victim = closest_target
 	visible_message("<span class='userdanger'>a tendril shoots out of [src] and grabs onto [closest_target]!</span>", "<span class='userdanger'>Our target is [closest_target]! Attacking them will lunge in their direction!</span>")
-	grasp_beam = Beam(beam_target, "plasmabeam", time= 3 SECONDS, maxdistance=7, beam_type=/obj/effect/ebeam/horror)
+	grasp_beam = Beam(src, grasp_victim, beam_icon_state="horrorgrasp", time= 3 SECONDS, maxdistance=7, beam_type=/obj/effect/ebeam/horror)
+	playsound(src, 'sound/effects/gravhit.ogg', 100, TRUE)
+	RegisterSignal(grasp_victim, COMSIG_MOVABLE_MOVED, .proc/__distance_check)
+
+/mob/living/simple_animal/hostile/guardian/gravitokinetic/proc/add_gravity(atom/A, new_gravity = 2)
+	A.AddElement(/datum/element/forced_gravity, new_gravity)
+	gravito_targets[A] = new_gravity
+
+/mob/living/simple_animal/hostile/guardian/gravitokinetic/proc/horrorform_ungrasp()
+	UnregisterSignal(target, COMSIG_MOVABLE_MOVED)
+	target.RemoveElement(/datum/element/forced_gravity, gravito_targets[target])
+	gravito_targets -= target
+
+/mob/living/simple_animal/hostile/guardian/gravitokinetic/proc/__distance_check(atom/movable/AM, OldLoc, Dir, Forced)
+	if(get_dist(src, grasp_victim) > gravity_power_range)
+		horrorform_ungrasp()
 
 /datum/action/innate/changeling
 	icon_icon = 'icons/mob/changeling.dmi'
@@ -151,6 +170,9 @@
 #undef TRUE_CHANGELING_REFORM_THRESHOLD
 #undef TRUE_CHANGELING_PASSIVE_HEAL
 #undef TRUE_CHANGELING_FORCED_REFORM
+
+/obj/effect/ebeam/horror
+	name = "tendrils"
 
 //headslug
 
