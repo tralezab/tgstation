@@ -35,7 +35,7 @@
 	timeout = 8 MINUTES
 
 /datum/mood_event/blessing/super
-	description = "<span class='nicegreen'>I've been blessed.</span>\n"
+	description = "<span class='nicegreen'>I've been protected by a higher power!</span>\n"
 	mood_change = 15
 	timeout = 8 MINUTES
 
