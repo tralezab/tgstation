@@ -123,7 +123,7 @@
 	chaos_level = new_level
 	switch(chaos_level)
 		if(SEC_LEVEL_GREEN)
-				godmessage = "[GLOB.deity] is silent, any murmurs of his power have vanished."
+			godmessage = "[GLOB.deity] is silent, any murmurs of his power have vanished."
 		if(SEC_LEVEL_BLUE)
 			if(increase)
 				godmessage = "You feel a faint buzz of holy energies for just a moment."
@@ -135,8 +135,8 @@
 			else
 				godmessage = "[GLOB.deity] is satisfied with the stop of the delta event. The wings are your reward."
 		if(SEC_LEVEL_DELTA)
-				godmessage = "You have been given the full power of [GLOB.deity] to save the station from crisis. [GLOB.deity] watches over you."
-				wings = TRUE
+			godmessage = "You have been given the full power of [GLOB.deity] to save the station from crisis. [GLOB.deity] watches over you."
+			wings = TRUE
 	if(godmessage)
 		for(var/i in GLOB.player_list)
 			if(!isliving(i))
@@ -144,7 +144,7 @@
 			var/mob/living/am_i_holy_living = i
 			if(!am_i_holy_living.mind?.holy_role)
 				continue
-			to_chat(user, "<span class='warning'>[godmessage]</span>")
+			to_chat(am_i_holy_living, "<span class='warning'>[godmessage]</span>")
 			if(wings && ishuman(am_i_holy_living))
 				var/mob/living/carbon/human/holyhumie = am_i_holy_living
 				holyhumie.dna.species.GiveSpeciesFlight()
@@ -152,20 +152,19 @@
 /datum/religion_sect/fallen/sect_bless(mob/living/L, mob/living/user)
 	switch(chaos_level)
 		if(SEC_LEVEL_GREEN to SEC_LEVEL_BLUE)
+			. = FALSE
 			to_chat(user, "<span class='warning'>[GLOB.deity]... where are you?!</span>")
 			SEND_SIGNAL(L, COMSIG_ADD_MOOD_EVENT, "forsaken", /datum/mood_event/forsaken)
-			. = FALSE
-		if(2)
-			. =
-		if(3)
+		if(SEC_LEVEL_RED to SEC_LEVEL_DELTA)
 			if(!ishuman(L))
-				return ..()
+				..()
+				return TRUE
+			. = TRUE
 			var/mob/living/carbon/human/H = L
 			for(var/X in H.bodyparts)
 				var/obj/item/bodypart/BP = X
 				if(BP.status == BODYPART_ROBOTIC)
 					to_chat(user, "<span class='warning'>[GLOB.deity] refuses to heal this metallic taint!</span>")
-					. = TRUE
 
 			var/heal_amt = 20
 			var/list/hurt_limbs = H.get_damaged_bodyparts(1, 1, null, BODYPART_ORGANIC)
