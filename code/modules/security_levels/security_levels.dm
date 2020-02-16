@@ -19,6 +19,7 @@ GLOBAL_VAR_INIT(security_level, SEC_LEVEL_GREEN)
 
 	//Will not be announced if you try to set to the same level as it already is
 	if(level >= SEC_LEVEL_GREEN && level <= SEC_LEVEL_DELTA && level != GLOB.security_level)
+		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_SECURITYLEVEL_CHANGED, level)
 		switch(level)
 			if(SEC_LEVEL_GREEN)
 				minor_announce(CONFIG_GET(string/alert_green), "Attention! Security level lowered to green:")

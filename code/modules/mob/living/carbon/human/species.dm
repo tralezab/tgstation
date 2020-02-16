@@ -1939,8 +1939,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			ToggleFlight(H)
 			return FALSE
 		return TRUE
-	else
-		return FALSE
+	return FALSE
 
 /datum/species/proc/CanFly(mob/living/carbon/human/H)
 	if(H.stat || !(H.mobility_flags & MOBILITY_STAND))

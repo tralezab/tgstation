@@ -103,3 +103,82 @@
 	. = ..()
 	if(..())
 		qdel(I)
+
+//Fallen Sect
+
+/datum/religion_sect/fallen
+	name = "Sleeping Gods"
+	desc = "A sect that has fallen into dormancy."
+	convert_opener = "The gods have been silent. Where have you gone?!<br>You have no powers... But, in the darkest hour you will rise to save them all."
+	alignment = ALIGNMENT_GOOD
+	var/chaos_level = 0 //gains one point for each level of security alert active
+
+/datum/religion_sect/fallen/on_select()
+	RegisterSignal(SSdcs, COMSIG_GLOB_SECURITYLEVEL_CHANGED, .proc/alert_change)
+
+/datum/religion_sect/fallen/proc/alert_change(new_level)
+	var/increase = chaos_level < new_level ? TRUE : FALSE
+	var/godmessage = ""
+	var/wings = FALSE
+	chaos_level = new_level
+	switch(chaos_level)
+		if(SEC_LEVEL_GREEN)
+				godmessage = "[GLOB.deity] is silent, any murmurs of his power have vanished."
+		if(SEC_LEVEL_BLUE)
+			if(increase)
+				godmessage = "You feel a faint buzz of holy energies for just a moment."
+			else
+				godmessage = "You feel your powers fade as [GLOB.deity] returns to it's slumber..."
+		if(SEC_LEVEL_RED)
+			if(increase)
+				godmessage = "You feel your powers surge as [GLOB.deity] awakens!"
+			else
+				godmessage = "[GLOB.deity] is satisfied with the stop of the delta event. The wings are your reward."
+		if(SEC_LEVEL_DELTA)
+				godmessage = "You have been given the full power of [GLOB.deity] to save the station from crisis. [GLOB.deity] watches over you."
+				wings = TRUE
+	if(godmessage)
+		for(var/i in GLOB.player_list)
+			if(!isliving(i))
+				continue
+			var/mob/living/am_i_holy_living = i
+			if(!am_i_holy_living.mind?.holy_role)
+				continue
+			to_chat(user, "<span class='warning'>[godmessage]</span>")
+			if(wings && ishuman(am_i_holy_living))
+				var/mob/living/carbon/human/holyhumie = am_i_holy_living
+				holyhumie.dna.species.GiveSpeciesFlight()
+
+/datum/religion_sect/fallen/sect_bless(mob/living/L, mob/living/user)
+	switch(chaos_level)
+		if(SEC_LEVEL_GREEN to SEC_LEVEL_BLUE)
+			to_chat(user, "<span class='warning'>[GLOB.deity]... where are you?!</span>")
+			SEND_SIGNAL(L, COMSIG_ADD_MOOD_EVENT, "forsaken", /datum/mood_event/forsaken)
+			. = FALSE
+		if(2)
+			. =
+		if(3)
+			if(!ishuman(L))
+				return ..()
+			var/mob/living/carbon/human/H = L
+			for(var/X in H.bodyparts)
+				var/obj/item/bodypart/BP = X
+				if(BP.status == BODYPART_ROBOTIC)
+					to_chat(user, "<span class='warning'>[GLOB.deity] refuses to heal this metallic taint!</span>")
+					. = TRUE
+
+			var/heal_amt = 20
+			var/list/hurt_limbs = H.get_damaged_bodyparts(1, 1, null, BODYPART_ORGANIC)
+
+			if(hurt_limbs.len)
+				for(var/X in hurt_limbs)
+					var/obj/item/bodypart/affecting = X
+					if(affecting.heal_damage(heal_amt, heal_amt, null, BODYPART_ORGANIC))
+						H.update_damage_overlays()
+				H.visible_message("<span class='notice'>[user] super heals [H] with the power of [GLOB.deity]!</span>")
+				to_chat(H, "<span class='boldnotice'>May the power of [GLOB.deity] compel you to be super healed!</span>")
+				SEND_SIGNAL(H, COMSIG_ADD_MOOD_EVENT, "blessing", /datum/mood_event/blessing/super)
+				for(var/i in 1 to 3)
+					playsound(user, "punch", 25, TRUE, -1)
+					sleep(1)
+			return TRUE
