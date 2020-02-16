@@ -255,6 +255,8 @@ SUBSYSTEM_DEF(mapping)
 				mining_ztraits += ZTRAITS_LAVAWORLD
 			if(2)
 				mining_ztraits += ZTRAITS_SNOWWORLD
+			if(2)
+				mining_ztraits += ZTRAITS_SNOWWORLD
 	else
 		INIT_ANNOUNCE("WARNING: An unknown minetype (or no minetype) '[config.minetype]' was set! This will SERIOUSLY break mining, so setting it to default!")
 		mining_ztraits += ZTRAITS_LAVAWORLD

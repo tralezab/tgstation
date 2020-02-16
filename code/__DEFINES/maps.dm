@@ -94,6 +94,13 @@ require only minor tweaks.
 	ZTRAIT_MINERAL_ICON = 'icons/turf/walls/icerock_wall.dmi', \
 	ZTRAIT_WEATHER_SNOWSTORM = TRUE )
 
+#define ZTRAITS_WASTELAND list(\
+	ZTRAIT_BASETURF = /turf/open/lava/smooth/wasteland, \
+	ZTRAIT_THEMATIC_PLATING = /turf/open/floor/plating/asteroid/basalt/wasteland, \
+	ZTRAIT_THEMATIC_LAVA = /turf/open/lava/smooth/wasteland, \
+	ZTRAIT_MINERAL_ICON = 'icons/turf/walls/icerock_wall.dmi', \
+	ZTRAIT_WEATHER_SNOWSTORM = TRUE )
+
 #define DL_NAME "name"
 #define DL_TRAITS "traits"
 #define DECLARE_LEVEL(NAME, TRAITS) list(DL_NAME = NAME, DL_TRAITS = TRAITS)
