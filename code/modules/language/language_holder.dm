@@ -319,6 +319,9 @@ Key procs
 	spoken_languages = list(/datum/language/common = list(LANGUAGE_ATOM),
 							/datum/language/calcic = list(LANGUAGE_ATOM))
 
+/datum/language_holder/skeleton/critter
+	selected_language = /datum/language/calcic
+
 /datum/language_holder/ethereal
 	understood_languages = list(/datum/language/common = list(LANGUAGE_ATOM),
 								/datum/language/voltaic = list(LANGUAGE_ATOM))

@@ -69,13 +69,55 @@
 	var/area/A = get_area(src)
 	team = ashteam
 	if(A)
-		notify_ghosts("An ash walker egg is ready to hatch in \the [A.name].", source = src, action=NOTIFY_ATTACK, flashwindow = FALSE, ignore_key = POLL_IGNORE_ASHWALKER)
+		notify_ghosts("An ash walker egg is ready to hatch in \the [A.name].", source = src, action=NOTIFY_ATTACK, flashwindow = FALSE, ignore_key = POLL_IGNORE_GUARDIAN)
 
 /datum/outfit/ashwalker
 	name ="Ashwalker"
 	head = /obj/item/clothing/head/helmet/gladiator
 	uniform = /obj/item/clothing/under/costume/gladiator/ash_walker
 
+/obj/effect/mob_spawn/human/guardian
+	name = "rattling bones"
+	desc = "a collapsed set of bones, faintly glossed in eerie magic and humming with a spark of life."
+	mob_name = "a reanimated guardian"
+	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
+	icon_state = "large_egg"
+	mob_species = /datum/species/lizard/ashwalker
+	outfit = /datum/outfit/guardian
+	roundstart = FALSE
+	death = FALSE
+	anchored = FALSE
+	move_resist = MOVE_FORCE_NORMAL
+	density = FALSE
+	short_desc = "You are a reanimated guardian. The moon has given you a shell to stop the invaders."
+	flavour_text = "The moon's secrets must not be uncovered. \
+	You have been given a second chance from something below. You must stop the invaders, and recycle them back into the moon so they may stop adventurers like yourself. \
+	Bring bodies to the altar to give them a chance at new purpose."
+	assignedrole = "Reanimated Guardian"
+	var/datum/team/ashwalkers/team
+
+/obj/effect/mob_spawn/human/guardian/special(mob/living/new_spawn)
+	new_spawn.fully_replace_character_name(null,random_unique_lizard_name(gender))
+	to_chat(new_spawn, "<b>Drag the corpses of men and beasts to the altar. It will absorb them to create more guardians. Don't leave the altar undefended, protect it with your... life? Glory to the secrets of the Moon!</b>")
+
+	new_spawn.mind.add_antag_datum(/datum/antagonist/ashwalker, team)
+
+	if(ishuman(new_spawn))
+		var/mob/living/carbon/human/H = new_spawn
+		H.underwear = "Nude"
+		H.update_body()
+
+/obj/effect/mob_spawn/human/guardian/Initialize(mapload, datum/team/ashwalkers/ashteam)
+	. = ..()
+	var/area/A = get_area(src)
+	team = ashteam
+	if(A)
+		notify_ghosts("A reanimated guardian shell has been created in \the [A.name].", source = src, action=NOTIFY_ATTACK, flashwindow = FALSE, ignore_key = POLL_IGNORE_GUARDIAN)
+
+/datum/outfit/guardian
+	name ="Reanimated Guardian"
+	head = /obj/item/clothing/head/helmet/gladiator
+	uniform = /obj/item/clothing/under/costume/gladiator/ash_walker
 
 //Timeless prisons: Spawns in Wish Granter prisons in lavaland. Ghosts become age-old users of the Wish Granter and are advised to seek repentance for their past.
 /obj/effect/mob_spawn/human/exile

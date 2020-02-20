@@ -57,3 +57,15 @@
 					H.emote("sigh")
 		H.reagents.remove_reagent(chem.type, chem.metabolization_rate)
 		return TRUE
+
+
+
+/*
+ Skeleton subspecies used on ice moon
+*/
+/datum/species/skeleton/critter
+	name = "Critter Skeleton"
+	id = "critterskeleton"
+	limbs_id = "skeleton"
+	inherent_traits = list(TRAIT_CHUNKYFINGERS)
+	species_language_holder = /datum/language_holder/skeleton/critter
