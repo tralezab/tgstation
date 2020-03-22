@@ -8,10 +8,13 @@
 	text_lose_indication = "<span class='notice'>You feel oddly exposed.</span>"
 	time_coeff = 5
 	instability = 25
+	///used for restoring alpha, it is set to whatever alpha the user had when they took chameleon
+	var/initial_alpha = 255
 
 /datum/mutation/human/chameleon/on_acquiring(mob/living/carbon/human/owner)
 	if(..())
 		return
+	initial_alpha = owner.alpha
 	owner.alpha = CHAMELEON_MUTATION_DEFAULT_TRANSPARENCY
 	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, .proc/on_move)
 	RegisterSignal(owner, COMSIG_HUMAN_EARLY_UNARMED_ATTACK, .proc/on_attack_hand)
@@ -30,5 +33,5 @@
 /datum/mutation/human/chameleon/on_losing(mob/living/carbon/human/owner)
 	if(..())
 		return
-	owner.alpha = 255
+	owner.alpha = initial_alpha
 	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)

@@ -40,3 +40,15 @@
 /datum/generecipe/martyrdom
 	required = "/datum/mutation/human/strong; /datum/mutation/human/stimmed"
 	result = MARTYRDOM
+
+/datum/generecipe/direcough
+	required = "/datum/mutation/human/cough; /datum/mutation/human/spastic"
+	result = DIRECOUGH
+
+/datum/generecipe/nicettes
+	required = "/datum/mutation/human/tourettes; /datum/mutation/human/smile"
+	result = NICETTES
+
+/datum/generecipe/epilepsy_dance
+	required = "/datum/mutation/human/epilepsy; /datum/mutation/human/strong"
+	result = EPILEPSY_DANCE

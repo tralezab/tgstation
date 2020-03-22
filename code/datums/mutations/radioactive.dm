@@ -6,11 +6,10 @@
 	time_coeff = 5
 	instability = 5
 	difficulty = 8
-	power_coeff = 1
 
 
 /datum/mutation/human/radioactive/on_life()
-	radiation_pulse(owner, 20 * GET_MUTATION_POWER(src))
+	radiation_pulse(owner, 120 - (dna.stability)) //at least 20 + 100 - stability (100) so by default 20 pulse which increases the more unstable you are
 
 /datum/mutation/human/radioactive/New(class_ = MUT_OTHER, timer, datum/mutation/human/copymut)
 	..()

@@ -73,34 +73,12 @@
 		to_chat(user, "<span class='notice'>You insert [I].</span>")
 		updateUsrDialog()
 		return
-	if (istype(I, /obj/item/chromosome))
-		if(LAZYLEN(stored_chromosomes) < max_chromosomes)
-			I.forceMove(src)
-			stored_chromosomes += I
-			to_chat(user, "<span class='notice'>You insert [I].</span>")
-		else
-			to_chat(user, "<span class='warning'>You cannot store any more chromosomes!</span>")
-		return
 	if(istype(I, /obj/item/dnainjector/activator))
 		var/obj/item/dnainjector/activator/A = I
 		if(A.used)
 			to_chat(user,"<span class='notice'>Recycled [I].</span>")
-			if(A.research)
-				if(prob(60))
-					var/c_typepath = generate_chromosome()
-					var/obj/item/chromosome/CM = new c_typepath (drop_location())
-					if(LAZYLEN(stored_chromosomes) < max_chromosomes)
-						CM.forceMove(src)
-						stored_chromosomes += CM
-						to_chat(user,"<span class='notice'>[capitalize(CM.name)] added to storage.</span>")
-					else
-						to_chat(user, "<span class='warning'>You cannot store any more chromosomes!</span>")
-						to_chat(user, "<span class='notice'>[capitalize(CM.name)] added on top of the console.</span>")
-				else
-					to_chat(user, "<span class='notice'>There was not enough genetic data to extract a viable chromosome.</span>")
 			qdel(I)
 			return
-
 	else
 		return ..()
 
@@ -387,12 +365,6 @@
 				else
 					temp_html += "<td><a href='?src=[REF(src)];task=combine;num=[i]'>Combine</a></td></tr>"
 			temp_html += "</table><br>"
-			temp_html += "<h3>Chromosome Storage:<br></h3>"
-			temp_html += "<table>"
-			for(var/i in 1 to stored_chromosomes.len)
-				var/obj/item/chromosome/CM = stored_chromosomes[i]
-				temp_html += "<td><a href='?src=[REF(src)];task=ejectchromosome;num=[i]'>[CM.name]</a></td><br>"
-			temp_html += "</table>"
 		if("advinjector")
 			temp_html += status
 			temp_html += buttons
@@ -477,7 +449,6 @@
 	var/scrambled = FALSE
 	var/instability
 	var/mob/living/carbon/viable_occupant = get_viable_occupant()
-	var/datum/mutation/human/HM = get_valid_mutation(mutation)
 
 	if(viable_occupant)
 		var/datum/mutation/human/M = viable_occupant.dna.get_mutation(mutation)
@@ -505,21 +476,11 @@
 				mutcolor = "average"
 			if(NEGATIVE)
 				mutcolor = "bad"
-		if(HM)
-			instability *= GET_MUTATION_STABILIZER(HM)
 		temp_html += "<div class='statusDisplay'><div class='statusLine'><span class='[mutcolor]'><b>[mut_name]</b></span><small> ([alias])</small><br>"
 		temp_html += "<div class='statusLine'>Instability : [round(instability)]</span><br>"
 	else
 		temp_html += "<div class='statusDisplay'><div class='statusLine'><b>[alias]</b><br>"
 	temp_html += "<div class='statusLine'>[mut_desc]<br></div>"
-	if(active && !storage_slot)
-		if(HM?.can_chromosome && (HM in viable_occupant.dna.mutations))
-			var/i = viable_occupant.dna.mutations.Find(HM)
-			var/chromosome_name = "<a href='?src=[REF(src)];task=applychromosome;path=[mutation];num=[i];'>----</a>"
-			if(HM.chromosome_name)
-				chromosome_name = HM.chromosome_name
-			temp_html += "<div class='statusLine'>Chromosome status: [chromosome_name]<br></div>"
-		temp_html += "<div class='statusLine'>Compatible chromosomes: [jointext(HM.valid_chrom_list, ", ")]<br></div>"
 
 	temp_html += "<div class='statusLine'>Sequence:<br><br></div>"
 	if(!scrambled)
@@ -640,7 +601,7 @@
 					buffer_slot.Cut()
 		if("transferbuffer")
 			if(num && viable_occupant)
-				switch(href_list["text"])                                                                            //Numbers are this high because other way upgrading laser is just not worth the hassle, and i cant think of anything better to inmrove
+				switch(href_list["text"])//Numbers are this high because other way upgrading laser is just not worth the hassle, and i cant think of anything better to improve
 					if("ui")
 						apply_buffer(SCANNER_ACTION_UI,num)
 					if("ue")
@@ -750,7 +711,7 @@
 						var/datum/mutation/human/HM = viable_occupant.dna.get_mutation(mutation)
 						if(HM)
 							var/datum/mutation/human/A = new HM.type()
-							A.copy_mutation(HM)
+							A.mutadone_proof = HM.mutadone_proof
 							succes = TRUE
 							stored_mutations += A
 							to_chat(usr,"<span class='notice'>Mutation succesfully stored.</span>")
@@ -771,7 +732,6 @@
 						var/obj/item/dnainjector/activator/I = new /obj/item/dnainjector/activator(loc)
 						I.add_mutations += new HM.type (copymut = HM)
 						I.name = "[HM.name] activator"
-						I.research = TRUE
 						if(connected)
 							I.damage_coeff = connected.damage_coeff*4
 							injectorready = world.time + INJECTOR_TIMEOUT * (1 - 0.1 * connected.precision_coeff) //precision_coeff being the matter bin rating
@@ -847,7 +807,6 @@
 					if(A && diskette && (LAZYLEN(diskette.mutations) < diskette.max_mutations))
 						var/datum/mutation/human/HM = new A.type()
 						diskette.mutations += HM
-						HM.copy_mutation(A)
 						to_chat(usr, "<span class='notice'>Successfully wrote [A.name] to [diskette.name].</span>")
 		if("deletediskmut")
 			if(diskette && !diskette.read_only)
@@ -860,7 +819,7 @@
 				if(LAZYLEN(stored_mutations) < max_storage)
 					var/datum/mutation/human/A = diskette.mutations[num]
 					var/datum/mutation/human/HM = new A.type()
-					HM.copy_mutation(A)
+					HM.mutadone_proof = A.mutadone_proof
 					stored_mutations += HM
 					to_chat(usr,"<span class='notice'>Successfully wrote [A.name] to storage.</span>")
 		if("combine")
@@ -883,25 +842,6 @@
 						to_chat(usr,"<span class='notice'>Selected [A.name] for combining</span>")
 				else
 					to_chat(usr, "<span class='warning'>Not enough space to store potential mutation.</span>")
-		if("ejectchromosome")
-			if(LAZYLEN(stored_chromosomes) >= num)
-				var/obj/item/chromosome/CM = stored_chromosomes[num]
-				CM.forceMove(drop_location())
-				adjust_item_drop_location(CM)
-				stored_chromosomes -= CM
-		if("applychromosome")
-			if(viable_occupant && (LAZYLEN(viable_occupant.dna.mutations) >= num))
-				var/datum/mutation/human/HM = viable_occupant.dna.mutations[num]
-				var/list/chromosomes = list()
-				for(var/obj/item/chromosome/CM in stored_chromosomes)
-					if(CM.can_apply(HM))
-						chromosomes += CM
-				if(chromosomes.len)
-					var/obj/item/chromosome/CM = input("Select a chromosome to apply", "Apply Chromosome") as null|anything in sortNames(chromosomes)
-					if(CM)
-						to_chat(usr, "<span class='notice'>You apply [CM] to [HM.name].</span>")
-						stored_chromosomes -= CM
-						CM.apply(HM)
 		if("expand_advinjector")
 			var/mutation = text2path(href_list["path"])
 			var/datum/mutation/human/HM = get_valid_mutation(mutation)

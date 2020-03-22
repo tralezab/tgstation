@@ -9,12 +9,15 @@
 #define TK			/datum/mutation/human/telekinesis
 #define NERVOUS		/datum/mutation/human/nervousness
 #define EPILEPSY	/datum/mutation/human/epilepsy
+#define EPILEPSY_DANCE	/datum/mutation/human/epilepsy/dance
 #define MUTATE		/datum/mutation/human/bad_dna
 #define COUGH		/datum/mutation/human/cough
+#define DIRECOUGH	/datum/mutation/human/cough/dire
 #define DWARFISM	/datum/mutation/human/dwarfism
 #define GIGANTISM	/datum/mutation/human/gigantism
 #define CLOWNMUT	/datum/mutation/human/clumsy
 #define TOURETTES	/datum/mutation/human/tourettes
+#define NICETTES	/datum/mutation/human/tourettes/nicettes
 #define DEAFMUT		/datum/mutation/human/deaf
 #define BLINDMUT	/datum/mutation/human/blind
 #define RACEMUT		/datum/mutation/human/race

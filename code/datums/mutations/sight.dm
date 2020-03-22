@@ -15,7 +15,6 @@
 		return
 	owner.cure_nearsighted(GENETIC_MUTATION)
 
-
 ///Blind makes you blind. Who knew?
 /datum/mutation/human/blind
 	name = "Blindness"

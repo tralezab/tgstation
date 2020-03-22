@@ -6,14 +6,15 @@
 	desc = "A genetic defect that sporadically causes seizures."
 	quality = NEGATIVE
 	text_gain_indication = "<span class='danger'>You get a headache.</span>"
-	synchronizer_coeff = 1
-	power_coeff = 1
 
 /datum/mutation/human/epilepsy/on_life()
-	if(prob(1 * GET_MUTATION_SYNCHRONIZER(src)) && owner.stat == CONSCIOUS)
+	if(prob(1) && owner.stat == CONSCIOUS)
+		seize()
+
+/datum/mutation/human/epilepsy/proc/seize()
 		owner.visible_message("<span class='danger'>[owner] starts having a seizure!</span>", "<span class='userdanger'>You have a seizure!</span>")
-		owner.Unconscious(200 * GET_MUTATION_POWER(src))
-		owner.Jitter(1000 * GET_MUTATION_POWER(src))
+		owner.Unconscious(200)
+		owner.Jitter(1000)
 		SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "epilepsy", /datum/mood_event/epilepsy)
 		addtimer(CALLBACK(src, .proc/jitter_less), 90)
 
@@ -21,6 +22,20 @@
 	if(owner)
 		owner.jitteriness = 10
 
+//Epilepsy sucks but at least you'll be dancing n shit
+/datum/mutation/human/epilepsy/dance
+	name = "Epilepsy Breakdown"
+	desc = "A genetic defect that sporadically causes dancing."
+
+/datum/mutation/human/epilepsy/dance/seize()
+	owner.visible_message("<span class='danger'>[owner] breaks out in dance!</span>", "<span class='userdanger'>You start busting a move!</span>")
+	owner.Unconscious(200)
+	owner.Jitter(1000)
+	SEND_SIGNAL(owner, COMSIG_ADD_MOOD_EVENT, "epilepsy", /datum/mood_event/epilepsy/breakdance)
+	for(var/i in 0 to 9)
+		dance_rotate(owner, CALLBACK(owner, /mob.proc/dance_flip))
+		sleep(20)
+	jitter_less()//by this point we're done dancing
 
 //Unstable DNA induces random mutations!
 /datum/mutation/human/bad_dna
@@ -54,17 +69,27 @@
 	desc = "A chronic cough."
 	quality = MINOR_NEGATIVE
 	text_gain_indication = "<span class='danger'>You start coughing.</span>"
-	synchronizer_coeff = 1
-	power_coeff = 1
 
 /datum/mutation/human/cough/on_life()
-	if(prob(5 * GET_MUTATION_SYNCHRONIZER(src)) && owner.stat == CONSCIOUS)
+	. = FALSE
+	if(prob(5) && owner.stat == CONSCIOUS)
+		. = TRUE
 		owner.drop_all_held_items()
 		owner.emote("cough")
-		if(GET_MUTATION_POWER(src) > 1)
-			var/cough_range = GET_MUTATION_POWER(src) * 4
-			var/turf/target = get_ranged_target_turf(owner, turn(owner.dir, 180), cough_range)
-			owner.throw_at(target, cough_range, GET_MUTATION_POWER(src))
+
+//Splice it, and it'll throw people
+/datum/mutation/human/cough/dire
+	name = "Violent Cough"
+	desc = "A harsh cough with extra punch added through gene splicing."
+	quality = NEGATIVE //ok it's official this sucks
+	text_gain_indication = "<span class='danger'>You start coughing, throwing you off balance.</span>"
+	locked = TRUE //combined
+
+/datum/mutation/human/cough/dire/on_life()
+	. = ..() //. = if we coughed this life tick
+	if(.)
+		var/turf/target = get_ranged_target_turf(owner, turn(owner.dir, 180), 4)
+		owner.throw_at(target, 4, 1)
 
 /datum/mutation/human/paranoia
 	name = "Paranoia"
@@ -123,23 +148,22 @@
 		return
 	REMOVE_TRAIT(owner, TRAIT_CLUMSY, GENETIC_MUTATION)
 
-
 //Tourettes causes you to randomly stand in place and shout.
 /datum/mutation/human/tourettes
 	name = "Tourette's Syndrome"
 	desc = "A chronic twitch that forces the user to scream bad words." //definitely needs rewriting
 	quality = NEGATIVE
 	text_gain_indication = "<span class='danger'>You twitch.</span>"
-	synchronizer_coeff = 1
+	var/list/forced_words = list("SHIT", "PISS", "FUCK", "CUNT", "COCKSUCKER", "MOTHERFUCKER", "TITS")
 
 /datum/mutation/human/tourettes/on_life()
-	if(prob(10 * GET_MUTATION_SYNCHRONIZER(src)) && owner.stat == CONSCIOUS && !owner.IsStun())
+	if(prob(10) && owner.stat == CONSCIOUS && !owner.IsStun())
 		owner.Stun(200)
 		switch(rand(1, 3))
 			if(1)
 				owner.emote("twitch")
 			if(2 to 3)
-				owner.say("[prob(50) ? ";" : ""][pick("SHIT", "PISS", "FUCK", "CUNT", "COCKSUCKER", "MOTHERFUCKER", "TITS")]", forced=name)
+				owner.say("[prob(50) ? ";" : ""][pick(forced_words)]", forced=name)
 		var/x_offset_old = owner.pixel_x
 		var/y_offset_old = owner.pixel_y
 		var/x_offset = owner.pixel_x + rand(-2,2)
@@ -147,6 +171,13 @@
 		animate(owner, pixel_x = x_offset, pixel_y = y_offset, time = 1)
 		animate(owner, pixel_x = x_offset_old, pixel_y = y_offset_old, time = 1)
 
+//how nice
+/datum/mutation/human/tourettes/nicettes
+	name = "Tourette's Syndrome?"
+	desc = "A chronic twitch that forces the user to scream... encouraging... words? Something is off about this mutation."
+	//no quality change, this still stuns
+	forced_words = list("YES!", "AWESOME!", "SUPER!", "THAT'S FANTASTIC", "YOU DO YOU MAN", "THAT'S A GREAT IDEA!", "WOOOO", "WOOOOOOOOOO")
+	locked = TRUE //combined
 
 //Deafness makes you deaf.
 /datum/mutation/human/deaf
@@ -192,7 +223,6 @@
 	var/obj/effect/dummy/luminescent_glow/glowth //shamelessly copied from luminescents
 	var/glow = 2.5
 	var/range = 2.5
-	power_coeff = 1
 	conflicts = list(/datum/mutation/human/glow/anti)
 
 /datum/mutation/human/glow/on_acquiring(mob/living/carbon/human/owner)
@@ -200,13 +230,7 @@
 	if(.)
 		return
 	glowth = new(owner)
-	modify()
-
-/datum/mutation/human/glow/modify()
-	if(!glowth)
-		return
-	var/power = GET_MUTATION_POWER(src)
-	glowth.set_light(range * power, glow * power, "#[dna.features["mcolor"]]")
+	glowth.set_light(range, glow, "#[dna.features["mcolor"]]")
 
 /datum/mutation/human/glow/on_losing(mob/living/carbon/human/owner)
 	. = ..()
@@ -262,12 +286,10 @@
 	text_gain_indication = "<span class='warning'>You feel hot.</span>"
 	text_lose_indication = "<span class'notice'>You feel a lot cooler.</span>"
 	difficulty = 14
-	synchronizer_coeff = 1
-	power_coeff = 1
 
 /datum/mutation/human/fire/on_life()
-	if(prob((1+(100-dna.stability)/10)) * GET_MUTATION_SYNCHRONIZER(src))
-		owner.adjust_fire_stacks(2 * GET_MUTATION_POWER(src))
+	if(prob((1+(100-dna.stability)/10)))
+		owner.adjust_fire_stacks(2)
 		owner.IgniteMob()
 
 /datum/mutation/human/fire/on_acquiring(mob/living/carbon/human/owner)
@@ -288,9 +310,6 @@
 	text_lose_indication = "<span class'notice'>The space around you settles back to normal.</span>"
 	difficulty = 18//high so it's hard to unlock and abuse
 	instability = 10
-	synchronizer_coeff = 1
-	energy_coeff = 1
-	power_coeff = 1
 	var/warpchance = 0
 
 /datum/mutation/human/badblink/on_life()
@@ -302,13 +321,13 @@
 		"<span class='warning'>[owner]'s torso starts folding inside out until it vanishes from reality, taking [owner] with it.</span>",
 		"<span class='warning'>One moment, you see [owner]. The next, [owner] is gone.</span>")
 		owner.visible_message(warpmessage, "<span class='userdanger'>You feel a wave of nausea as you fall through reality!</span>")
-		var/warpdistance = rand(10,15) * GET_MUTATION_POWER(src)
+		var/warpdistance = rand(10,15)
 		do_teleport(owner, get_turf(owner), warpdistance, channel = TELEPORT_CHANNEL_FREE)
-		owner.adjust_disgust(GET_MUTATION_SYNCHRONIZER(src) * (warpchance * warpdistance))
+		owner.adjust_disgust(warpchance * warpdistance)
 		warpchance = 0
 		owner.visible_message("<span class='danger'>[owner] appears out of nowhere!</span>")
 	else
-		warpchance += 0.25 * GET_MUTATION_ENERGY(src)
+		warpchance += 0.25
 
 /datum/mutation/human/acidflesh
 	name = "Acidic Flesh"

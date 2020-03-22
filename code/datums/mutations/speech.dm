@@ -11,7 +11,6 @@
 	if(prob(10))
 		owner.stuttering = max(10, owner.stuttering)
 
-
 /datum/mutation/human/wacky
 	name = "Wacky"
 	desc = "<span class='sans'>Unknown.</span>"

@@ -222,7 +222,7 @@
 	stability = 100
 	for(var/datum/mutation/human/M in mutations)
 		if(M.class == MUT_EXTRA)
-			stability -= M.instability * GET_MUTATION_STABILIZER(M)
+			stability -= M.instability
 	if(holder)
 		var/message
 		if(alert)

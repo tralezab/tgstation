@@ -5,7 +5,6 @@
 	text_gain_indication = "<span class='notice'>Your hand feels cold.</span>"
 	instability = 10
 	difficulty = 10
-	synchronizer_coeff = 1
 	power = /obj/effect/proc_holder/spell/targeted/conjure_item/snow
 
 /obj/effect/proc_holder/spell/targeted/conjure_item/snow
@@ -16,7 +15,6 @@
 	delete_old = FALSE
 	action_icon_state = "snow"
 
-
 /datum/mutation/human/cryokinesis
 	name = "Cryokinesis"
 	desc = "Draws negative energy from the sub-zero void to freeze surrounding temperatures at subject's will."
@@ -24,7 +22,6 @@
 	text_gain_indication = "<span class='notice'>Your hand feels cold.</span>"
 	instability = 20
 	difficulty = 12
-	synchronizer_coeff = 1
 	power = /obj/effect/proc_holder/spell/aimed/cryo
 
 /obj/effect/proc_holder/spell/aimed/cryo

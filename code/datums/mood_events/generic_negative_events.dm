@@ -120,6 +120,10 @@
   mood_change = -3
   timeout = 5 MINUTES
 
+/datum/mood_event/epilepsy/breakdance
+  description = "<span class='warning'>I should have paid attention to the epilepsy warning. That was one hell of a dance, though!</span>\n"
+  mood_change = -2
+
 /datum/mood_event/nyctophobia
 	description = "<span class='warning'>It sure is dark around here...</span>\n"
 	mood_change = -3

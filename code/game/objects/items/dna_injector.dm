@@ -506,8 +506,6 @@
 	name = "\improper DNA activator"
 	desc = "Activates the current mutation on injection, if the subject has it."
 	var/doitanyway = FALSE
-	var/research = FALSE //Set to true to get expended and filled injectors for chromosomes
-	var/filled = FALSE
 
 /obj/item/dnainjector/activator/inject(mob/living/carbon/M, mob/user)
 	if(M.has_dna() && !HAS_TRAIT(M, TRAIT_RADIMMUNE) && !HAS_TRAIT(M, TRAIT_BADDNA))
@@ -524,9 +522,6 @@
 				else
 					M.dna.add_mutation(HM, MUT_EXTRA)
 					pref = "expended"
-			else if(research && M.client)
-				filled = TRUE
-				pref = "filled"
 			else
 				pref = "expended"
 			log_msg += "([mutation])"
