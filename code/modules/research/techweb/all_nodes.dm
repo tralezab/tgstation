@@ -1168,6 +1168,17 @@
 	hidden = TRUE
 	experimental = TRUE
 
+//GENETIC NODES :)
+
+/datum/techweb_node/combinations
+	id = "advgenetic"
+	display_name = "Advanced Genetics"
+	description = "It seems to obtain more powerful mutations we must splice these base mutations together."
+	prereq_ids = list("base")
+	design_ids = list("genetic_seeker_item")
+	research_costs = list(TECHWEB_POINT_TYPE_GENETICS = 0)
+	export_price = 0
+
 //Helpers for debugging/balancing the techweb in its entirety!
 /proc/total_techweb_exports()
 	var/list/datum/techweb_node/processing = list()

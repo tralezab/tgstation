@@ -842,6 +842,18 @@
 						to_chat(usr,"<span class='notice'>Selected [A.name] for combining</span>")
 				else
 					to_chat(usr, "<span class='warning'>Not enough space to store potential mutation.</span>")
+		if("combination_check")
+			if(num && (LAZYLEN(stored_mutations) >= num))
+				var/datum/mutation/human/A = stored_mutations[num]
+				var/checkedpath = A.type
+				var/foundsomething = FALSE
+				to_chat(usr, "<span class='notice'>Fetching possible combinations...</span>")
+				for(var/otherpath in GLOB.all_mutations)
+					if(checkedpath == otherpath)
+						continue //nothing combines with itself
+					if(get_mixed_mutation(checkedpath, otherpath))
+						foundsomething = TRUE
+						to_chat(usr, "<span class='notice'>[checkedpath] has a combination with [otherpath]!</span>")
 		if("expand_advinjector")
 			var/mutation = text2path(href_list["path"])
 			var/datum/mutation/human/HM = get_valid_mutation(mutation)

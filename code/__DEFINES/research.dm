@@ -67,6 +67,7 @@
 ///Techweb names for new point types. Can be used to define specific point values for specific types of research (science, security, engineering, etc.)
 #define TECHWEB_POINT_TYPE_GENERIC "General Research"
 #define TECHWEB_POINT_TYPE_NANITES "Nanite Research"
+#define TECHWEB_POINT_TYPE_GENETICS "Genetic Research"
 
 #define TECHWEB_POINT_TYPE_DEFAULT TECHWEB_POINT_TYPE_GENERIC
 
