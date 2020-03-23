@@ -1170,12 +1170,36 @@
 
 //GENETIC NODES :)
 
-/datum/techweb_node/combinations
+//tier one. basic mutations positive and negative found, no changes done to the patient
+//nothing here because it works off of base
+
+//tier two. mutations splicing to get stronger mutations, machines to lock in mutations. should be helpful, but nothing super.
+//this has all other tier two nodes
+/datum/techweb_node/tiertwo
 	id = "advgenetic"
 	display_name = "Advanced Genetics"
-	description = "It seems to obtain more powerful mutations we must splice these base mutations together."
+	description = "Splicing mutations together will allow for even stronger mutations."
 	prereq_ids = list("base")
-	design_ids = list("genetic_seeker_item")
+	design_ids = list("combination_upgrade")
+	research_costs = list(TECHWEB_POINT_TYPE_GENETICS = 0)
+	export_price = 0
+
+/datum/techweb_node/lockedinmut
+	id = "lockinmut"
+	display_name = "Genetic Locks"
+	description = "Protecting a mutation is a really powerful tool when used correctly."
+	prereq_ids = list("advgenetic")
+	design_ids = list("lockinmutations")
+	research_costs = list(TECHWEB_POINT_TYPE_GENETICS = 0)
+	export_price = 0
+
+//tierthree. mutations that are incredibly powerful, but require turning into a sickly subject that is very weak to the elements without their mutations
+/datum/techweb_node/lockedinmut
+	id = "lockinmut"
+	display_name = "Genetic Locks"
+	description = "Protecting a mutation is a really powerful tool when used correctly."
+	prereq_ids = list("advgenetic")
+	design_ids = list("lockinmutations")
 	research_costs = list(TECHWEB_POINT_TYPE_GENETICS = 0)
 	export_price = 0
 
