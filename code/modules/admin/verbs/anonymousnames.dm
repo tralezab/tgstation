@@ -38,12 +38,8 @@
 			return M.client.prefs.pref_species.random_name(M.gender,1)
 		if(ANON_EMPLOYEENAMES)
 			var/name = "Employee "
-
 			for(var/i in 1 to 6)
-				if(prob(30) || i == 1)
-					name += ascii2text(rand(65, 90)) //A - Z
-				else
-					name += ascii2text(rand(48, 57)) //0 - 9
+				name += prob(30) || i == 1 ? ascii2text(rand(65, 90)) : ascii2text(rand(48, 57)) //A - Z if true, 0 - 9 if false. highly likely to be a number but first character is always letter
 			return name
 
 /**
