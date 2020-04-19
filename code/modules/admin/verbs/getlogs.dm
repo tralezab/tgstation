@@ -33,3 +33,19 @@
 			return
 	to_chat(src, "Attempting to send [path], this may take a fair few minutes if the file is very large.")
 	return
+
+/client/proc/load_current_demo()
+	set name = "Setup Current Round Demo"
+	set desc = "Downloads the current demo log for the round, opens the demo site."
+	set category = "Admin"
+
+	var/reelviewer = CONFIG_GET(string/demoplayerurl)
+
+	to_chat(src, "Sending demo log. This file is usually very large, and you will lag until it is finished. do NOT reconnect as it will not fully download the demo.")
+	src << ftp(file(GLOB.demo_log), [GLOB.round_id])
+	if(reelviewer)
+		to_chat(src, "This is the site for playing replays. When the demo is finished downloading, you can enter the file here to start the replay.<br> \
+			IF THE DEMO ERRORS, YOU DIDN'T FINISH LETTING IT DOWNLOAD.")
+		link(reelviewer)
+	else
+		to_chat(src, "No demo site set in the config, bug your config holders to set one. Good luck finding out where to put that file!")
