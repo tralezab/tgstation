@@ -131,6 +131,14 @@
 	always_place = TRUE
 	allow_duplicates = FALSE
 
+/datum/map_template/ruin/lavaland/netherworld_ritual
+	name = "Evil Ritual"
+	id = "ritual"
+	description = "Followers of the dark forces that rule over the planet have gathered to bring a being from another world. It must be stopped at all costs!"
+	suffix = "netherworld_ritual.dmm"
+	always_place = TRUE
+	allow_duplicates = FALSE
+
 /datum/map_template/ruin/lavaland/blood_drunk_miner
 	name = "Blood-Drunk Miner"
 	id = "blooddrunk"

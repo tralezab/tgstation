@@ -102,8 +102,21 @@
 /area/ruin/unpowered/ash_walkers
 	icon_state = "red"
 
+
+//arenas
 /area/ruin/powered/kinggoat_arena
 	name = "King Goat Arena"
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
 	noteleport = TRUE
 	icon_state = "dk_yellow"
+
+/area/ruin/unpowered/ritual_site //fighting area
+	name = "Ritual Site"
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+	noteleport = TRUE
+	icon_state = "yellow"
+
+/area/ruin/unpowered/ritual_site_shield //shield so not fighting, still don't want weather and lighting but don't want the game to search this area for objects
+	name = "Ritual Site"
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+	icon_state = "green"
