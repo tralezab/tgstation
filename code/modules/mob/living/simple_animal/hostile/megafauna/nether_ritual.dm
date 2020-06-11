@@ -16,10 +16,10 @@ Difficulty: Medium
 */
 
 /mob/living/simple_animal/hostile/megafauna/cultist
-	name = "cultist"
-	desc = "Buggy and stupid, this one never gets invited to the cultist parties."
-	health = 500
-	maxHealth = 500
+	name = "netherworld fastigium"
+	desc = "The apex predator of the netherworld, breaching into this one."
+	health = 1000
+	maxHealth = 1000
 	attack_verb_continuous = "stabs"
 	attack_verb_simple = "stabs"
 	attack_sound = 'sound/magic/demon_attack1.ogg'
@@ -42,16 +42,13 @@ Difficulty: Medium
 	var/attacking_attacks = 0 //counts up, increases the chance the cultist will swap out
 	var/static/list/dying_text //can no longer fight the player
 	var/static/list/death_text //dead
-	var/cult_title = "Bugged" //name of the cultist appended
 	var/obj/effect/summoning_rune/rune //rune to add the second megafauna
-	var/swap_in_line = "My spells don't work, so can you just drop dead? Man, all my friends are gonna laugh at me again..."
 	var/datum/beam/beam //rune charging effect
 	ranged_cooldown_time = 3 SECONDS
-	true_spawn = FALSE //there are 5 of them, we can't have them all give achievements. the last one alive will give the achievements
-	achievement_type = /datum/award/achievement/boss/drake_kill
-	crusher_achievement_type = /datum/award/achievement/boss/drake_crusher
-	score_achievement_type = /datum/award/score/drake_score
-	deathmessage = "is pulled into the portal!"
+	//achievement_type = /datum/award/achievement/boss/drake_kill
+	//crusher_achievement_type = /datum/award/achievement/boss/drake_crusher
+	//score_achievement_type = /datum/award/score/drake_score
+	deathmessage = "splatters into bits!"
 	deathsound = 'sound/magic/demon_dies.ogg'
 	del_on_death = TRUE
 
@@ -60,13 +57,10 @@ Difficulty: Medium
 	var/area/ritual_area = get_area(src)
 	for(var/obj/effect/summoning_rune/_rune in ritual_area)
 		rune = _rune
-	if(swapped_in)
-		charge_rune()
-	fully_replace_character_name(name, "[pick(GLOB.first_names)] the [cult_title]")
 	if(!dying_text)
 		dying_text = list("I'm too weak!", "The ritual must be completed at all costs!", "I cannot continue fighting!", "This power cannot die with me!", "They're waiting for us on the other side!")
 	if(!death_text)
-		death_text = list("HEL-", "HAHAHAHAH-", "IMPOS-", "YES! HERE THEY C-", "WAI-")
+		death_text = list("HEL-", "HAHAHAHAH-", "IMPOS-", "YE-", "WAI-")
 	return_turf = get_turf(src)
 
 /mob/living/simple_animal/hostile/megafauna/cultist/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
@@ -145,15 +139,15 @@ Difficulty: Medium
 /mob/living/simple_animal/hostile/megafauna/cultist/process()
 	var/angle_to_rune = Get_Angle(src,rune)
 	shoot_projectile(/obj/projectile/colossus, rune.loc, angle_to_rune)//shoot towards the rune to create a wall of projectiles
-	shoot_projectile(/obj/projectile/colossus, rune.loc, abs(angle_to_rune-180))//shoot away from the rune to finish that will
+	shoot_projectile(/obj/projectile/colossus, rune.loc, abs(angle_to_rune-180))//shoot away from the rune to finish that wall
 
 /mob/living/simple_animal/hostile/megafauna/cultist/proc/cultist_attack() //base does nothing, their usual attacks
 	to_chat(world, "[src] attack")
 	return
 
 /mob/living/simple_animal/hostile/megafauna/cultist/proc/cultist_trap() //base does nothing, trap left behind permanently to make the fight harder
-	to_chat(world, "[src] trap")
-	return
+	new /obj/effect/temp_visual/lava_warning(get_turf(target), 0)
+	new /obj/effect/temp_visual/lava_warning(get_turf(src), 0)
 
 /mob/living/simple_animal/hostile/megafauna/cultist/proc/shoot_projectile(obj/projectile/projectile_type, turf/marker, set_angle) //shamelessly stolen from colossus BUT the projectile is an argument
 	if(!isnum(set_angle) && (!marker || marker == loc) || !projectile_type)
@@ -166,18 +160,14 @@ Difficulty: Medium
 		P.original = target
 	P.fire(set_angle)
 
-/mob/living/simple_animal/hostile/megafauna/cultist/proc/charge_rune()
-	beam = src.Beam(rune,"lichbeam", beam_sleep_time = 50, time = INFINITY)
-
 /mob/living/simple_animal/hostile/megafauna/cultist/proc/swap_in()
 	swapped_in = TRUE
 	icon_state = "cultist_fight"
-	QDEL_NULL(beam)
 	var/list/ordered_directions = list(NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST)
 	var/dir_index = ordered_directions.Find(get_dir(rune, target))
 	if(dir_index == 1) //it'll bump down to 0 and runtime, need to put it at the end of the list bumped up instead
 		dir_index = 9 //ordered_directions + 1 = out of bounds - 1 = we're good
-	var/travel_direction = ordered_directions[dir_index--]
+	var/travel_direction = ordered_directions[dir_index--] //guess what im wrong
 	//get turfs from the rune's turf in the travel_direction a certain length to finish this code (teleporting the cultist clockwise)
 	var/turf/swap_in_turf = rune.loc
 	for(var/i in 1 to 6)
@@ -194,7 +184,6 @@ Difficulty: Medium
 	if(!notrap)
 		cultist_trap()
 	forceMove(return_turf)
-	charge_rune()
 
 /mob/living/simple_animal/hostile/megafauna/cultist/proc/can_swap() //any other cultists that can fight? if yes, returns a random one
 	var/list/viable_cultists = list()
@@ -205,68 +194,7 @@ Difficulty: Medium
 	if(viable_cultists.len)
 		return pick(viable_cultists)
 
-/mob/living/simple_animal/hostile/megafauna/cultist/red
-	cult_title = "Red"
-	color = "red"
-	desc = "Horrifically disfigured from burns, the robes cover the marks of one who has tamed the searing heat of the planet."
-	swap_in_line = "You will burn!"
-
-/mob/living/simple_animal/hostile/megafauna/cultist/red/cultist_attack() //shoots an inaccurate bomb that has a huge explosion
-	var/turf/target_turf = get_turf(target)
-	playsound(src,'sound/magic/fireball.ogg', 200, TRUE)
-	newtonian_move(get_dir(target_turf, src))
-	var/angle_to_target = Get_Angle(src, target_turf)
-	var/static/list/inaccurate_shot_angles = list(12.5, 7.5, 2.5, 0, -2.5, -7.5, -12.5) //sometimes is right on target (0)
-	shoot_projectile(/obj/projectile/redcultist_bomb, target_turf, angle_to_target + pick(inaccurate_shot_angles))
-
-/mob/living/simple_animal/hostile/megafauna/cultist/red/cultist_trap() //leaves lava both on the place they last were AND where you were. this will become more and more of a problem
-	new /obj/effect/temp_visual/lava_warning(get_turf(target), 0)
-	new /obj/effect/temp_visual/lava_warning(get_turf(src), 0)
-
-/mob/living/simple_animal/hostile/megafauna/cultist/yellow
-	cult_title = "Yellow"
-	color = "yellow"
-	desc = "The engine could never truly die. Its latent magic is infused with this reality, and the stragglers of ratvar's cult use it to enact revenge on the world."
-	swap_in_line = "Power surges through me, interloper!"
-
-/mob/living/simple_animal/hostile/megafauna/cultist/blue //notably, this one starts the fight.
-	cult_title = "Blue"
-	color = "blue"
-	desc = "Their mind glitters, And it's shine clears out the worldly memories of this cultist. This is the consequence for one who has unlocked the secrets of the hierophant."
-	swap_in_line = "The ritual cannot be disturbed!"
-
-//reminder = create that fukken wall of bullets aimed at and away from the rune thing
-
-/mob/living/simple_animal/hostile/megafauna/cultist/blue/cultist_attack()//a lot of chaser swarms from hierophant
-	var/obj/effect/temp_visual/hierophant/chaser/C = new(loc, src, target, 3, FALSE)
-	C.moving = 3
-	C.moving_dir = pick(GLOB.cardinals)
-	SLEEP_CHECK_DEATH(9)
-
-/mob/living/simple_animal/hostile/megafauna/cultist/black
-	cult_title = "Black"
-	color = "black"
-	desc = "The whispers of grandeur from this planet have rocked them to their very core. At any cost, says the one who works for the wishgranter."
-	swap_in_line = "You don't understand what you're doing, fool!"
-
-/mob/living/simple_animal/hostile/megafauna/cultist/white
-	cult_title = "White"
-	desc = "One who has resolved to protect the necropolis. They know what the necropolis holds, and their determination to stop anyone from uncovering it is absolute."
-	swap_in_line = "I will carry out the Necropolis' will!"
-
-/mob/living/simple_animal/hostile/megafauna/cultist/white/cultist_attack() //colossus shotgun blast... basically.
-	var/turf/target_turf = get_turf(target)
-	playsound(src, 'sound/magic/clockwork/invoke_general.ogg', 200, TRUE, 2)
-	newtonian_move(get_dir(target_turf, src))
-	//var/angle_to_target = Get_Angle(src, target_turf)
-	//var/static/list/shotgun_shot_angles = list(12.5, 7.5, 2.5, -2.5, -7.5, -12.5)
-	//for(var/i in shotgun_shot_angles)
-	//	shoot_projectile(whitecultist_curse, target_turf, angle_to_target + i)
-	shoot_projectile(/obj/projectile/whitecultist_curse, target_turf, Get_Angle(src, target_turf))
-
-
 //spawns the loot. does an animation. holds gps. changes both areas off of what they are, and destroys the walls to let the miner leave.
-
 /obj/effect/summoning_rune
 	icon = 'icons/effects/224x224.dmi'
 	icon_state = "huge_rune"
@@ -327,21 +255,28 @@ Difficulty: Medium
 		if(isliving(M))
 			var/mob/living/L = M
 			to_chat(L, "<span class='warning'>[src] rejects you! The portal is on a cooldown from it's last use attempt.</span>")
+		return
 	used = TRUE
 	addtimer(VARSET_CALLBACK(src, used, FALSE), 20 SECONDS)
-	var/area/arena = hard_target.loc //turf's location = area
+	var/area/arena = GLOB.areas_by_type[/area/ruin/unpowered/ritual_site]
 	var/allowed_teleport = TRUE
+	var/list/megafauna = list()
 	for(var/mob/living/L in arena.contents)
 		if(ismegafauna(L))
-			continue
+			megafauna += L
+			break
 		allowed_teleport = FALSE
-		break
 	if(!allowed_teleport)
 		if(isliving(M))
 			var/mob/living/L = M
-			to_chat(L, "<span class='warning'>[src] rejects you! There is already someone inside fighting. You must wait for them to win... or die.</span>")
-			return
+			to_chat(L, "<span class='warning'>[src] rejects you! There is already someone inside fighting. You must wait for them to win... or perish.</span>")
+		return
 	. = ..()
+	for(var/MF in megafauna)
+		var/mob/living/simple_animal/hostile/megafauna/cultist/mega = MF
+		mega.GiveTarget(M)
+	var/mob/living/simple_animal/hostile/megafauna/cultist/fight_starter = pick(megafauna)
+	fight_starter.swap_in()
 
 /obj/projectile/redcultist_bomb
 	name ="magma bomb"

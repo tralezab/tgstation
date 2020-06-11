@@ -132,7 +132,7 @@
 	allow_duplicates = FALSE
 
 /datum/map_template/ruin/lavaland/netherworld_ritual
-	name = "Evil Ritual"
+	name = "Netherworld Ritual"
 	id = "ritual"
 	description = "Followers of the dark forces that rule over the planet have gathered to bring a being from another world. It must be stopped at all costs!"
 	suffix = "netherworld_ritual.dmm"

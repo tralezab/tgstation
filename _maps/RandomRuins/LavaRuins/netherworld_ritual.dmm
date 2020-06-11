@@ -12,7 +12,7 @@
 "m" = (/obj/effect/summoning_rune,/turf/open/floor/plating/asteroid/basalt/lava_land_surface,/area/ruin/unpowered/ritual_site)
 "n" = (/obj/effect/landmark/portal_exit{id = "ritual enter"},/turf/open/floor/plating/asteroid/basalt/lava_land_surface,/area/ruin/unpowered/ritual_site)
 "o" = (/obj/item/clothing/head/helmet/skull,/turf/open/floor/plating/asteroid/basalt/lava_land_surface,/area/ruin/unpowered/ritual_site)
-"p" = (/obj/effect/portal/permanent/one_way{id = "ritual enter"},/turf/open/floor/plating/asteroid/basalt/lava_land_surface,/area/lavaland/surface/outdoors)
+"p" = (/obj/effect/portal/permanent/one_way/one_use/nether{id = "ritual enter"},/turf/open/floor/plating/asteroid/basalt/lava_land_surface,/area/lavaland/surface/outdoors)
 
 (1,1,1) = {"
 ddddddddddddddddddddddddddddddddddd
