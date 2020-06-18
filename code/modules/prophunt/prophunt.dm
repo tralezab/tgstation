@@ -31,6 +31,7 @@ GLOBAL_DATUM_INIT(minigame_signups,/datum/minigame_signups,new)
 		if(GLOB.directory[key] && GLOB.directory[key].mob == game_q[key])
 			. += 1
 
+
 //flush to remove from signups
 /datum/minigame_signups/proc/GetPlayers(game_id,count,flush=TRUE)
 	var/result = list()
