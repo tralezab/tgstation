@@ -196,11 +196,10 @@ GLOBAL_DATUM_INIT(minigame_signups,/datum/minigame_signups,new)
 
 /obj/machinery/computer/arena/prophunt/proc/conclude_round(seekers_win = FALSE)//bool
 	QDEL_LIST(projectors)
-	for(var/mob/M in total_players)
-		if(seekers_win)
-			to_chat(M, "<span class='redtext'>SEEKERS HAVE WON! ALL HIDERS HAVE BEEN CAUGHT!")
-		else
-			to_chat(M, "<span class='greentext'>HIDERS HAVE WON! NOT ALL HIDERS WERE CAUGHT!")
+	if(seekers_win)
+		to_chat(total_players, "<span class='redtext'>SEEKERS HAVE WON! ALL HIDERS HAVE BEEN CAUGHT!")
+	else
+		to_chat(total_players, "<span class='greentext'>HIDERS HAVE WON! NOT ALL HIDERS WERE CAUGHT!")
 	kick_players_out()
 	if(next_stage_timer)
 		deltimer(next_stage_timer)
@@ -208,10 +207,8 @@ GLOBAL_DATUM_INIT(minigame_signups,/datum/minigame_signups,new)
 	try_autostart()
 
 /obj/machinery/computer/arena/prophunt/proc/kick_hider_out(var/mob/player)//used for when you get caught
-	for(var/mob/M in hiders)
-		if(M == player)
-			M.forceMove(get_landmark_turf(ARENA_EXIT))
-			hiders -= M
+	player.forceMove(get_landmark_turf(ARENA_EXIT))
+		hiders -= player
 	if(!hiders.len)
 		conclude_round(seekers_win = TRUE)
 
