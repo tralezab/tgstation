@@ -84,14 +84,18 @@
 	var/datum/mafia_role/R = current_investigation
 	if(R)
 		var/team_text
+		var/fluff
 		switch(R.team)
 			if(MAFIA_TEAM_TOWN)
 				team_text = "Town"
+				fluff = "a true member of the station."
 			if(MAFIA_TEAM_MAFIA)
 				team_text = "Mafia"
+				fluff = "an unfeeling, hideous changeling!"
 			if(MAFIA_TEAM_SOLO)
 				team_text = "Solo"
-		to_chat(body,"<span class='warning'>Your investigations reveal that [R.body.real_name] is [team_text].</span>")
+				fluff = "a rogue, with their own objectives..."
+		to_chat(body,"<span class='warning'>Your investigations reveal that [R.body.real_name] is [fluff]</span>")
 		add_note("N[game.turn] - [R.body.real_name] - [team_text]")
 	current_investigation = null
 
@@ -355,12 +359,3 @@
 		game.send_message("<span class='big red'>!! OBSESSED VICTORY !!</span>") //red since it's a confirmed townie
 	else
 		to_chat(body, "<span class='userdanger'>Your obsession died alone, WITHOUT YOU THERE! You have failed your objective to lynch them!</span>")
-
-/*
-/datum/mafia_role/head_of_personnel
-	name = "Head of Personnel"
-	desc = "Your bureaucratic position demands respect from all faithful town members. You may reveal yourself during the day, tripling the power of your vote, but you can no longer be protected."
-	team = MAFIA_TEAM_SOLO
-	actions = list("Reveal Role")
-	var/revealed = FALSE
-*/
