@@ -320,7 +320,7 @@
 	return MAFIA_PREVENT_KILL
 
 /datum/mafia_role/fugitive/proc/survived(datum/mafia_controller/game)
-	if(game_status = MAFIA_ALIVE)
+	if(game_status == MAFIA_ALIVE)
 		game.send_message("<span class='big comradio'>!! FUGITIVE VICTORY !!</span>")
 
 #undef FUGITIVE_NOT_PRESERVING
