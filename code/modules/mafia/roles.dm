@@ -325,7 +325,6 @@
 
 #undef FUGITIVE_NOT_PRESERVING
 #undef FUGITIVE_WILL_PRESERVE
-#undef FUGITIVE_NOW_PRESERVING
 
 /datum/mafia_role/obsessed
 	name = "Obsessed"
