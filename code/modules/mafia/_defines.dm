@@ -21,6 +21,7 @@
 #define COMSIG_MAFIA_NIGHT_START "night_start"
 #define COMSIG_MAFIA_NIGHT_ACTION_PHASE "night_actions"
 #define COMSIG_MAFIA_NIGHT_KILL_PHASE "night_kill"
+#define COMSIG_MAFIA_GAME_END "game_end"
 
 GLOBAL_LIST_EMPTY(mafia_games)
 GLOBAL_LIST_INIT(mafia_setups,generate_mafia_setups())
