@@ -137,7 +137,7 @@
 
 /datum/mafia_role/chaplain
 	name = "Chaplain"
-	desc = "You can communicate with spirits of the dead each night to discover dead crewmembers role."
+	desc = "You can communicate with spirits of the dead each night to discover dead crewmember roles."
 
 	targeted_actions = list("Pray")
 	var/current_target
@@ -316,7 +316,8 @@
 	return MAFIA_PREVENT_KILL
 
 /datum/mafia_role/fugitive/proc/survived(datum/mafia_controller/game)
-	game.send_message("<span class='big yellow'>!! FUGITIVE VICTORY !!</span>")
+	if(game_status = MAFIA_ALIVE)
+		game.send_message("<span class='big comradio'>!! FUGITIVE VICTORY !!</span>")
 
 #undef FUGITIVE_NOT_PRESERVING
 #undef FUGITIVE_WILL_PRESERVE
@@ -324,7 +325,7 @@
 
 /datum/mafia_role/obsessed
 	name = "Obsessed"
-	desc = "You're completely lost in your own mind. You win by lynching your obsession before you get killed in this mess."
+	desc = "You're completely lost in your own mind. You win by lynching your obsession before you get killed in this mess. Obsession assigned on the first night!"
 	team = MAFIA_TEAM_SOLO
 
 	var/datum/mafia_role/obsession
@@ -332,6 +333,9 @@
 
 /datum/mafia_role/obsessed/New(datum/mafia_controller/game) //note: obsession is always a townie
 	. = ..()
+	RegisterSignal(game,COMSIG_MAFIA_NIGHT_START,.proc/find_obsession)
+
+/datum/mafia_role/obsessed/proc/find_obsession(datum/mafia_controller/game)
 	var/list/all_roles_shuffle = shuffle(game.all_roles)
 	for(var/role in all_roles_shuffle)
 		var/datum/mafia_role/possible = role
@@ -341,11 +345,16 @@
 	if(!obsession)
 		obsession = pick(all_roles_shuffle) //okay no town just pick anyone here
 	//if you still don't have an obsession you're playing a single player game like i can't help your dumb ass
+	to_chat(body, "<span class='userdanger'>Your obsession is [obsession.body.real_name]! Get them lynched to win!</span>")
+	add_note("N[game.turn] - I vowed to watch my obsession, [obsession.body.real_name], hang!") //it'll always be N1 but whatever
 	RegisterSignal(obsession,COMSIG_MAFIA_ON_KILL,.proc/check_victory)
+	UnregisterSignal(src,COMSIG_MAFIA_NIGHT_START)
 
 /datum/mafia_role/obsessed/proc/check_victory(datum/source,datum/mafia_controller/game,lynch)
 	if(lynch)
 		game.send_message("<span class='big red'>!! OBSESSED VICTORY !!</span>") //red since it's a confirmed townie
+	else
+		to_chat(body, "<span class='userdanger'>Your obsession died alone, WITHOUT YOU THERE! You have failed your objective to lynch them!</span>")
 
 /*
 /datum/mafia_role/head_of_personnel
