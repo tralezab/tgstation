@@ -677,21 +677,21 @@
 					user_role.handle_action(src,params["atype"],target)
 			return TRUE
 		if("vote_abstain")
-			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_abstain_votes)
+			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_abstain_votes))
 				return
 			to_chat(user_role.body,"You have decided to abstain.")
 			judgement_innocent_votes -= user_role
 			judgement_guilty_votes -= user_role
 			judgement_abstain_votes += user_role
 		if("vote_innocent")
-			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_innocent_votes)
+			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_innocent_votes))
 				return
 			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as INNOCENT!")
 			judgement_abstain_votes -= user_role//no fakers, and...
 			judgement_guilty_votes -= user_role//no radical centrism
 			judgement_innocent_votes += user_role
 		if("vote_guilty")
-			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_guilty_votes)
+			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_guilty_votes))
 				return
 			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as GUILTY!")
 			judgement_abstain_votes -= user_role//no fakers, and...
