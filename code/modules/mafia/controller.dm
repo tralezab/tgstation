@@ -48,7 +48,8 @@
 
 	///group voting on one person, like putting people to trial or choosing who to kill as mafia
 	var/list/votes = list()
-	///and these (judgement_innocent_votes and judgement_guilty_votes) are the judgement phase votes, aka people sorting themselves into guilty and innocent lists. whichever has more wins!
+	///and these (judgement_innocent_votes, judgement_abstain_votes and judgement_guilty_votes) are the judgement phase votes, aka people sorting themselves into guilty and innocent, and "eh, i don't really care" lists. whichever has more inno or guilty wins!
+	var/list/judgement_abstain_votes = list()
 	var/list/judgement_innocent_votes = list()
 	var/list/judgement_guilty_votes = list()
 	///current role on trial for the judgement phase, will die if guilty is greater than innocent
@@ -192,6 +193,14 @@
 	var/datum/mafia_role/loser = get_vote_winner("Day")//, majority_of_town = TRUE)
 	if(loser)
 		send_message("<b>[loser.body.real_name] wins the day vote, Listen to their defense and vote \"INNOCENT\" or \"GUILTY\"!</b>")
+		//refresh the lists
+		judgement_abstain_votes = list()
+		judgement_innocent_votes = list()
+		judgement_guilty_votes = list()
+		for(var/i in all_roles)
+			var/datum/mafia_role/abstainee = i
+			if(abstainee.game_status == MAFIA_ALIVE)
+				judgement_abstain_votes += abstainee
 		on_trial = loser
 		on_trial.body.forceMove(get_turf(town_center_landmark))
 		phase = MAFIA_PHASE_JUDGEMENT
@@ -216,6 +225,9 @@
 	for(var/i in judgement_innocent_votes)
 		var/datum/mafia_role/role = i
 		send_message("<span class='green'>[role.body.real_name] voted innocent.</span>")
+	for(var/i in judgement_innocent_votes)
+		var/datum/mafia_role/role = i
+		send_message("<span class='comradio'>[role.body.real_name] abstained.</span>")
 	for(var/ii in judgement_guilty_votes)
 		var/datum/mafia_role/role = ii
 		send_message("<span class='red'>[role.body.real_name] voted guilty.</span>")
@@ -226,9 +238,6 @@
 	else
 		send_message("<span class='green'><b>Innocent wins majority, [on_trial.body.real_name] has been spared.</b></span>")
 		on_trial.body.forceMove(get_turf(on_trial.assigned_landmark))
-	//by now clowns should have killed someone in guilty list, clear this out
-	judgement_innocent_votes = list()
-	judgement_guilty_votes = list()
 	on_trial = null
 	//day votes are already cleared, so this will skip the trial and check victory/lockdown/whatever else
 	next_phase_timer = addtimer(CALLBACK(src, .proc/check_trial, FALSE),judgement_lynch_period,TIMER_STOPPABLE)// small pause to see the guy dead, no verbosity since we already did this
@@ -535,7 +544,7 @@
 		.["judgement_phase"] = FALSE
 	var/datum/mafia_role/user_role = player_role_lookup[user]
 	if(user_role)
-		.["roleinfo"] = list("role" = user_role.name,"desc" = user_role.desc, "action_log" = user_role.role_notes)
+		.["roleinfo"] = list("role" = user_role.name,"desc" = user_role.desc, "action_log" = user_role.role_notes, "hud_icon" = user_role.hud_icon, "revealed_icon" = user_role.revealed_icon)
 		var/actions = list()
 		for(var/action in user_role.actions)
 			if(user_role.validate_action_target(src,action,null))
@@ -567,6 +576,11 @@
 
 	//Not sure on this, should this info be visible
 	.["all_roles"] = current_setup_text
+
+/datum/mafia_controller/ui_assets(mob/user)
+	return list(
+		get_asset_datum(/datum/asset/spritesheet/mafia),
+	)
 
 /datum/mafia_controller/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
@@ -634,7 +648,6 @@
 			helper.show_help(usr)
 	if(!user_role || user_role.game_status == MAFIA_DEAD)//ghosts, dead people?
 		return
-	var/self_voting = user_role == on_trial ? TRUE : FALSE //used to block people from voting themselves innocent or guilty
 	//User actions
 	switch(action)
 		if("mf_action")
@@ -663,19 +676,26 @@
 						return
 					user_role.handle_action(src,params["atype"],target)
 			return TRUE
+		if("vote_abstain")
+			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_abstain_votes)
+				return
+			to_chat(user_role.body,"You have decided to abstain.")
+			judgement_innocent_votes -= user_role
+			judgement_guilty_votes -= user_role
+			judgement_abstain_votes += user_role
 		if("vote_innocent")
-			if(phase != MAFIA_PHASE_JUDGEMENT && !self_voting)
+			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_innocent_votes)
 				return
 			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as INNOCENT!")
-			judgement_innocent_votes -= user_role//no double voting
+			judgement_abstain_votes -= user_role//no fakers, and...
 			judgement_guilty_votes -= user_role//no radical centrism
 			judgement_innocent_votes += user_role
 		if("vote_guilty")
-			if(phase != MAFIA_PHASE_JUDGEMENT && !self_voting)
+			if(phase != MAFIA_PHASE_JUDGEMENT || user_role in judgement_guilty_votes)
 				return
 			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as GUILTY!")
+			judgement_abstain_votes -= user_role//no fakers, and...
 			judgement_innocent_votes -= user_role//no radical centrism
-			judgement_guilty_votes -= user_role//no double voting
 			judgement_guilty_votes += user_role
 
 /datum/mafia_controller/ui_state(mob/user)

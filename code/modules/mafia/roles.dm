@@ -24,7 +24,12 @@
 
 	var/game_status = MAFIA_ALIVE
 
-	var/special_theme //set this to something cool for antagonists and their window will look different
+	///icon state in the mafia dmi of the hud of the role, used in the mafia ui
+	var/hud_icon = "hudassistant"
+	///icon state in the mafia dmi of the hud of the role, used in the mafia ui
+	var/revealed_icon = "assistant"
+	///set this to something cool for antagonists and their window will look different
+	var/special_theme
 
 	var/list/role_notes = list()
 
@@ -117,6 +122,9 @@
 	revealed_outfit = /datum/outfit/mafia/detective
 	role_type = TOWN_INVEST
 
+	hud_icon = "huddetective"
+	revealed_icon = "detective"
+
 	targeted_actions = list("Investigate")
 
 	var/datum/mafia_role/current_investigation
@@ -166,6 +174,9 @@
 	desc = "You can visit someone ONCE PER GAME to reveal their true role in the morning!"
 	revealed_outfit = /datum/outfit/mafia/psychologist
 	role_type = TOWN_INVEST
+
+	hud_icon = "hudpsychologist"
+	revealed_icon = "psychologist"
 
 	targeted_actions = list("Reveal")
 	var/datum/mafia_role/current_target
@@ -410,6 +421,9 @@
 	role_type = NEUTRAL_KILL
 	targeted_actions = list("Night Kill")
 	revealed_outfit = /datum/outfit/mafia/traitor
+
+	hud_icon = "hudtraitor"
+	revealed_icon = "traitor"
 	special_theme = "syndicate"
 
 	var/datum/mafia_role/current_victim
@@ -620,7 +634,7 @@
 
 /datum/mafia_role/clown
 	name = "Clown"
-	desc = "If you are lynched you take down one of your voters with you and win. HONK!"
+	desc = "If you are lynched you take down one of your voters (guilty or abstain) with you and win. HONK!"
 	win_condition = "get themselves lynched!"
 	revealed_outfit = /datum/outfit/mafia/clown
 	team = MAFIA_TEAM_SOLO
@@ -632,7 +646,7 @@
 
 /datum/mafia_role/clown/proc/prank(datum/source,datum/mafia_controller/game,lynch)
 	if(lynch)
-		var/datum/mafia_role/victim = pick(game.judgement_guilty_votes)
+		var/datum/mafia_role/victim = pick(game.judgement_guilty_votes + game.judgement_abstain_votes)
 		game.send_message("<span class='big clown'>[body.real_name] WAS A CLOWN! HONK! They take down [victim.body.real_name] with their last prank.</span>")
 		game.send_message("<span class='big clown'>!! CLOWN VICTORY !!</span>")
 		victim.kill(game,FALSE)
