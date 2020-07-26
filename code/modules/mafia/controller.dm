@@ -5,6 +5,10 @@
   * It is first created when the first ghost signs up to play.
   */
 /datum/mafia_controller
+	///list of observers that should get game updates.
+	var/list/spectators = list()
+	///list of signups that will be filtered should the game start
+	var/list/bad_signups = list()
 	///all roles in the game, dead or alive. check their game status if you only want living or dead.
 	var/list/all_roles = list()
 	///exists to speed up role retrieval, it's a dict. player_role_lookup[player ckey] will give you the role they play
@@ -130,7 +134,7 @@
 	var/team_suffix = team ? "([uppertext(team)] CHAT)" : ""
 	for(var/M in GLOB.dead_mob_list)
 		var/mob/spectator = M
-		if(spectator.ckey in GLOB.mafia_signup || player_role_lookup[spectator.mind.current] != null) //was in current game, or is signed up
+		if(spectator.ckey in spectators) //was in current game, or spectatin' (won't send to living)
 			var/link = FOLLOW_LINK(M, town_center_landmark)
 			to_chat(M, "[link] MAFIA: [msg] [team_suffix]")
 
@@ -225,7 +229,7 @@
 	for(var/i in judgement_innocent_votes)
 		var/datum/mafia_role/role = i
 		send_message("<span class='green'>[role.body.real_name] voted innocent.</span>")
-	for(var/i in judgement_innocent_votes)
+	for(var/i in judgement_abstain_votes)
 		var/datum/mafia_role/role = i
 		send_message("<span class='comradio'>[role.body.real_name] abstained.</span>")
 	for(var/ii in judgement_guilty_votes)
@@ -497,7 +501,7 @@
 	if(phase != MAFIA_PHASE_VOTING)
 		return
 	var/v = get_vote_count(player_role_lookup[source],"Day")
-	var/mutable_appearance/MA = mutable_appearance('icons/obj/mafia.dmi',"vote_[v]")
+	var/mutable_appearance/MA = mutable_appearance('icons/obj/mafia.dmi',"vote_[v > 12 ? "over_12" : v]")
 	overlay_list += MA
 
 /**
@@ -551,6 +555,19 @@
 				actions += action
 		.["actions"] = actions
 		.["role_theme"] = user_role.special_theme
+	else
+		var/list/lobby_data = list()
+		for(var/key in GLOB.mafia_signup + GLOB.mafia_bad_signup)
+			var/list/lobby_member = list()
+			lobby_member["name"] = key
+			lobby_member["status"] = "Ready"
+			if(key in GLOB.mafia_bad_signup)
+				lobby_member["status"] = "Inactive"
+			lobby_member["spectating"] = "Ghost"
+			if(key in spectators)
+				lobby_member["spectating"] = "Spectator"
+			lobby_data += list(lobby_member)
+		.["lobbydata"] = lobby_data
 	var/list/player_data = list()
 	for(var/datum/mafia_role/R in all_roles)
 		var/list/player_info = list()
@@ -637,7 +654,7 @@
 				custom_setup = debug_setup
 			if("cancel_setup")
 				custom_setup = list()
-	switch(action)
+	switch(action) //both living and dead
 		if("mf_lookup")
 			var/role_lookup = params["atype"]
 			var/datum/mafia_role/helper
@@ -646,9 +663,33 @@
 					helper = role
 					break
 			helper.show_help(usr)
-	if(!user_role || user_role.game_status == MAFIA_DEAD)//ghosts, dead people?
+	if(!user_role)//just the dead
+		var/client/C = ui.user.client
+		switch(action)
+			if("mf_signup")
+				if(!SSticker.HasRoundStarted())
+					to_chat(usr, "<span class='warning'>Wait for the game to start!</span>")
+					return
+				if(GLOB.mafia_signup[C.ckey])
+					GLOB.mafia_signup -= C.ckey
+					to_chat(usr, "<span class='notice'>You unregister from Mafia.</span>")
+					return
+				else
+					GLOB.mafia_signup[C.ckey] = C
+					to_chat(usr, "<span class='notice'>You sign up for Mafia.</span>")
+				if(phase == MAFIA_PHASE_SETUP)
+					check_signups()
+					try_autostart()
+			if("mf_spectate")
+				if(C.ckey in spectators)
+					to_chat(usr, "<span class='notice'>You will no longer get messages from the game.</span>")
+					spectators -= C.ckey
+				else
+					to_chat(usr, "<span class='notice'>You will now get messages from the game.</span>")
+					spectators += C.ckey
+	if(user_role.game_status == MAFIA_DEAD)
 		return
-	//User actions
+	//User actions (just living)
 	switch(action)
 		if("mf_action")
 			if(!user_role.actions.Find(params["atype"]))
@@ -705,7 +746,7 @@
 	ui = SStgui.try_update_ui(user, src, null)
 	if(!ui)
 		ui = new(user, src, "MafiaPanel")
-		ui.set_autoupdate(FALSE)
+		//ui.set_autoupdate(TRUE)
 		ui.open()
 
 /proc/assoc_value_sum(list/L)
@@ -839,6 +880,27 @@
 		return
 	if(GLOB.mafia_signup.len >= MAFIA_MAX_PLAYER_COUNT || custom_setup.len)//enough people to try and make something (or debug mode)
 		basic_setup()
+
+/**
+  * Filters inactive player into a different list until they reconnect, and removes players who are no longer ghosts.
+  *
+  * If a disconnected player gets a non-ghost mob and reconnects, they will be first put back into mafia_signup then filtered by that.
+  */
+/datum/mafia_controller/proc/check_signups()
+	for(var/bad_key in GLOB.mafia_bad_signup)
+		if(GLOB.directory[bad_key] && GLOB.directory[bad_key] == GLOB.mafia_bad_signup[bad_key])
+			//they have reconnected
+			GLOB.mafia_bad_signup -= bad_key
+			GLOB.mafia_signup += bad_key
+	for(var/key in GLOB.mafia_signup)
+		if(!(GLOB.directory[key] && GLOB.directory[key] == GLOB.mafia_signup[key]))
+			//they are no longer connected, move them to inactive list
+			GLOB.mafia_signup -= key
+			GLOB.mafia_bad_signup += key
+		var/client/C = GLOB.directory[key]
+		if(!isobserver(C.mob))
+			//they are back to playing the game, remove them from the signups
+			GLOB.mafia_signup -= key
 
 /datum/action/innate/mafia_panel
 	name = "Mafia Panel"

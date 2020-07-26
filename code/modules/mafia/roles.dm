@@ -44,6 +44,8 @@
 	body.death()
 	if(lynch)
 		reveal_role(game, verbose = TRUE)
+	if(!(player_key in game.spectators)) //people who played will want to see the end of the game more often than not
+		game.spectators += player_key
 	return TRUE
 
 /datum/mafia_role/Destroy(force, ...)
