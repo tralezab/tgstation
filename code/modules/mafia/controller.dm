@@ -562,7 +562,7 @@
 			lobby_member["name"] = key
 			lobby_member["status"] = "Ready"
 			if(key in GLOB.mafia_bad_signup)
-				lobby_member["status"] = "Inactive"
+				lobby_member["status"] = "Disconnected"
 			lobby_member["spectating"] = "Ghost"
 			if(key in spectators)
 				lobby_member["spectating"] = "Spectator"
@@ -746,7 +746,7 @@
 	ui = SStgui.try_update_ui(user, src, null)
 	if(!ui)
 		ui = new(user, src, "MafiaPanel")
-		//ui.set_autoupdate(TRUE)
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
 /proc/assoc_value_sum(list/L)

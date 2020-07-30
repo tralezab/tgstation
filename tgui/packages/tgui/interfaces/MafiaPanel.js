@@ -1,13 +1,11 @@
 import { classes } from 'common/react';
 import { Fragment } from 'inferno';
-import { useBackend, useLocalState } from '../backend';
+import { useBackend } from '../backend';
 import { Box, Button, Flex, Section, TimeDisplay } from '../components';
 import { Window } from '../layouts';
 
 export const MafiaPanel = (props, context) => {
   const { act, data } = useBackend(context);
-  const [lobbyistColor, setLobbyistColor] = useLocalState(
-    context, 'mf_lobby_box_color', "yellow");
   const {
     lobbydata,
     players,
@@ -20,9 +18,8 @@ export const MafiaPanel = (props, context) => {
     timeleft,
     all_roles,
   } = data;
-  // removes disconnected players, gets length
-  // const readyGhosts = 0;// lobbydata => lobbydata.filter(
-  // player => player.status === "Ready");
+  const readyGhosts = lobbydata ? lobbydata.filter(
+    player => player.status === "Ready") : null;
   return (
     <Window
       title="Mafia"
@@ -39,7 +36,8 @@ export const MafiaPanel = (props, context) => {
               <LobbyDisplay phase={phase} timeleft={timeleft} />
             }>
             <Box bold textAlign="center">
-              The lobby currently has {1}/12 players signed up.
+              The lobby currently has {readyGhosts.length}
+              /12 valid players signed up.
               <Flex
                 direction="column">
                 {!!lobbydata && lobbydata.map(lobbyist => (
@@ -52,7 +50,7 @@ export const MafiaPanel = (props, context) => {
                       height={2}
                       align="center"
                       justify="space-between">
-                      <Flex.Item>
+                      <Flex.Item basis={0}>
                         {lobbyist.name}
                       </Flex.Item>
                       <Flex.Item>
@@ -60,10 +58,11 @@ export const MafiaPanel = (props, context) => {
                       </Flex.Item>
                       <Flex.Item width="30%">
                         <Section>
-                          {lobbyist.status === "Ready" &&(
-                            setLobbyistColor("green")
-                          )}
-                          <Box color={lobbyistColor} textAlign="center">
+                          <Box
+                            color={
+                              lobbyist.status === "Ready" ? "green" : "red"
+                            }
+                            textAlign="center">
                             {lobbyist.status} {lobbyist.spectating}
                           </Box>
                         </Section>
@@ -84,41 +83,36 @@ export const MafiaPanel = (props, context) => {
                 <TimeDisplay auto="down" value={timeleft} />
               </Box>
             }>
-            <Fragment>
-              <Flex justify="center">
-                <b>You are the {roleinfo.role}</b>
-              </Flex>
-              <Flex
-                justify="space-between">
-                <Flex.Item>
-                  <Box
-                    className={classes([
-                      'mafia32x32',
-                      roleinfo.hud_icon,
-                    ])}
-                    style={{
-                      'transform': 'scale(4) translate(0px, -2px)',
-                      '-ms-interpolation-mode': 'nearest-neighbor',
-                      'vertical-align': 'middle',
-                    }} />
-                </Flex.Item>
-                <Flex.Item align="center" textAlign="center">
-                  <b>{roleinfo.desc}</b>
-                </Flex.Item>
-                <Flex.Item>
-                  <Box
-                    className={classes([
-                      'mafia32x32',
-                      roleinfo.revealed_icon,
-                    ])}
-                    style={{
-                      'transform': 'scale(2) translate(0%, -4px)',
-                      'image-rendering': 'pixelated',
-                      'vertical-align': 'middle',
-                    }} />
-                </Flex.Item>
-              </Flex>
-            </Fragment>
+            <Flex
+              justify="space-between">
+              <Flex.Item
+                align="center"
+                textAlign="center"
+                maxWidth="500px">
+                <b>You are the {roleinfo.role}</b><br />
+                <b>{roleinfo.desc}</b>
+              </Flex.Item>
+              <Flex.Item>
+                <Box
+                  className={classes([
+                    'mafia32x32',
+                    roleinfo.revealed_icon,
+                  ])}
+                  style={{
+                    'transform': 'scale(2) translate(0px, 5px)',
+                    'vertical-align': 'middle',
+                  }} />
+                <Box
+                  className={classes([
+                    'mafia32x32',
+                    roleinfo.hud_icon,
+                  ])}
+                  style={{
+                    'transform': 'scale(2) translate(-5px, -5px)',
+                    'vertical-align': 'middle',
+                  }} />
+              </Flex.Item>
+            </Flex>
           </Section>
         )}
         <Flex>
@@ -158,87 +152,89 @@ export const MafiaPanel = (props, context) => {
             </Flex>
           </Section>
         )}
-        <Flex mt={1} spacing={1}>
-          <Flex.Item grow={2} basis={0}>
-            <Section title="Players">
-              <Flex
-                direction="column">
-                {!!players && players.map(player => (
-                  <Flex.Item
-                    basis={2}
-                    className="Section__title candystripe"
-                    key={player.ref}>
-                    <Flex
-                      height={2}
-                      justify="space-between"
-                      align="center">
-                      <Flex.Item basis={16} >
-                        {!!player.alive && (<Box>{player.name}</Box>)}
-                        {!player.alive && (
-                          <Box color="red">{player.name}</Box>)}
-                      </Flex.Item>
-                      <Flex.Item>
-                        {!player.alive && (<Box color="red">DEAD</Box>)}
-                      </Flex.Item>
-                      <Flex.Item>
-                        {player.votes !== undefined && !!player.alive
-                        && (<Fragment>Votes : {player.votes} </Fragment>)}
-                      </Flex.Item>
-                      <Flex.Item grow={1} />
-                      <Flex.Item>
-                        {
-                          !!player.actions && player.actions.map(action => {
-                            return (
-                              <Button
-                                key={action}
-                                onClick={() => act('mf_targ_action', {
-                                  atype: action,
-                                  target: player.ref,
-                                })}>
-                                {action}
-                              </Button>); })
-                        }
-                      </Flex.Item>
-                    </Flex>
-                  </Flex.Item>)
-                )}
-              </Flex>
-            </Section>
-          </Flex.Item>
-          <Flex.Item grow={1} basis={0}>
-            <Section
-              title="Roles">
-              <Flex
-                direction="column">
-                {!!all_roles && all_roles.map(r => (
-                  <Flex.Item
-                    key={r}
-                    basis={2}
-                    className="Section__title candystripe">
-                    <Flex
-                      height={2}
-                      align="center"
-                      justify="space-between">
-                      <Flex.Item>
-                        {r}
-                      </Flex.Item>
-                      <Flex.Item grow={1} />
-                      <Flex.Item
-                        textAlign="right">
-                        <Button
-                          content="?"
-                          onClick={() => act("mf_lookup", {
-                            atype: r.slice(0, -3),
-                          })}
-                        />
-                      </Flex.Item>
-                    </Flex>
-                  </Flex.Item>
-                ))}
-              </Flex>
-            </Section>
-          </Flex.Item>
-        </Flex>
+        {phase !== "No Game" &&(
+          <Flex mt={1} spacing={1}>
+            <Flex.Item grow={2} basis={0}>
+              <Section title="Players">
+                <Flex
+                  direction="column">
+                  {!!players && players.map(player => (
+                    <Flex.Item
+                      basis={2}
+                      className="Section__title candystripe"
+                      key={player.ref}>
+                      <Flex
+                        height={2}
+                        justify="space-between"
+                        align="center">
+                        <Flex.Item basis={16} >
+                          {!!player.alive && (<Box>{player.name}</Box>)}
+                          {!player.alive && (
+                            <Box color="red">{player.name}</Box>)}
+                        </Flex.Item>
+                        <Flex.Item>
+                          {!player.alive && (<Box color="red">DEAD</Box>)}
+                        </Flex.Item>
+                        <Flex.Item>
+                          {player.votes !== undefined && !!player.alive
+                          && (<Fragment>Votes : {player.votes} </Fragment>)}
+                        </Flex.Item>
+                        <Flex.Item grow={1} />
+                        <Flex.Item>
+                          {
+                            !!player.actions && player.actions.map(action => {
+                              return (
+                                <Button
+                                  key={action}
+                                  onClick={() => act('mf_targ_action', {
+                                    atype: action,
+                                    target: player.ref,
+                                  })}>
+                                  {action}
+                                </Button>); })
+                          }
+                        </Flex.Item>
+                      </Flex>
+                    </Flex.Item>)
+                  )}
+                </Flex>
+              </Section>
+            </Flex.Item>
+            <Flex.Item grow={1} basis={0}>
+              <Section
+                title="Roles">
+                <Flex
+                  direction="column">
+                  {!!all_roles && all_roles.map(r => (
+                    <Flex.Item
+                      key={r}
+                      basis={2}
+                      className="Section__title candystripe">
+                      <Flex
+                        height={2}
+                        align="center"
+                        justify="space-between">
+                        <Flex.Item>
+                          {r}
+                        </Flex.Item>
+                        <Flex.Item grow={1} />
+                        <Flex.Item
+                          textAlign="right">
+                          <Button
+                            content="?"
+                            onClick={() => act("mf_lookup", {
+                              atype: r.slice(0, -3),
+                            })}
+                          />
+                        </Flex.Item>
+                      </Flex>
+                    </Flex.Item>
+                  ))}
+                </Flex>
+              </Section>
+            </Flex.Item>
+          </Flex>
+        )}
         {!!roleinfo && (
           <Flex mt={1} spacing={1}>
             <Flex.Item grow={2} basis={0}>
