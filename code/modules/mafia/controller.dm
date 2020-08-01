@@ -563,7 +563,7 @@
 			if(H.dna.species.outfit_important_for_life) //plasmamen
 				H.set_species(/datum/species/human)
 		var/mob/dead/observer/ghostie = player_client.mob
-		if(ghostie?.mind.current && ghostie.can_reenter_corpse)
+		if(ghostie.mind?.current && ghostie.can_reenter_corpse)
 			player_old_current[role.player_key] = ghostie.mind.current
 		role.body = H
 		player_role_lookup[H] = role
@@ -785,7 +785,7 @@
 	ui = SStgui.try_update_ui(user, src, null)
 	if(!ui)
 		ui = new(user, src, "MafiaPanel")
-		ui.set_autoupdate(FALSE)
+		ui.set_autoupdate(TRUE)
 		ui.open()
 
 /proc/assoc_value_sum(list/L)
