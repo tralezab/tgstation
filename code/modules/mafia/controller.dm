@@ -359,9 +359,10 @@
 /datum/mafia_controller/proc/end_game()
 	for(var/r in all_roles)
 		var/datum/mafia_role/living_role = r
-		if(living_role.game_status == MAFIA_DEAD) //already relinked
+		if(living_role.game_status == MAFIA_DEAD || player_old_current[living_role.player_key] == null) //already relinked, nothing to relink to
 			continue
 		relink_player_current(living_role)
+	player_old_current = list()
 	map_deleter.generate() //remove the map, it will be loaded at the start of the next one
 	QDEL_LIST(all_roles)
 	current_setup_text = null
@@ -376,10 +377,11 @@
 
 /**
   * Takes a role, ghosts it, relinks it with its old body. that way they can get revived and stuff...
+  * FINISH THIS!
   */
-/datum/mafia_controller/proc/relink_player_current(/datum/mafia_role/role)
-	var/mob/dead/observer/ghost = role.body.ghostize(FALSE)
-	ghost.current = player_old_current[role.player_key]
+/datum/mafia_controller/proc/relink_player_current(datum/mafia_role/role)
+	var/mob/dead/observer/ghostie = role.body.ghostize(FALSE)
+	ghostie.mind.current = player_old_current[role.player_key]
 	player_old_current -= player_old_current[role.player_key]
 
 /**
