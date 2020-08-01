@@ -42,6 +42,7 @@
 	if(SEND_SIGNAL(src,COMSIG_MAFIA_ON_KILL,game,lynch) & MAFIA_PREVENT_KILL)
 		return FALSE
 	game_status = MAFIA_DEAD
+	game.relink_player_current(src)
 	body.death()
 	if(lynch)
 		reveal_role(game, verbose = TRUE)

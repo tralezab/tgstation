@@ -9,6 +9,8 @@
 	var/list/spectators = list()
 	///list of signups that will be filtered should the game start
 	var/list/bad_signups = list()
+	///list of ghosts that need to have their ghost set to what it was when they joined
+	var/list/player_old_current = list()
 	///all roles in the game, dead or alive. check their game status if you only want living or dead.
 	var/list/all_roles = list()
 	///exists to speed up role retrieval, it's a dict. player_role_lookup[player ckey] will give you the role they play
@@ -352,11 +354,15 @@
 
 /**
   * Cleans up the game, resetting variables back to the beginning and removing the map with the generator.
+  * Any living players are ghosted and relinked with their last body before they joined the game.
   */
 /datum/mafia_controller/proc/end_game()
-
+	for(var/r in all_roles)
+		var/datum/mafia_role/living_role = r
+		if(living_role.game_status == MAFIA_DEAD) //already relinked
+			continue
+		relink_player_current(living_role)
 	map_deleter.generate() //remove the map, it will be loaded at the start of the next one
-
 	QDEL_LIST(all_roles)
 	current_setup_text = null
 	custom_setup = list()
@@ -366,6 +372,15 @@
 	QDEL_LIST(landmarks)
 	QDEL_NULL(town_center_landmark)
 	phase = MAFIA_PHASE_SETUP
+
+
+/**
+  * Takes a role, ghosts it, relinks it with its old body. that way they can get revived and stuff...
+  */
+/datum/mafia_controller/proc/relink_player_current(/datum/mafia_role/role)
+	var/mob/dead/observer/ghost = role.body.ghostize(FALSE)
+	ghost.current = player_old_current[role.player_key]
+	player_old_current -= player_old_current[role.player_key]
 
 /**
   * After the voting and judgement phases, the game goes to night shutting the windows and beginning night with a proc.
@@ -545,6 +560,9 @@
 			player_client.prefs.copy_to(H)
 			if(H.dna.species.outfit_important_for_life) //plasmamen
 				H.set_species(/datum/species/human)
+		var/mob/dead/observer/ghostie = player_client.mob
+		if(ghostie?.mind.current && ghostie.can_reenter_corpse)
+			player_old_current[role.player_key] = ghostie.mind.current
 		role.body = H
 		player_role_lookup[H] = role
 		H.key = role.player_key
