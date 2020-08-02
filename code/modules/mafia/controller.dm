@@ -7,8 +7,6 @@
 /datum/mafia_controller
 	///list of observers that should get game updates.
 	var/list/spectators = list()
-	///list of signups that will be filtered should the game start
-	var/list/bad_signups = list()
 	///list of ghosts that need to have their ghost set to what it was when they joined
 	var/list/player_old_current = list()
 	///all roles in the game, dead or alive. check their game status if you only want living or dead.

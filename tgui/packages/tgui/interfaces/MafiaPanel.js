@@ -19,22 +19,25 @@ export const MafiaPanel = (props, context) => {
     timeleft,
     all_roles,
   } = data;
-  const playerAddedHeight = players ? players.length * 30 : 0;
+  const playerAddedHeight = roleinfo ? players.length * 30 : 0;
   const readyGhosts = lobbydata ? lobbydata.filter(
     player => player.status === "Ready") : null;
   return (
     <Window
       title="Mafia"
       theme={role_theme}
-      resizable
       width={650} // 414 or 415 / 444 or 445
       height={293 + playerAddedHeight}>
       <Window.Content scrollable={admin_controls}>
         {!roleinfo && (
-          <Flex direction="column" height="100%" grow={1}>
+          <Flex scrollable
+            overflowY="scroll"
+            direction="column"
+            height="100%"
+            grow={1}>
             <Section
               title="Lobby"
-              mb={0}
+              mb={1}
               fill
               minHeight={8}
               buttons={
@@ -87,6 +90,7 @@ export const MafiaPanel = (props, context) => {
           <Section
             title={phase}
             minHeight="100px"
+            maxHeight="50px"
             buttons={
               <Box bold>
                 {!!admin_controls && (
@@ -118,7 +122,7 @@ export const MafiaPanel = (props, context) => {
                     roleinfo.revealed_icon,
                   ])}
                   style={{
-                    'transform': 'scale(2) translate(0px, 5px)',
+                    'transform': 'scale(2) translate(0px, 10%)',
                     'vertical-align': 'middle',
                   }} />
                 <Box
@@ -257,8 +261,7 @@ export const MafiaPanel = (props, context) => {
             </Flex.Item>
             <Flex.Item grow={2}>
               <Flex
-                direction="column"// maxHeight="100%">
-                width="100%"
+                direction="column"
                 height="100%">
                 <Section
                   title="Roles and Notes"
@@ -290,9 +293,10 @@ export const MafiaPanel = (props, context) => {
                     {!!all_roles && all_roles.map(r => (
                       <Flex.Item
                         key={r}
+                        height="30px"
                         className="Section__title candystripe">
                         <Flex
-                          height={2}
+                          height="18px"
                           align="center"
                           justify="space-between">
                           <Flex.Item>
