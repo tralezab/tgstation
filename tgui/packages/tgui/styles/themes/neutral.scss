@@ -16,7 +16,7 @@
    $color-bg: color.scale($neutral, $lightness: -45%),
  );
 
- .theme-syndicate {
+ .theme-neutral {
    // Components
    @include meta.load-css('../components/Button.scss', $with: (
      'color-default': color.scale($neutral, $lightness: -45%),

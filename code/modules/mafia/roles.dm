@@ -449,7 +449,7 @@
 
 	hud_icon = "hudtraitor"
 	revealed_icon = "traitor"
-	special_theme = "syndicate"
+	special_theme = "neutral"
 
 	var/datum/mafia_role/current_victim
 
@@ -498,6 +498,7 @@
 	detect_immune = TRUE
 	team = MAFIA_TEAM_SOLO
 	role_type = NEUTRAL_KILL
+	special_theme = "neutral"
 	hud_icon = "hudnightmare"
 	revealed_icon = "nightmare"
 	winner_award = /datum/award/achievement/mafia/nightmare
@@ -573,6 +574,7 @@
 	revealed_outfit = /datum/outfit/mafia/fugitive
 	team = MAFIA_TEAM_SOLO
 	role_type = NEUTRAL_DISRUPT
+	special_theme = "neutral"
 	hud_icon = "hudfugitive"
 	revealed_icon = "fugitive"
 	winner_award = /datum/award/achievement/mafia/fugitive
@@ -635,6 +637,7 @@
 	solo_counts_as_town = TRUE //after winning or whatever, can side with whoever. they've already done their objective!
 	team = MAFIA_TEAM_SOLO
 	role_type = NEUTRAL_DISRUPT
+	special_theme = "neutral"
 	hud_icon = "hudobsessed"
 	revealed_icon = "obsessed"
 
@@ -684,6 +687,7 @@
 	solo_counts_as_town = TRUE
 	team = MAFIA_TEAM_SOLO
 	role_type = NEUTRAL_DISRUPT
+	special_theme = "neutral"
 	hud_icon = "hudclown"
 	revealed_icon = "clown"
 	winner_award = /datum/award/achievement/mafia/clown
