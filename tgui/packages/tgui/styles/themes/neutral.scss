@@ -21,8 +21,8 @@
  .theme-neutral {
    // Components
    @include meta.load-css('../components/Button.scss', $with: (
-     'color-default': color.scale($neutral, $lightness: -45%),
-     'color-transparent-text': rgba(227, 240, 255, 0.75),
+     'color-default': color.scale($neutral, $lightness: -30%),
+     'color-transparent-text': color.scale($neutral, $lightness: 30%),
    ));
    @include meta.load-css('../components/ProgressBar.scss', $with: (
      'color-default': $neutral,
