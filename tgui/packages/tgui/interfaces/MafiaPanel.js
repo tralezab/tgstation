@@ -2,7 +2,7 @@ import { classes } from 'common/react';
 import { Fragment } from 'inferno';
 import { multiline } from 'common/string';
 import { useBackend } from '../backend';
-import { Box, Button, Collapsible, Flex, Section, TimeDisplay, Tooltip } from '../components';
+import { Box, Button, Collapsible, Flex, NoticeBox, Section, TimeDisplay, Tooltip } from '../components';
 import { Window } from '../layouts';
 
 export const MafiaPanel = (props, context) => {
@@ -19,7 +19,7 @@ export const MafiaPanel = (props, context) => {
     timeleft,
     all_roles,
   } = data;
-  const playerAddedHeight = roleinfo ? players.length * 30 : 0;
+  const playerAddedHeight = roleinfo ? players.length * 30 : 7;
   const readyGhosts = lobbydata ? lobbydata.filter(
     player => player.status === "Ready") : null;
   return (
@@ -46,9 +46,11 @@ export const MafiaPanel = (props, context) => {
                   timeleft={timeleft}
                   admin_controls={admin_controls} />
               }>
-              <Box bold textAlign="center">
-                The lobby currently has {readyGhosts.length}
-                /12 valid players signed up.
+              <Box textAlign="center">
+                <NoticeBox info>
+                  The lobby currently has {readyGhosts.length}
+                  /12 valid players signed up.
+                </NoticeBox>
                 <Flex
                   direction="column">
                   {!!lobbydata && lobbydata.map(lobbyist => (
@@ -57,7 +59,6 @@ export const MafiaPanel = (props, context) => {
                       basis={2}
                       className="Section__title candystripe">
                       <Flex
-                        bold
                         height={2}
                         align="center"
                         justify="space-between">
@@ -92,7 +93,7 @@ export const MafiaPanel = (props, context) => {
             minHeight="100px"
             maxHeight="50px"
             buttons={
-              <Box bold>
+              <Box>
                 {!!admin_controls && (
                   <Button
                     color="red"
@@ -100,7 +101,7 @@ export const MafiaPanel = (props, context) => {
                     tooltipPosition="bottom-left"
                     tooltip={multiline`
                     Hello admin! If it is the admin controls you seek,
-                    please notice the scrollbar you have that players
+                    please notice the extra scrollbar you have that players
                     do not!`}
                   />
                 )} <TimeDisplay auto="down" value={timeleft} />
@@ -166,11 +167,10 @@ export const MafiaPanel = (props, context) => {
             <Flex justify="space-around">
               <Button
                 icon="smile-beam"
+                content="INNOCENT!"
                 color="good"
                 disabled={!judgement_phase}
-                onClick={() => act("vote_innocent")}>
-                INNOCENT!
-              </Button>
+                onClick={() => act("vote_innocent")} />
               {!judgement_phase && (
                 <Box>
                   There is nobody on trial at the moment.
@@ -183,20 +183,18 @@ export const MafiaPanel = (props, context) => {
               )}
               <Button
                 icon="angry"
+                content="GUILTY!"
                 color="bad"
                 disabled={!judgement_phase}
-                onClick={() => act("vote_guilty")}>
-                GUILTY!
-              </Button>
+                onClick={() => act("vote_guilty")} />
             </Flex>
             <Flex justify="center">
               <Button
                 icon="meh"
-                color="grey"
+                content="Abstain"
+                color="white"
                 disabled={!judgement_phase}
-                onClick={() => act("vote_abstain")}>
-                Abstain
-              </Button>
+                onClick={() => act("vote_abstain")} />
             </Flex>
           </Section>
         )}
@@ -435,7 +433,7 @@ const LobbyDisplay = (props, context) => {
     admin_controls,
   } = data;
   return (
-    <Box bold>
+    <Box>
       [Phase = {phase} | <TimeDisplay auto="down" value={timeleft} />]{' '}
       <Button
         icon="clipboard-check"

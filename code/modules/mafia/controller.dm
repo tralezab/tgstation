@@ -7,8 +7,6 @@
 /datum/mafia_controller
 	///list of observers that should get game updates.
 	var/list/spectators = list()
-	///list of ghosts that need to have their ghost set to what it was when they joined
-	var/list/player_old_current = list()
 	///all roles in the game, dead or alive. check their game status if you only want living or dead.
 	var/list/all_roles = list()
 	///exists to speed up role retrieval, it's a dict. player_role_lookup[player ckey] will give you the role they play
@@ -206,7 +204,7 @@
 		judgement_guilty_votes = list()
 		for(var/i in all_roles)
 			var/datum/mafia_role/abstainee = i
-			if(abstainee.game_status == MAFIA_ALIVE)
+			if(abstainee.game_status == MAFIA_ALIVE && abstainee != loser)
 				judgement_abstain_votes += abstainee
 		on_trial = loser
 		on_trial.body.forceMove(get_turf(town_center_landmark))
@@ -228,15 +226,14 @@
   * * If the accused is killed, their true role is revealed to the rest of the players.
   */
 /datum/mafia_controller/proc/lynch()
-
 	for(var/i in judgement_innocent_votes)
 		var/datum/mafia_role/role = i
 		send_message("<span class='green'>[role.body.real_name] voted innocent.</span>")
-	for(var/i in judgement_abstain_votes)
-		var/datum/mafia_role/role = i
-		send_message("<span class='comradio'>[role.body.real_name] abstained.</span>")
-	for(var/ii in judgement_guilty_votes)
+	for(var/ii in judgement_abstain_votes)
 		var/datum/mafia_role/role = ii
+		send_message("<span class='comradio'>[role.body.real_name] abstained.</span>")
+	for(var/iii in judgement_guilty_votes)
+		var/datum/mafia_role/role = iii
 		send_message("<span class='red'>[role.body.real_name] voted guilty.</span>")
 	if(judgement_guilty_votes.len > judgement_innocent_votes.len) //strictly need majority guilty to lynch
 		send_message("<span class='red'><b>Guilty wins majority, [on_trial.body.real_name] has been lynched.</b></span>")
@@ -352,15 +349,8 @@
 
 /**
   * Cleans up the game, resetting variables back to the beginning and removing the map with the generator.
-  * Any living players are ghosted and relinked with their last body before they joined the game.
   */
 /datum/mafia_controller/proc/end_game()
-	for(var/r in all_roles)
-		var/datum/mafia_role/living_role = r
-		if(living_role.game_status == MAFIA_DEAD || player_old_current[living_role.player_key] == null) //already relinked, nothing to relink to
-			continue
-		relink_player_current(living_role)
-	player_old_current = list()
 	map_deleter.generate() //remove the map, it will be loaded at the start of the next one
 	QDEL_LIST(all_roles)
 	current_setup_text = null
@@ -371,16 +361,6 @@
 	QDEL_LIST(landmarks)
 	QDEL_NULL(town_center_landmark)
 	phase = MAFIA_PHASE_SETUP
-
-
-/**
-  * Takes a role, ghosts it, relinks it with its old body. that way they can get revived and stuff...
-  * FINISH THIS!
-  */
-/datum/mafia_controller/proc/relink_player_current(datum/mafia_role/role)
-	var/mob/dead/observer/ghostie = role.body.ghostize(FALSE)
-	ghostie.mind.current = player_old_current[role.player_key]
-	player_old_current -= player_old_current[role.player_key]
 
 /**
   * After the voting and judgement phases, the game goes to night shutting the windows and beginning night with a proc.
@@ -560,9 +540,6 @@
 			player_client.prefs.copy_to(H)
 			if(H.dna.species.outfit_important_for_life) //plasmamen
 				H.set_species(/datum/species/human)
-		var/mob/dead/observer/ghostie = player_client.mob
-		if(ghostie.mind?.current && ghostie.can_reenter_corpse)
-			player_old_current[role.player_key] = ghostie.mind.current
 		role.body = H
 		player_role_lookup[H] = role
 		H.key = role.player_key
@@ -754,27 +731,29 @@
 						return
 					user_role.handle_action(src,params["atype"],target)
 			return TRUE
-		if("vote_abstain")
-			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_abstain_votes))
-				return
-			to_chat(user_role.body,"You have decided to abstain.")
-			judgement_innocent_votes -= user_role
-			judgement_guilty_votes -= user_role
-			judgement_abstain_votes += user_role
-		if("vote_innocent")
-			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_innocent_votes))
-				return
-			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as INNOCENT!")
-			judgement_abstain_votes -= user_role//no fakers, and...
-			judgement_guilty_votes -= user_role//no radical centrism
-			judgement_innocent_votes += user_role
-		if("vote_guilty")
-			if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_guilty_votes))
-				return
-			to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as GUILTY!")
-			judgement_abstain_votes -= user_role//no fakers, and...
-			judgement_innocent_votes -= user_role//no radical centrism
-			judgement_guilty_votes += user_role
+	if(user_role != on_trial)
+		switch(action)
+			if("vote_abstain")
+				if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_abstain_votes))
+					return
+				to_chat(user_role.body,"You have decided to abstain.")
+				judgement_innocent_votes -= user_role
+				judgement_guilty_votes -= user_role
+				judgement_abstain_votes += user_role
+			if("vote_innocent")
+				if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_innocent_votes))
+					return
+				to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as INNOCENT!")
+				judgement_abstain_votes -= user_role//no fakers, and...
+				judgement_guilty_votes -= user_role//no radical centrism
+				judgement_innocent_votes += user_role
+			if("vote_guilty")
+				if(phase != MAFIA_PHASE_JUDGEMENT || (user_role in judgement_guilty_votes))
+					return
+				to_chat(user_role.body,"Your vote on [on_trial.body.real_name] submitted as GUILTY!")
+				judgement_abstain_votes -= user_role//no fakers, and...
+				judgement_innocent_votes -= user_role//no radical centrism
+				judgement_guilty_votes += user_role
 
 /datum/mafia_controller/ui_state(mob/user)
 	return GLOB.always_state
