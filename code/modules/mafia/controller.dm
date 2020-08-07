@@ -682,7 +682,7 @@
 		switch(action)
 			if("mf_signup")
 				if(!SSticker.HasRoundStarted())
-					to_chat(usr, "<span class='warning'>Wait for the game to start!</span>")
+					to_chat(usr, "<span class='warning'>Wait for the round to start.</span>")
 					return
 				if(GLOB.mafia_signup[C.ckey])
 					GLOB.mafia_signup -= C.ckey
@@ -858,9 +858,7 @@
 	//cuts invalid players from signups (disconnected/not a ghost)
 	var/list/possible_keys = list()
 	for(var/key in GLOB.mafia_signup)
-		var/client/directory_client = GLOB.directory[key]
-		var/client/signup_client = GLOB.mafia_signup[key]
-		if(directory_client && directory_client.key == signup_client.key)
+		if(GLOB.directory[key])
 			var/client/C = GLOB.directory[key]
 			if(isobserver(C.mob))
 				possible_keys += key
@@ -906,20 +904,14 @@
   */
 /datum/mafia_controller/proc/check_signups()
 	for(var/bad_key in GLOB.mafia_bad_signup)
-		var/client/directory_client = GLOB.directory[bad_key]
-		var/client/bad_signup_client = GLOB.mafia_bad_signup[bad_key]
-		if(directory_client && directory_client.key == bad_signup_client.key)
-			//they have reconnected
+		if(GLOB.directory[bad_key])//they have reconnected if we can search their key and get a client
 			GLOB.mafia_bad_signup -= bad_key
 			GLOB.mafia_signup += bad_key
 	for(var/key in GLOB.mafia_signup)
-		var/client/directory_client = GLOB.directory[key]
-		var/client/signup_client = GLOB.mafia_signup[key]
-		if(!(directory_client && directory_client.key == signup_client.key))
-			//they are no longer connected, move them to inactive list
+		var/client/C = GLOB.directory[key]
+		if(!C)//vice versa but in a variable we use later
 			GLOB.mafia_signup -= key
 			GLOB.mafia_bad_signup += key
-		var/client/C = GLOB.directory[key]
 		if(!isobserver(C.mob))
 			//they are back to playing the game, remove them from the signups
 			GLOB.mafia_signup -= key
