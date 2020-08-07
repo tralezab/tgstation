@@ -38,8 +38,6 @@ export const MafiaPanel = (props, context) => {
             <Section
               title="Lobby"
               mb={1}
-              fill
-              minHeight={8}
               buttons={
                 <LobbyDisplay
                   phase={phase}

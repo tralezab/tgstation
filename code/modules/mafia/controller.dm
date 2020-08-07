@@ -762,7 +762,7 @@
 	ui = SStgui.try_update_ui(user, src, null)
 	if(!ui)
 		ui = new(user, src, "MafiaPanel")
-		ui.set_autoupdate(TRUE)
+		ui.set_autoupdate(FALSE)
 		ui.open()
 
 /proc/assoc_value_sum(list/L)
