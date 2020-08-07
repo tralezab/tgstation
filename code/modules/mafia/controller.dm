@@ -858,7 +858,9 @@
 	//cuts invalid players from signups (disconnected/not a ghost)
 	var/list/possible_keys = list()
 	for(var/key in GLOB.mafia_signup)
-		if(GLOB.directory[key] && GLOB.directory[key] == GLOB.mafia_signup[key])
+		var/client/directory_client = GLOB.directory[key]
+		var/client/signup_client = GLOB.mafia_signup[key]
+		if(directory_client && directory_client.key == signup_client.key)
 			var/client/C = GLOB.directory[key]
 			if(isobserver(C.mob))
 				possible_keys += key
@@ -904,12 +906,16 @@
   */
 /datum/mafia_controller/proc/check_signups()
 	for(var/bad_key in GLOB.mafia_bad_signup)
-		if(GLOB.directory[bad_key] && GLOB.directory[bad_key] == GLOB.mafia_bad_signup[bad_key])
+		var/client/directory_client = GLOB.directory[bad_key]
+		var/client/bad_signup_client = GLOB.mafia_bad_signup[bad_key]
+		if(directory_client && directory_client.key == bad_signup_client.key)
 			//they have reconnected
 			GLOB.mafia_bad_signup -= bad_key
 			GLOB.mafia_signup += bad_key
 	for(var/key in GLOB.mafia_signup)
-		if(!(GLOB.directory[key] && GLOB.directory[key] == GLOB.mafia_signup[key]))
+		var/client/directory_client = GLOB.directory[bad_key]
+		var/client/signup_client = GLOB.mafia_signup[key]
+		if(!(directory_client && directory_client.key == signup_client.key))
 			//they are no longer connected, move them to inactive list
 			GLOB.mafia_signup -= key
 			GLOB.mafia_bad_signup += key
