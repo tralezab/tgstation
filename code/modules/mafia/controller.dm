@@ -913,7 +913,7 @@
 			GLOB.mafia_bad_signup -= bad_key
 			GLOB.mafia_signup += bad_key
 	for(var/key in GLOB.mafia_signup)
-		var/client/directory_client = GLOB.directory[bad_key]
+		var/client/directory_client = GLOB.directory[key]
 		var/client/signup_client = GLOB.mafia_signup[key]
 		if(!(directory_client && directory_client.key == signup_client.key))
 			//they are no longer connected, move them to inactive list
