@@ -125,9 +125,11 @@
 	ranged = TRUE
 	rapid = 1
 	///Previous segment in the chain
-	var/mob/living/simple_animal/hostile/eldritch/armsy/back
+
+	//haha hey look poopy code for fall festival LOL
+	var/mob/living/simple_animal/hostile/eldritch/armsy/rollercoaster/back
 	///Next segment in the chain
-	var/mob/living/simple_animal/hostile/eldritch/armsy/front
+	var/mob/living/simple_animal/hostile/eldritch/armsy/rollercoaster/front
 	///Your old location
 	var/oldloc
 	///Allow / disallow pulling

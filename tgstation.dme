@@ -1,4 +1,4 @@
-// DM Environment file for tgstation.dme.
+	// DM Environment file for tgstation.dme.
 // All manual changes should be made outside the BEGIN_ and END_ blocks.
 // New source code should be placed in .dm files: choose File/New --> Code File.
 // BEGIN_INTERNALS
@@ -3162,6 +3162,8 @@
 #include "code\modules\vehicles\wheelchair.dm"
 #include "code\modules\vehicles\cars\car.dm"
 #include "code\modules\vehicles\cars\clowncar.dm"
+#include "code\modules\vehicles\rollercoasters\coaster_car.dm"
+#include "code\modules\vehicles\rollercoasters\track.dm"
 #include "code\modules\vending\_vending.dm"
 #include "code\modules\vending\assist.dm"
 #include "code\modules\vending\autodrobe.dm"
