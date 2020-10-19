@@ -418,6 +418,18 @@
 	tastes = list("salad" = 1, "wood" = 1)
 	foodtypes = VEGETABLES
 
+/obj/item/food/meat/slab/human/mutant/faceless
+	icon_state = "facelessmeat"
+	desc = "\"What is that?\""
+	tastes = list("rubbery skin" = 1, "sludge" = 1)
+	foodtypes = TOXIC
+
+/obj/item/food/meat/slab/human/mutant/faceless/examine(mob/user)
+	. = ..()
+	. += "<span class='warning'>\"I don't really know.\"</span>"
+	. += "<span class='notice'>\"You don't know... and you're eating it.\"</span>"
+	. += "<span class='warning'>\"You know, if you can sort of muscle your way past the gag reflex, all kinds of food possibilities open up.\"</span>"
+
 /obj/item/food/meat/slab/human/mutant/shadow
 	icon_state = "shadowmeat"
 	desc = "Ow, the edge."

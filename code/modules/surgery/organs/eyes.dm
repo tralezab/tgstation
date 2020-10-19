@@ -402,3 +402,7 @@
 	eye_icon_state = "snail_eyes"
 	icon_state = "snail_eyeballs"
 
+/obj/item/organ/eyes/faceless
+	name = "fogged over eyes"
+	desc = "These eyes seem to be able to see to some degree, despite looking heavily fogged over and dead. They're sensitive to bright lights."
+	flash_protect = FLASH_PROTECTION_SENSITIVE
