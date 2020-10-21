@@ -239,6 +239,15 @@
 	mood_change = -25
 	timeout = 4 MINUTES
 
+/datum/mood_event/new_faceless //of course, you won't remember muahahaha
+	description = "<span class='boldwarning'>Who was I?! I just have to remember my name!</span>\n"
+	mood_change = -20
+	timeout = 2 MINUTES
+
+/datum/mood_event/faceless
+	description = "<span class='boldwarning'>I feel miserable living in this disgusting shell...</span>\n"
+	mood_change = -8
+
 //These are unused so far but I want to remember them to use them later
 /datum/mood_event/surgery
 	description = "<span class='boldwarning'>HE'S CUTTING ME OPEN!!</span>\n"

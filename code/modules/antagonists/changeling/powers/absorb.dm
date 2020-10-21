@@ -1,6 +1,6 @@
 /datum/action/changeling/absorb_dna
 	name = "Absorb DNA"
-	desc = "Absorb the DNA of our victim. Requires us to strangle them."
+	desc = "We will steal the identity of the victim. Requires us to strangle them. In this process their identity is ruined."
 	button_icon_state = "absorb_dna"
 	chemical_cost = 0
 	dna_cost = 0
@@ -34,17 +34,21 @@
 	for(var/i in 1 to 3)
 		switch(i)
 			if(1)
-				to_chat(user, "<span class='notice'>This creature is compatible. We must hold still...</span>")
+				user.visible_message("<span class='warning'>[user] begins to shake violently.</span>", "<span class='notice'>This creature is compatible. We must not be interrupted.</span>")
+				user.Shake(5,5, 150)
 			if(2)
-				user.visible_message("<span class='warning'>[user] extends a proboscis!</span>", "<span class='notice'>We extend a proboscis.</span>")
+				user.visible_message("<span class='warning'>[user] unhinges their jaw!</span>", "<span class='notice'>We prepare to ruin them.</span>")
 			if(3)
-				user.visible_message("<span class='danger'>[user] stabs [target] with the proboscis!</span>", "<span class='notice'>We stab [target] with the proboscis.</span>")
-				to_chat(target, "<span class='userdanger'>You feel a sharp stabbing pain!</span>")
-				target.take_overall_damage(40)
-
+				user.visible_message("<span class='danger'>[user] vomits a red goop on [target], their skin turning a sickly grey!</span>", "<span class='notice'>[target] has been ruined. Let us take their identity.</span>")
+				to_chat(target, "<span class='userdanger'>You feel your skin burn and your insides melt!</span>")
+				to_chat(target, "<span class='warning'>You can feel your mind flickering on and off...</span>")
+				target.set_species(/datum/species/faceless)
+				target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 180, 180)//really more like setting the damage
 		SSblackbox.record_feedback("nested tally", "changeling_powers", 1, list("Absorb DNA", "[i]"))
 		if(!do_mob(user, target, 150))
 			to_chat(user, "<span class='warning'>Our absorption of [target] has been interrupted!</span>")
+			if(i == 3)
+				to_chat(user, "<span class='danger'>...And after we ruin them but before we could steal their DNA! We've lost the chance to absorb them.</span>")
 			changeling.isabsorbing = 0
 			return
 
