@@ -43,7 +43,6 @@
 				to_chat(target, "<span class='userdanger'>You feel your skin burn and your insides melt!</span>")
 				to_chat(target, "<span class='warning'>You can feel your mind flickering on and off...</span>")
 				target.set_species(/datum/species/faceless)
-				target.adjustOrganLoss(ORGAN_SLOT_BRAIN, 180, 180)//really more like setting the damage
 		SSblackbox.record_feedback("nested tally", "changeling_powers", 1, list("Absorb DNA", "[i]"))
 		if(!do_mob(user, target, 150))
 			to_chat(user, "<span class='warning'>Our absorption of [target] has been interrupted!</span>")
@@ -146,6 +145,5 @@
 	changeling.isabsorbing = 0
 	changeling.canrespec = 1
 
-	target.death(0)
-	target.Drain()
+	target.SetSleeping(40 SECONDS) //same as mindswap, should give a good amount of time to clean things up (steal stuff, get away, etc)
 	return TRUE
