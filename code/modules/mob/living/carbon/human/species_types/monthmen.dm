@@ -39,14 +39,16 @@
 			days_in_that_month = 30
 
 	var/day_chosen = rand(1, days_in_that_month)
-	var/append
-	switch(day_chosen)
+	var/append = ""
+	switch(copytext(day_chosen, -1)) //so always the last letter
 		if(1)
 			append = "st"
 		if(2)
 			append = "nd"
 		if(3)
 			append = "rd"
+		else
+			append = "th"
 
 	return "[day_chosen][append] of [month]"
 
