@@ -389,17 +389,6 @@ GLOBAL_LIST_EMPTY(lifts)
 	glide_size = 4
 	var/time_inbetween_moves = 1
 
-/obj/structure/industrial_lift/tram/Initialize(mapload)
-	. = ..()
-	/*
-	if(!lift_master_datum.tram_mixture)
-		lift_master_datum.tram_mixture = new
-		lift_master_datum.tram_mixture.add_gases(/datum/gas/plasma, /datum/gas/tritium)
-		lift_master_datum.tram_mixture.gases[/datum/gas/plasma][MOLES] = MOLES_O2STANDARD
-		lift_master_datum.tram_mixture.gases[/datum/gas/tritium][MOLES] = MOLES_N2STANDARD
-		lift_master_datum.tram_mixture.temperature = T20C
-	*/
-
 /obj/structure/industrial_lift/tram/use(mob/user, is_ghost=FALSE)
 	if(is_ghost && !in_range(src, user))
 		return
