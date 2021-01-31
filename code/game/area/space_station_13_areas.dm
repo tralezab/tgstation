@@ -276,6 +276,28 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 	name = "Starboard Tram Underpass"
 	icon_state = "mainttramR"
 
+//Radation storm shelter
+/area/maintenance/radshelter
+	name = "Radstorm Shelter"
+	icon_state = "green"
+
+/area/maintenance/radshelter/medical
+	name = "Medical Radstorm Shelter"
+
+/area/maintenance/radshelter/sec
+	name = "Security Radstorm Shelter"
+
+/area/maintenance/radshelter/service
+	name = "Service Radstorm Shelter"
+
+/area/maintenance/radshelter/civil
+	name = "Civilian Radstorm Shelter"
+
+/area/maintenance/radshelter/sci
+	name = "Science Radstorm Shelter"
+
+/area/maintenance/radshelter/cargo
+	name = "Cargo Radstorm Shelter"
 
 //Hallway
 /area/hallway
@@ -501,7 +523,8 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 	name = "Bar"
 	icon_state = "bar"
 	mood_bonus = 5
-	mood_message = "<span class='nicegreen'>I love being in the bar!\n</span>"
+	mood_message = "<span class='nicegreen'>I love being in the bar!</span>\n"
+	mood_trait = TRAIT_EXTROVERT
 	airlock_wires = /datum/wires/airlock/service
 	sound_environment = SOUND_AREA_WOODFLOOR
 
@@ -533,6 +556,9 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 /area/library
 	name = "Library"
 	icon_state = "library"
+	mood_bonus = 5
+	mood_message = "<span class='nicegreen'>I love being in the library!</span>\n"
+	mood_trait = TRAIT_INTROVERT
 	flags_1 = CULT_PERMITTED_1
 	sound_environment = SOUND_AREA_LARGE_SOFTFLOOR
 
@@ -892,7 +918,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 	name = "Psychology Office"
 	icon_state = "psychology"
 	mood_bonus = 3
-	mood_message = "<span class='nicegreen'>I feel at ease here.\n</span>"
+	mood_message = "<span class='nicegreen'>I feel at ease here.</span>\n"
 	ambientsounds = list('sound/ambience/aurora_caelus_short.ogg')
 
 //Security
