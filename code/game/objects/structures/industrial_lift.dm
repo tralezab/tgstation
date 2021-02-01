@@ -7,6 +7,11 @@
 /datum/lift_master
 	var/list/lift_platforms
 
+	///If initialized, the platform will store gas mixtures it goes over, replacing them with a copy of this. It restores them when leaving.
+	var/datum/gas_mixture/tram_mixture
+	///assoc list for above, turf to what that turf's gas mix was.
+	var/list/stored_gases = list()
+
 /datum/lift_master/Destroy()
 	for(var/l in lift_platforms)
 		var/obj/structure/industrial_lift/lift_platform = l
@@ -49,6 +54,31 @@
 			possible_expansions -= borderline
 
 /**
+ * Updates the air on the tram only if the tram has a special gas mixture.
+ * Spots that are no longer on the tram get their old gas mix back from the first loop.
+ * Spots that are now on the tram get their gas mix stored and replaced by the lift master's gas mix.
+ */
+/datum/lift_master/proc/update_lift_atmos()
+	for(var/lt in stored_gases)
+		var/turf/open/lift_turf = lt
+		if(!isopenturf(lift_turf) || locate(/obj/structure/industrial_lift) in lift_turf)
+			continue
+		//the tram is no longer here, we can restore it to the atmos it originally had
+		var/datum/gas_mixture/old_air = stored_gases[lift_turf]
+		stored_gases -= lift_turf
+		lift_turf.copy_air(old_air)
+	for(var/p in lift_platforms)
+		var/obj/structure/industrial_lift/lift_platform = p
+		var/turf/open/current_turf = get_turf(lift_platform)
+		if(!isopenturf(current_turf) || stored_gases[current_turf]) //don't mess with wall atmos (??), or there already has the correct atmos
+			continue
+		//new location for the tram, we are going to save its air contents and override it with the tram atmos
+		var/datum/gas_mixture/destination_air = current_turf.return_air()
+		var/datum/gas_mixture/copied_destination_air = destination_air.copy()
+		stored_gases[current_turf] = copied_destination_air
+		current_turf.copy_air(tram_mixture)
+
+/**
  * Moves the lift UP or DOWN, this is what users invoke with their hand.
  * This is a SAFE proc, ensuring every part of the lift moves SANELY.
  * It also locks controls for the (miniscule) duration of the movement, so the elevator cannot be broken by spamming.
@@ -61,6 +91,8 @@
 	for(var/p in lift_platforms)
 		var/obj/structure/industrial_lift/lift_platform = p
 		lift_platform.travel(going)
+	if(tram_mixture)
+		update_lift_atmos()
 	set_controls(UNLOCKED)
 
 /**
@@ -109,6 +141,8 @@
 				for(var/y in min_y to max_y)
 					var/obj/structure/industrial_lift/lift_platform = locate(/obj/structure/industrial_lift, locate(x, y, z))
 					lift_platform.travel(going)
+	if(tram_mixture)
+		update_lift_atmos()
 	set_controls(UNLOCKED)
 
 ///Check destination turfs
