@@ -190,7 +190,7 @@ GLOBAL_LIST_EMPTY(lifts)
  * Signal for when the tram runs into a field of which it cannot go through.
  * Stops the train's travel fully, sends a message, and destroys the train.
  * Arguments:
- * bumped_field - The field this tram bumped into
+ * bumped_atom - The atom this tram bumped into
  */
 /obj/structure/industrial_lift/proc/GracefullyBreak(atom/bumped_atom)
 	SIGNAL_HANDLER
@@ -198,13 +198,12 @@ GLOBAL_LIST_EMPTY(lifts)
 	if(istype(bumped_atom, /obj/machinery/field))
 		return
 
-	to_chat(world, "bump signal passed checks moment")
-	bumped_atom.visible_message("<span class='userdanger'>[src] crashes into [bumped_atom] violently!")
+	bumped_atom.visible_message("<span class='userdanger'>[src] crashes into the field violently!</span>")
 	for(var/obj/structure/industrial_lift/tram/tram_part as anything in lift_master_datum.lift_platforms)
 		tram_part.travel_distance = 0
 		tram_part.travelling = FALSE
-		if(prob(10))
-			explosion(get_turf(tram_part),1,2,3)
+		if(prob(15) || locate(/mob/living) in tram_part.lift_load) //always go boom on people on the track
+			explosion(get_turf(tram_part),rand(0,1),2,3) //50% chance of gib
 		qdel(tram_part)
 
 /obj/structure/industrial_lift/proc/lift_platform_expansion(datum/lift_master/lift_master_datum)
