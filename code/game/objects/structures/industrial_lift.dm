@@ -259,8 +259,8 @@ GLOBAL_LIST_EMPTY(lifts)
 		var/atom/movable/thing = am
 		thing.forceMove(destination)
 
-/obj/structure/industrial_lift/proc/use(mob/user, is_ghost=FALSE)
-	if(is_ghost && !in_range(src, user))
+/obj/structure/industrial_lift/proc/use(mob/living/user)
+	if(!isliving(user) || !in_range(src, user) || user.combat_mode)
 		return
 
 	var/list/tool_list = list()
@@ -277,8 +277,8 @@ GLOBAL_LIST_EMPTY(lifts)
 		add_fingerprint(user)
 		return
 	var/result = show_radial_menu(user, src, tool_list, custom_check = CALLBACK(src, .proc/check_menu, user), require_near = TRUE, tooltips = TRUE)
-	if(!is_ghost && !in_range(src, user))
-		return  // nice try
+	if(!isliving(user) || !in_range(src, user) || user.combat_mode)
+		return //nice try
 	switch(result)
 		if("Up")
 			lift_master_datum.MoveLift(UP, user)
@@ -410,8 +410,8 @@ GLOBAL_LIST_EMPTY(lifts)
 	var/travel_direction
 	var/time_inbetween_moves = 1
 
-/obj/structure/industrial_lift/tram/use(mob/user, is_ghost=FALSE)
-	if(is_ghost && !in_range(src, user))
+/obj/structure/industrial_lift/tram/use(mob/user)
+	if(!isliving(user) || !in_range(src, user) || user.combat_mode)
 		return
 
 	if(controls_locked || travelling)
