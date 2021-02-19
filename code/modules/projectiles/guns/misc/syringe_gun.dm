@@ -34,7 +34,7 @@
 	return syringes.len
 
 /obj/item/gun/syringe/process_chamber()
-	if(chambered && !chambered.BB) //we just fired
+	if(chambered && !chambered.loaded_projectile) //we just fired
 		recharge_newshot()
 	update_icon()
 
@@ -60,6 +60,9 @@
 	return TRUE
 
 /obj/item/gun/syringe/attackby(obj/item/A, mob/user, params, show_msg = TRUE)
+	if(istype(A, /obj/item/reagent_containers/syringe/bluespace))
+		to_chat(user, "<span class='notice'>[A] is too big to load into [src].</span>")
+		return TRUE
 	if(istype(A, /obj/item/reagent_containers/syringe))
 		if(syringes.len < max_syringes)
 			if(!user.transferItemToLoc(A, src))

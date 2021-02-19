@@ -85,7 +85,7 @@
 	toggle_paddles()
 
 //ATTACK HAND IGNORING PARENT RETURN VALUE
-/obj/item/defibrillator/attack_hand(mob/user)
+/obj/item/defibrillator/attack_hand(mob/user, list/modifiers)
 	if(loc == user)
 		if(slot_flags == ITEM_SLOT_BACK)
 			if(user.get_item_by_slot(ITEM_SLOT_BACK) == src)
@@ -107,8 +107,8 @@
 	. = ..()
 	if(ismob(loc))
 		var/mob/M = loc
-		if(!M.incapacitated() && istype(over_object, /obj/screen/inventory/hand))
-			var/obj/screen/inventory/hand/H = over_object
+		if(!M.incapacitated() && istype(over_object, /atom/movable/screen/inventory/hand))
+			var/atom/movable/screen/inventory/hand/H = over_object
 			M.putItemFromInventoryInHandIfPossible(src, H.held_index)
 
 /obj/item/defibrillator/attackby(obj/item/W, mob/user, params)
@@ -410,7 +410,7 @@
 	forceMove(defib)
 	defib.update_power()
 
-/obj/item/shockpaddles/attack(mob/M, mob/user)
+/obj/item/shockpaddles/attack(mob/M, mob/living/user, params)
 	if(busy)
 		return
 	if(req_defib && !defib.powered)
@@ -430,7 +430,8 @@
 			to_chat(user, "<span class='warning'>[src] are recharging!</span>")
 		return
 
-	if(user.a_intent == INTENT_DISARM)
+	var/list/modifiers = params2list(params)
+	if(LAZYACCESS(modifiers, RIGHT_CLICK))
 		do_disarm(M, user)
 		return
 
@@ -446,7 +447,7 @@
 		to_chat(user, "<span class='warning'>You need to target your patient's chest with [src]!</span>")
 		return
 
-	if(user.a_intent == INTENT_HARM)
+	if(user.combat_mode)
 		do_harm(H, user)
 		return
 
@@ -457,7 +458,7 @@
 	do_help(H, user)
 
 /obj/item/shockpaddles/proc/shock_touching(dmg, mob/H)
-	if(isliving(H.pulledby))		//CLEAR!
+	if(isliving(H.pulledby)) //CLEAR!
 		var/mob/living/M = H.pulledby
 		if(M.electrocute_act(30, H))
 			M.visible_message("<span class='danger'>[M] is electrocuted by [M.p_their()] contact with [H]!</span>")
@@ -498,7 +499,7 @@
 		"<span class='warning'>You overcharge the paddles and begin to place them onto [H]'s chest...</span>")
 	busy = TRUE
 	update_icon()
-	if(do_after(user, 15, TRUE, H))
+	if(do_after(user, 1.5 SECONDS, H))
 		user.visible_message("<span class='notice'>[user] places [src] on [H]'s chest.</span>",
 			"<span class='warning'>You place [src] on [H]'s chest and begin to charge them.</span>")
 		var/turf/T = get_turf(defib)
@@ -507,7 +508,7 @@
 			T.audible_message("<span class='warning'>\The [defib] lets out an urgent beep and lets out a steadily rising hum...</span>")
 		else
 			user.audible_message("<span class='warning'>[src] let out an urgent beep.</span>")
-		if(do_after(user, 15, TRUE, H)) //Takes longer due to overcharging
+		if(do_after(user, 1.5 SECONDS, H)) //Takes longer due to overcharging
 			if(!H)
 				busy = FALSE
 				update_icon()
@@ -548,11 +549,11 @@
 	user.visible_message("<span class='warning'>[user] begins to place [src] on [H]'s chest.</span>", "<span class='warning'>You begin to place [src] on [H]'s chest...</span>")
 	busy = TRUE
 	update_icon()
-	if(do_after(user, 30, TRUE, H)) //beginning to place the paddles on patient's chest to allow some time for people to move away to stop the process
+	if(do_after(user, 3 SECONDS, H)) //beginning to place the paddles on patient's chest to allow some time for people to move away to stop the process
 		user.visible_message("<span class='notice'>[user] places [src] on [H]'s chest.</span>", "<span class='warning'>You place [src] on [H]'s chest.</span>")
 		playsound(src, 'sound/machines/defib_charge.ogg', 75, FALSE)
 		var/obj/item/organ/heart = H.getorgan(/obj/item/organ/heart)
-		if(do_after(user, 20, TRUE, H)) //placed on chest and short delay to shock for dramatic effect, revive time is 5sec total
+		if(do_after(user, 2 SECONDS, H)) //placed on chest and short delay to shock for dramatic effect, revive time is 5sec total
 			if((!combat && !req_defib) || (req_defib && !defib.combat))
 				for(var/obj/item/clothing/C in H.get_equipped_items())
 					if((C.body_parts_covered & CHEST) && (C.clothing_flags & THICKMATERIAL)) //check to see if something is obscuring their chest.
