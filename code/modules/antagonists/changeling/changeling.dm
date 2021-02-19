@@ -34,7 +34,7 @@
 	var/geneticpoints = 10
 	var/total_geneticspoints = 10
 	var/total_chem_storage = 75
-	var/purchasedpowers = list()
+	var/powers = list()
 
 	var/mimicing = ""
 	var/canrespec = FALSE//set to TRUE in absorb.dm
@@ -100,8 +100,8 @@
 /datum/antagonist/changeling/proc/remove_changeling_powers()
 	if(ishuman(owner.current))
 		reset_properties()
-		for(var/datum/action/changeling/p in purchasedpowers)
-			purchasedpowers -= p
+		for(var/datum/action/changeling/p in powers)
+			powers -= p
 			p.Remove(owner.current)
 
 	//MOVE THIS
@@ -110,19 +110,18 @@
 		owner.current.hud_used.lingstingdisplay.invisibility = INVISIBILITY_ABSTRACT
 
 /datum/antagonist/changeling/proc/reset_powers()
-	if(purchasedpowers)
+	if(powers)
 		remove_changeling_powers()
 	//Repurchase free powers.
 	for(var/path in all_powers)
 		var/datum/action/changeling/S = new path
-		if(!S.dna_cost)
-			if(!has_sting(S))
-				purchasedpowers += S
-				S.on_purchase(owner.current,TRUE)
+		if(!has_sting(S))
+			powers += S
+			S.on_purchase(owner.current,TRUE)
 
 /datum/antagonist/changeling/proc/regain_powers()//for when action buttons are lost and need to be regained, such as when the mind enters a new mob
 	emporium_action.Grant(owner.current)
-	for(var/power in purchasedpowers)
+	for(var/power in powers)
 		var/datum/action/changeling/S = power
 		if(istype(S) && S.needs_button)
 			S.Grant(owner.current)
@@ -139,12 +138,10 @@
 	return COMSIG_MOB_CANCEL_CLICKON
 
 /datum/antagonist/changeling/proc/has_sting(datum/action/changeling/power)
-	for(var/P in purchasedpowers)
-		var/datum/action/changeling/otherpower = P
+	for(var/datum/action/changeling/otherpower as anything in powers)
 		if(initial(power.name) == otherpower.name)
 			return TRUE
 	return FALSE
-
 
 /datum/antagonist/changeling/proc/purchase_power(sting_name)
 	var/datum/action/changeling/thepower
@@ -180,7 +177,7 @@
 		return
 
 	geneticpoints -= thepower.dna_cost
-	purchasedpowers += thepower
+	powers += thepower
 	thepower.on_purchase(owner.current)//Grant() is ran in this proc, see changeling_powers.dm
 
 /datum/antagonist/changeling/proc/readapt()
