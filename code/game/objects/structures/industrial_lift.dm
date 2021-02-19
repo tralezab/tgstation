@@ -74,6 +74,7 @@
 	var/min_x = world.maxx
 	var/min_y = world.maxy
 
+
 	set_controls(LOCKED)
 	for(var/p in lift_platforms)
 		var/obj/structure/industrial_lift/lift_platform = p
