@@ -462,9 +462,11 @@ GLOBAL_LIST_EMPTY(lifts)
 
 /obj/structure/industrial_lift/tram/proc/tram_travel(obj/effect/landmark/tram/from_where, obj/effect/landmark/tram/to_where)
 	visible_message("<span class='notice'>[src] has been called to the [to_where]!</span")
+
 	lift_master_datum.set_controls(LOCKED)
-	for(var/lift in lift_master_datum.lift_platforms) //only thing everyone needs to know is the new location.
-		var/obj/structure/industrial_lift/tram/other_tram_part = lift
+	for(var/obj/structure/industrial_lift/tram/other_tram_part as anything in lift_master_datum.lift_platforms) //only thing everyone needs to know is the new location.
+		if(other_tram_part.travelling) //wee woo wee woo there was a double action queued. damn multi tile structs
+			return //we don't care to undo locked controls, though, as that will resolve itself
 		other_tram_part.travelling = TRUE
 		other_tram_part.from_where = to_where
 	travel_direction = get_dir(from_where, to_where)
@@ -480,7 +482,7 @@ GLOBAL_LIST_EMPTY(lifts)
 	for(var/lift in lift_master_datum.lift_platforms) //only thing everyone needs to know is the new location.
 		var/obj/structure/industrial_lift/tram/other_tram_part = lift
 		other_tram_part.travelling = FALSE
-	lift_master_datum.set_controls(UNLOCKED)
+		lift_master_datum.set_controls(UNLOCKED)
 
 /obj/effect/landmark/tram
 	name = "tram destination" //the tram buttons will mention this.
