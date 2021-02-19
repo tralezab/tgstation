@@ -17,7 +17,7 @@
 	if(!receptors_active)
 		to_chat(user, "<span class='warning'>We search for the scent of any nearby changelings.</span>")
 		changeling.chem_recharge_slowdown += 6
-		var/datum/status_effect/pinpointer = user.apply_status_effect(/datum/status_effect/agent_pinpointer/changeling)
+		var/datum/status_effect/agent_pinpointer/changeling/pinpointer = user.apply_status_effect(/datum/status_effect/agent_pinpointer/changeling)
 		pinpointer.ability = src
 	else
 		if(forced_end)

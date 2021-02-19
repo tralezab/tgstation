@@ -192,7 +192,9 @@
 	if(mob_species)
 		H.set_species(mob_species)
 	if(husk)
-		H.Drain()
+		H.become_husk(INNATE_TRAIT)
+		ADD_TRAIT(H, TRAIT_BADDNA, INNATE_TRAIT)
+		H.blood_volume = 0
 	else //Because for some reason I can't track down, things are getting turned into husks even if husk = false. It's in some damage proc somewhere.
 		H.cure_husk()
 	H.underwear = "Nude"

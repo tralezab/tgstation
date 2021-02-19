@@ -11,15 +11,19 @@
 	mutanteyes = /obj/item/organ/eyes/faceless
 	mutantbrain = /obj/item/organ/brain/faceless
 
-/datum/species/faceless/on_species_gain(mob/living/carbon/C, datum/species/old_species, pref_load)
+/datum/species/faceless/on_species_gain(mob/living/carbon/new_faceless, datum/species/old_species, pref_load)
 	. = ..()
-	SEND_SIGNAL(C, COMSIG_ADD_MOOD_EVENT, "faceless_moodlet_temp", /datum/mood_event/new_faceless)
-	SEND_SIGNAL(C, COMSIG_ADD_MOOD_EVENT, "faceless_moodlet", /datum/mood_event/faceless)
+	new_faceless.real_name = "Unknown"
+	new_faceless.name = new_faceless.real_name
+	SEND_SIGNAL(new_faceless, COMSIG_ADD_MOOD_EVENT, "faceless_moodlet_temp", /datum/mood_event/new_faceless)
+	SEND_SIGNAL(new_faceless, COMSIG_ADD_MOOD_EVENT, "faceless_moodlet", /datum/mood_event/faceless)
+	new_faceless.mind?.add_antag_datum(/datum/antagonist/faceless)
 
-/datum/species/faceless/on_species_loss(mob/living/carbon/human/C, datum/species/new_species, pref_load)
+/datum/species/faceless/on_species_loss(mob/living/carbon/human/old_faceless, datum/species/new_species, pref_load)
 	. = ..()
-	SEND_SIGNAL(C, COMSIG_CLEAR_MOOD_EVENT, "faceless_moodlet_temp") //just in case? shit happens even if i'm trying to prevent species changing as much as possible
-	SEND_SIGNAL(C, COMSIG_CLEAR_MOOD_EVENT, "faceless_moodlet")
+	SEND_SIGNAL(old_faceless, COMSIG_CLEAR_MOOD_EVENT, "faceless_moodlet_temp") //just in case? shit happens even if i'm trying to prevent species changing as much as possible
+	SEND_SIGNAL(old_faceless, COMSIG_CLEAR_MOOD_EVENT, "faceless_moodlet")
+	old_faceless.mind?.remove_antag_datum(/datum/antagonist/faceless)
 
 /datum/species/faceless/spec_death(gibbed, mob/living/carbon/human/H)
 	if(gibbed)
@@ -48,5 +52,5 @@
 
 /obj/item/organ/eyes/faceless
 	name = "fogged over eyes"
-	desc = "These eyes seem to be able to see to some degree, despite looking heavily fogged over and dead. They're sensitive to bright lights."
+	desc = "These eyes are normally sunken deep behind layers of skin on the featureless faceless. They're sensitive to bright lights, despite their heavily fogged over look."
 	flash_protect = FLASH_PROTECTION_SENSITIVE

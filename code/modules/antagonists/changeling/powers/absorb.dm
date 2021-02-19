@@ -34,25 +34,21 @@
 	for(var/i in 1 to 3)
 		switch(i)
 			if(1)
-				user.visible_message("<span class='warning'>[user] begins to shake violently.</span>", "<span class='notice'>This creature is compatible. We must not be interrupted.</span>")
+				user.visible_message("<span class='warning'>[user] puts their hand on [target]'s face.</span>", "<span class='notice'>This creature is compatible. We must not be interrupted.</span>")
 				user.Shake(5,5, 150)
 			if(2)
-				user.visible_message("<span class='warning'>[user] unhinges their jaw!</span>", "<span class='notice'>We prepare to ruin them.</span>")
+				user.visible_message("<span class='warning'>[user] begins pulling on [target]'s face!</span>", "<span class='notice'>We begin to remove their identity.</span>")
 			if(3)
-				user.visible_message("<span class='danger'>[user] vomits a red goop on [target], their skin turning a sickly grey!</span>", "<span class='notice'>[target] has been ruined. Let us take their identity.</span>")
-				to_chat(target, "<span class='userdanger'>You feel your skin burn and your insides melt!</span>")
-				to_chat(target, "<span class='warning'>You can feel your mind flickering on and off...</span>")
-				target.set_species(/datum/species/faceless)
+				user.visible_message("<span class='danger'>A sickly grey spreads across [target] as their face begins to fall off!</span>", "<span class='notice'>[target] has begun to lose their form. We must continue.</span>")
+				to_chat(target, "<span class='userdanger'>You can feel your mind flickering on and off...</span>")
 		SSblackbox.record_feedback("nested tally", "changeling_powers", 1, list("Absorb DNA", "[i]"))
-		if(!do_mob(user, target, 150))
+		if(!do_mob(user, target, 5 SECONDS))
 			to_chat(user, "<span class='warning'>Our absorption of [target] has been interrupted!</span>")
-			if(i == 3)
-				to_chat(user, "<span class='danger'>...And after we ruin them but before we could steal their DNA! We've lost the chance to absorb them.</span>")
 			changeling.isabsorbing = 0
 			return
 
 	SSblackbox.record_feedback("nested tally", "changeling_powers", 1, list("Absorb DNA", "4"))
-	user.visible_message("<span class='danger'>[user] sucks the fluids from [target]!</span>", "<span class='notice'>We have absorbed [target].</span>")
+	user.visible_message("<span class='danger'>[user] takes [target]'s face off, absorbing it into [p_their()] hand!</span>", "<span class='notice'>We have absorbed [target].</span>")
 	to_chat(target, "<span class='userdanger'>You are absorbed by the changeling!</span>")
 
 	if(!changeling.has_dna(target.dna))
@@ -145,5 +141,6 @@
 	changeling.isabsorbing = 0
 	changeling.canrespec = 1
 
+	target.set_species(/datum/species/faceless)
 	target.SetSleeping(40 SECONDS) //same as mindswap, should give a good amount of time to clean things up (steal stuff, get away, etc)
 	return TRUE
