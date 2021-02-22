@@ -410,6 +410,13 @@ GLOBAL_LIST_EMPTY(lifts)
 	var/travel_direction
 	var/time_inbetween_moves = 1
 
+/obj/structure/industrial_lift/tram/LateInitialize()
+	. = ..()
+	for(var/obj/effect/landmark/tram/our_location in GLOB.landmarks_list)
+		if(our_location.destination_id == initial_id)
+			from_where = our_location
+			break
+
 /obj/structure/industrial_lift/tram/console
 	name = "tram console"
 	desc = "This lets you tell the tram where to go and hopefully it makes it there."
@@ -430,15 +437,9 @@ GLOBAL_LIST_EMPTY(lifts)
 		add_fingerprint(user)
 		return
 
-
 	var/list/radial_buttons = list()
 	var/list/button2landmark = list()
 
-	if(!from_where) //only needs to grab landmark the first time
-		for(var/obj/effect/landmark/tram/our_location in GLOB.landmarks_list)
-			if(our_location.destination_id == initial_id)
-				from_where = our_location
-				break
 	for(var/obj/effect/landmark/tram/destination in GLOB.landmarks_list)
 		if(destination == from_where)
 			continue
@@ -499,15 +500,20 @@ GLOBAL_LIST_EMPTY(lifts)
 	name = "tram destination" //the tram buttons will mention this.
 	icon_state = "tram"
 	var/destination_id
+	///icons for the tgui console to list out for what is at this location
+	var/list/tgui_icons = list()
 
 /obj/effect/landmark/tram/left_part
-	name = "west wing"
+	name = "West Wing"
 	destination_id = "left_part"
+	tgui_icons = list("Arrivals" = "plane-arrival", "Service" = "cocktail")
 
 /obj/effect/landmark/tram/middle_part
-	name = "central wing"
+	name = "Central Wing"
 	destination_id = "middle_part"
+	tgui_icons = list("Command" = "bullhorn", "Security" = "gavel", "Medical" = "plus", "Engineering" = "wrench")
 
 /obj/effect/landmark/tram/right_part
-	name = "east wing"
+	name = "East Wing"
 	destination_id = "right_part"
+	tgui_icons = list("Departures" = "plane-departure", "Cargo" = "box")

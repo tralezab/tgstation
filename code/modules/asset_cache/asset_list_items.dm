@@ -529,3 +529,11 @@
 	assets = list(
 		"chem_help_advisor.gif" = 'icons/UI_Icons/Advisors/chem_help_advisor.gif',
 	)
+
+/datum/asset/spritesheet/tram
+	name = "tram"
+
+/datum/asset/spritesheet/tram/register()
+	InsertAll("", 'icons/effects/tram.dmi')
+
+	..()
