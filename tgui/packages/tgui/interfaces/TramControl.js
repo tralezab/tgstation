@@ -102,7 +102,7 @@ export const TramControl = (props, context) => {
         )}
         <Section fill>
           <Stack vertical fill>
-            <Stack.Item grow fontSize="16px" mt={3} mb={7} textAlign="center" grow>
+            <Stack.Item grow fontSize="16px" mt={1} mb={9} textAlign="center" grow>
               Nanotrasen Transit System
             </Stack.Item>
             <Stack.Item mb={4}>
