@@ -18,6 +18,7 @@
 /obj/machinery/computer/tram_controls/proc/find_tram()
 	var/obj/structure/industrial_lift/tram/tram_struct = locate(/obj/structure/industrial_lift/tram) in GLOB.lifts
 	tram_part = tram_struct //possibly setting to something null, that's fine, but
+	tram_part.find_our_location()
 
 /obj/machinery/computer/tram_controls/ui_state(mob/user)
 	return GLOB.not_incapacitated_state
@@ -58,6 +59,5 @@
 		to_where = destination
 		break
 	if(tram_part.controls_locked || tram_part.travelling) // someone else started
-		to_chat(user, "<span class='warning'>The tram is busy!</span>")
 		return
 	tram_part.tram_travel(tram_part.from_where, to_where)

@@ -412,57 +412,18 @@ GLOBAL_LIST_EMPTY(lifts)
 
 /obj/structure/industrial_lift/tram/LateInitialize()
 	. = ..()
+	find_our_location()
+
+
+
+/obj/structure/industrial_lift/tram/proc/find_our_location()
 	for(var/obj/effect/landmark/tram/our_location in GLOB.landmarks_list)
 		if(our_location.destination_id == initial_id)
 			from_where = our_location
 			break
 
-/obj/structure/industrial_lift/tram/console
-	name = "tram console"
-	desc = "This lets you tell the tram where to go and hopefully it makes it there."
-	icon = 'icons/obj/modular_console.dmi'
-	icon_state = "console"
-	layer = 2.3
-	density = TRUE
-
 /obj/structure/industrial_lift/tram/use(mob/user) //dont click the floor dingus we use computers now
 	return
-
-/obj/structure/industrial_lift/tram/console/use(mob/user)
-	if(!isliving(user) || !in_range(src, user))
-		return
-
-	if(controls_locked || travelling)
-		to_chat(user, "<span class='warning'>[src] has its controls locked!</span>")
-		add_fingerprint(user)
-		return
-
-	var/list/radial_buttons = list()
-	var/list/button2landmark = list()
-
-	for(var/obj/effect/landmark/tram/destination in GLOB.landmarks_list)
-		if(destination == from_where)
-			continue
-		var/direction_to_destination = get_dir(from_where, destination)
-		var/direction_text = uppertext(dir2text(direction_to_destination))
-		//far left or far right tram destination have multiple in the left and right slot, so lets add this as SOUTH
-		var/button_direction
-		if(radial_buttons[direction_text])
-			button_direction = "NORTH[direction_text]" //there is already something in this direction
-		else
-			button_direction = direction_text
-		button2landmark[button_direction] = destination
-		radial_buttons[button_direction] = image(icon = 'icons/effects/effects.dmi', icon_state = destination.destination_id, dir = direction_to_destination)
-	if(!radial_buttons.len)
-		return //nowhere to go
-	var/result = show_radial_menu(user, src, radial_buttons, custom_check = CALLBACK(src, .proc/check_menu, user), require_near = TRUE, tooltips = FALSE)
-	if (!result || result == "Cancel" || !in_range(src, user))
-		return  // cancelling or trying to be a dirty cheat
-	add_fingerprint(user)
-	if(controls_locked || travelling) // someone else started
-		to_chat(user, "<span class='warning'>[src]'s controls are locked up! Someone else started the tram!</span>")
-		return
-	tram_travel(from_where, button2landmark[result])
 
 /obj/structure/industrial_lift/tram/process(delta_time)
 	if(!travel_distance)
