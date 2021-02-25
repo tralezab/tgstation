@@ -227,7 +227,7 @@ GLOBAL_LIST_EMPTY(lifts)
 			crushed.gib(FALSE,FALSE,FALSE)//the nicest kind of gibbing, keeping everything intact.
 	else if(going != UP) //can't really crush something upwards
 		for(var/obj/structure/anchortrouble in destination.contents)
-			if(anchortrouble.anchored && (!istype(anchortrouble, /obj/structure/holosign)) && anchortrouble.layer >= GAS_PUMP_LAYER) //to avoid pipes, wires, etc
+			if(!QDELETED(anchortrouble) && anchortrouble.anchored && (!istype(anchortrouble, /obj/structure/holosign)) && anchortrouble.layer >= GAS_PUMP_LAYER) //to avoid pipes, wires, etc
 				playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
 				visible_message("<span class='notice'>[src] smashes through [anchortrouble]!</span>")
 				anchortrouble.deconstruct(FALSE)

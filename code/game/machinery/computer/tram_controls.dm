@@ -3,8 +3,8 @@
 /obj/machinery/computer/tram_controls
 	name = "tram controls"
 	desc = "An interface for the tram that lets you tell the tram where to go and hopefully it makes it there. I'm here to describe the controls to you, not to inspire confidence."
-	icon_screen = "crew"
-	icon_keyboard = "med_key"
+	icon_screen = "tram"
+	icon_keyboard = "atmos_key"
 	circuit = /obj/item/circuitboard/computer/tram_controls
 
 	var/obj/structure/industrial_lift/tram/tram_part
@@ -33,6 +33,10 @@
 	var/list/data = list()
 	data["moving"] = tram_part.travelling
 	data["broken"] = tram_part ? FALSE : TRUE
+	return data
+
+/obj/machinery/computer/tram_controls/ui_static_data(mob/user)
+	var/list/data = list()
 	data["destinations"] = get_destinations()
 	return data
 
@@ -50,14 +54,13 @@
 	. = ..()
 	if(.)
 		return
-	var/destination_index = params["destination"]
+	var/destination_name = params["destination"]
 	var/obj/effect/landmark/tram/to_where
 	for(var/obj/effect/landmark/tram/destination in GLOB.landmarks_list)
-		if(destination_index)
-			destination_index--
-			continue
-		to_where = destination
-		break
+		if(destination.name == destination_name)
+			to_where = destination
+	if(!to_where)
+		CRASH("Controls couldn't find the destination \"[destination_name]\"!")
 	if(tram_part.controls_locked || tram_part.travelling) // someone else started
 		return
 	tram_part.tram_travel(tram_part.from_where, to_where)

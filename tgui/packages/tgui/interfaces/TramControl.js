@@ -1,6 +1,6 @@
 import { classes } from 'common/react';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Dimmer, Divider, Dropdown, Icon, LabeledList, Section, Stack } from '../components';
+import { Box, Button, Dimmer, Icon, Section, Stack } from '../components';
 import { Window } from '../layouts';
 
 const DEPARTMENT2COLOR = {
@@ -20,18 +20,6 @@ const COLOR2BLURB = {
   transparent: "Click to set destination.",
 };
 
-const getDestColor = (props, context, dest) => {
-  const [
-    transitIndex,
-    setTransitIndex,
-  ] = useLocalState(context, 'transit-index', 1);
-  const { act, data } = useBackend(context);
-  const { current_loc, destinations } = data;
-  const here = dest.name === current_loc[0].name;
-  const selected = transitIndex === destinations.indexOf(dest);
-  return !current_loc ? "bad" : here ? "blue" : selected ? "green" : "transparent";
-};
-
 const marginNormal = 1;
 const marginDipped = 3;
 
@@ -41,8 +29,7 @@ const dipUnderCircle = (dest, dep) => {
   return dipped ? marginDipped : marginNormal;
 };
 
-const BrokenTramDimmer = (props, context) => {
-  const { act, data } = useBackend(context);
+const BrokenTramDimmer = () => {
   return (
     <Dimmer>
       <Stack vertical>
@@ -62,7 +49,7 @@ const BrokenTramDimmer = (props, context) => {
   );
 };
 
-const MovingTramDimmer = (props, context) => {
+const MovingTramDimmer = (context) => {
   const { act, data } = useBackend(context);
   const { current_loc } = data;
   return (
@@ -85,58 +72,7 @@ const MovingTramDimmer = (props, context) => {
 };
 
 
-const Destination = (props, context, dest) => {
-  const { act, data } = useBackend(context);
-  const { destinations } = data;
-  const [
-    transitIndex,
-    setTransitIndex,
-  ] = useLocalState(context, 'transit-index', 1);
-  return (
-    <Stack vertical>
-      <Stack.Item ml={5}>
-        <Button
-          mr={4.38}
-          color={getDestColor(dest)}
-          circular
-          compact
-          height={5}
-          width={5}
-          tooltipPosition="top"
-          tooltip={COLOR2BLURB[getDestColor(dest)]}
-          onClick={() => setTransitIndex(destinations.indexOf(dest))} >
-          <Icon ml={-2.1} mt={0.55} fontSize="60px" name="circle-o" />
-        </Button>
-        {destinations.length-1 !== destinations.indexOf(dest) && (
-          <Section title=" " mt={-7.3} ml={10} mr={-6.1} />
-        ) || (
-          <Box mt={-2.3} />
-        )}
-      </Stack.Item>
-      {dest.dest_icons && (
-        <Stack.Item >
-          <Stack>
-            {Object.keys(dest.dest_icons).map(dep => (
-              <Stack.Item key={dep}
-                mt={dipUnderCircle(dest, dep)}>
-                <Button
-                  color={DEPARTMENT2COLOR[dep]}
-                  icon={dest.dest_icons[dep]}
-                  tooltipPosition="bottom"
-                  tooltip={dep}
-                  style={{
-                    'border-radius': '5em',
-                    'border': '2px solid white',
-                  }}
-                />
-              </Stack.Item>
-            ))}
-          </Stack>
-        </Stack.Item>
-      )}
-    </Stack>
-  );
-};
+
 
 
 export const TramControl = (props, context) => {
@@ -153,6 +89,58 @@ export const TramControl = (props, context) => {
     transitIndex,
     setTransitIndex,
   ] = useLocalState(context, 'transit-index', 1);
+  const Destination = props => {
+    const { dest } = props;
+    const getDestColor = (dest) => {
+      const here = dest.name === current_loc[0].name;
+      const selected = transitIndex === destinations.indexOf(dest);
+      return !current_loc ? "bad" : here ? "blue" : selected ? "green" : "transparent";
+    }
+    return (
+      <Stack vertical>
+        <Stack.Item ml={5}>
+          <Button
+            mr={4.38}
+            color={getDestColor(dest)}
+            circular
+            compact
+            height={5}
+            width={5}
+            tooltipPosition="top"
+            tooltip={COLOR2BLURB[getDestColor(dest)]}
+            onClick={() => setTransitIndex(destinations.indexOf(dest))} >
+            <Icon ml={-2.1} mt={0.55} fontSize="60px" name="circle-o" />
+          </Button>
+          {destinations.length-1 !== destinations.indexOf(dest) && (
+            <Section title=" " mt={-7.3} ml={10} mr={-6.1} />
+          ) || (
+            <Box mt={-2.3} />
+          )}
+        </Stack.Item>
+        {dest.dest_icons && (
+          <Stack.Item >
+            <Stack>
+              {Object.keys(dest.dest_icons).map(dep => (
+                <Stack.Item key={dep}
+                  mt={dipUnderCircle(dest, dep)}>
+                  <Button
+                    color={DEPARTMENT2COLOR[dep]}
+                    icon={dest.dest_icons[dep]}
+                    tooltipPosition="bottom"
+                    tooltip={dep}
+                    style={{
+                      'border-radius': '5em',
+                      'border': '2px solid white',
+                    }}
+                  />
+                </Stack.Item>
+              ))}
+            </Stack>
+          </Stack.Item>
+        )}
+    </Stack>
+    );
+  };
   return (
     <Window
       title="Tram Controls"
@@ -188,7 +176,7 @@ export const TramControl = (props, context) => {
                 }
                 content="Send Tram"
                 onClick={() => act('send', {
-                  destIndex: transitIndex,
+                  destIndex: destinations[transitIndex].name,
                 })} />
             </Stack.Item>
           </Stack>
