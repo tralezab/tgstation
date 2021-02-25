@@ -4,7 +4,6 @@
 	helptext = "Can be used while unconscious."
 	button_icon_state = "panacea"
 	chemical_cost = 20
-	dna_cost = 1
 	req_stat = HARD_CRIT
 
 //Heals the things that the other regenerative abilities don't.

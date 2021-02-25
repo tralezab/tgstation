@@ -4,7 +4,6 @@
 	helptext = "Removes all stuns instantly and adds a short-term reduction in further stuns. Can be used while unconscious. Continued use poisons the body."
 	button_icon_state = "adrenaline"
 	chemical_cost = 30
-	dna_cost = 2
 	req_human = 1
 	req_stat = UNCONSCIOUS
 

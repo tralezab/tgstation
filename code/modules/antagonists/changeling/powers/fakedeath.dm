@@ -3,7 +3,6 @@
 	desc = "We fall into a stasis, allowing us to regenerate and trick our enemies. Costs 15 chemicals."
 	button_icon_state = "fake_death"
 	chemical_cost = 15
-	dna_cost = 0
 	req_dna = 1
 	req_stat = DEAD
 	ignores_fakedeath = TRUE
@@ -23,7 +22,10 @@
 		to_chat(user, "<span class='notice'>We have revived ourselves.</span>")
 	else
 		to_chat(user, "<span class='notice'>We begin our stasis, preparing energy to arise once more.</span>")
-		user.fakedeath("changeling") //play dead
+		if(user.stat != DEAD)
+			var/datum/antagonist/changeling/C = user.mind.has_antag_datum(/datum/antagonist/changeling)
+			C?.become_obvious()
+		user.fakedeath("changeling") //play dead, though if you aren't already dead this is just kind of silly
 		addtimer(CALLBACK(src, .proc/ready_to_regenerate, user), LING_FAKEDEATH_TIME, TIMER_UNIQUE)
 	return TRUE
 
@@ -48,22 +50,20 @@
 
 /datum/action/changeling/fakedeath/proc/ready_to_regenerate(mob/user)
 	if(user?.mind)
-		var/datum/antagonist/changeling/C = user.mind.has_antag_datum(/datum/antagonist/changeling)
-		if(C?.purchasedpowers)
-			to_chat(user, "<span class='notice'>We are ready to revive.</span>")
-			name = "Revive"
-			desc = "We arise once more."
-			button_icon_state = "revive"
-			UpdateButtonIcon()
-			chemical_cost = 0
-			revive_ready = TRUE
+		to_chat(user, "<span class='notice'>We are ready to revive.</span>")
+		name = "Revive"
+		desc = "We arise once more."
+		button_icon_state = "revive"
+		UpdateButtonIcon()
+		chemical_cost = 0
+		revive_ready = TRUE
 
 /datum/action/changeling/fakedeath/can_sting(mob/living/user)
 	if(HAS_TRAIT_FROM(user, TRAIT_DEATHCOMA, "changeling") && !revive_ready)
 		to_chat(user, "<span class='warning'>We are already reviving.</span>")
 		return
-	if(!user.stat && !revive_ready) //Confirmation for living changelings if they want to fake their death
-		switch(alert("Are we sure we wish to fake our own death?",,"Yes", "No"))
+	if(user.stat != DEAD && !revive_ready) //Confirmation for living changelings if they want to fake their death as it is not stealthy
+		switch(alert("Entering Stasis while alive is incredibly obvious. Are you sure?", "Stasis", "Yes", "No"))
 			if("No")
 				return
 	return ..()

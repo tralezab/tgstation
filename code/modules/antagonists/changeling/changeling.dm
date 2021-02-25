@@ -41,8 +41,6 @@
 	var/changeling_speak = 0
 	var/datum/dna/chosen_dna
 	var/datum/action/changeling/sting/chosen_sting
-	var/datum/cellular_emporium/cellular_emporium
-	var/datum/action/innate/cellular_emporium/emporium_action
 
 	var/static/list/all_powers = typecacheof(/datum/action/changeling,TRUE)
 
@@ -56,18 +54,7 @@
 		competitive_objectives = TRUE
 		break
 
-/datum/antagonist/changeling/Destroy()
-	QDEL_NULL(cellular_emporium)
-	QDEL_NULL(emporium_action)
-	. = ..()
-
-/datum/antagonist/changeling/proc/create_actions()
-	cellular_emporium = new(src)
-	emporium_action = new(cellular_emporium)
-	emporium_action.Grant(owner.current)
-
 /datum/antagonist/changeling/on_gain()
-	create_actions()
 	reset_powers()
 	create_initial_profile()
 	if(give_objectives)
@@ -115,12 +102,9 @@
 	//Repurchase free powers.
 	for(var/path in all_powers)
 		var/datum/action/changeling/S = new path
-		if(!has_sting(S))
-			powers += S
-			S.on_purchase(owner.current,TRUE)
+		powers += S
+		S.on_purchase(owner.current,TRUE)
 
-/datum/antagonist/changeling/proc/regain_powers()//for when action buttons are lost and need to be regained, such as when the mind enters a new mob
-	emporium_action.Grant(owner.current)
 	for(var/power in powers)
 		var/datum/action/changeling/S = power
 		if(istype(S) && S.needs_button)
@@ -136,66 +120,6 @@
 		return
 	ling.changeNext_move(CLICK_CD_MELEE)
 	return COMSIG_MOB_CANCEL_CLICKON
-
-/datum/antagonist/changeling/proc/has_sting(datum/action/changeling/power)
-	for(var/datum/action/changeling/otherpower as anything in powers)
-		if(initial(power.name) == otherpower.name)
-			return TRUE
-	return FALSE
-
-/datum/antagonist/changeling/proc/purchase_power(sting_name)
-	var/datum/action/changeling/thepower
-
-	for(var/path in all_powers)
-		var/datum/action/changeling/S = path
-		if(initial(S.name) == sting_name)
-			thepower = new path
-			break
-
-	if(!thepower)
-		to_chat(owner.current, "This is awkward. Changeling power purchase failed, please report this bug to a coder!")
-		return
-
-	if(absorbedcount < thepower.req_dna)
-		to_chat(owner.current, "<span class='warning'>We lack the energy to evolve this ability!</span>")
-		return
-
-	if(has_sting(thepower))
-		to_chat(owner.current, "<span class='warning'>We have already evolved this ability!</span>")
-		return
-
-	if(thepower.dna_cost < 0)
-		to_chat(owner.current, "<span class='warning'>We cannot evolve this ability!</span>")
-		return
-
-	if(geneticpoints < thepower.dna_cost)
-		to_chat(owner.current, "<span class='warning'>We have reached our capacity for abilities!</span>")
-		return
-
-	if(HAS_TRAIT(owner.current, TRAIT_DEATHCOMA))//To avoid potential exploits by buying new powers while in stasis, which clears your verblist.
-		to_chat(owner.current, "<span class='warning'>We lack the energy to evolve new abilities right now!</span>")
-		return
-
-	geneticpoints -= thepower.dna_cost
-	powers += thepower
-	thepower.on_purchase(owner.current)//Grant() is ran in this proc, see changeling_powers.dm
-
-/datum/antagonist/changeling/proc/readapt()
-	if(!ishuman(owner.current))
-		to_chat(owner.current, "<span class='warning'>We can't remove our evolutions in this form!</span>")
-		return
-	if(HAS_TRAIT_FROM(owner.current, TRAIT_DEATHCOMA, CHANGELING_TRAIT))
-		to_chat(owner.current, "<span class='warning'>We are too busy reforming ourselves to readapt right now!</span>")
-		return
-	if(canrespec)
-		to_chat(owner.current, "<span class='notice'>We have removed our evolutions from this form, and are now ready to readapt.</span>")
-		reset_powers()
-		canrespec = FALSE
-		SSblackbox.record_feedback("tally", "changeling_power_purchase", 1, "Readapt")
-		return TRUE
-	else
-		to_chat(owner.current, "<span class='warning'>You lack the power to readapt your evolutions!</span>")
-		return FALSE
 
 //Called in life()
 /datum/antagonist/changeling/proc/regenerate()//grants the HuD in life.dm
@@ -350,6 +274,63 @@
 	var/mob/living/carbon/C = owner.current //only carbons have dna now, so we have to typecaste
 	if(ishuman(C))
 		add_new_profile(C)
+
+/datum/antagonist/changeling/proc/become_obvious()
+	var/mob/living/carbon/human/obvious_changeling = owner.current
+	if(!obvious_changeling || !istype(obvious_changeling))
+		return
+	to_chat(obvious_changeling, "<span class='userdanger'>Our true form is being made clear!</span>")
+
+	..()
+	obvious_changeling.dropItemToGround(obvious_changeling.head)
+	obvious_changeling.dropItemToGround(obvious_changeling.wear_suit)
+
+	var/obj/item/clothing/suit/armor/changeling/ling_suit = new ling_suit(obvious_changeling)
+	var/obj/item/clothing/head/helmet/changeling/ling_helmet = new ling_helmet(obvious_changeling)
+
+	obvious_changeling.equip_to_slot_if_possible(ling_suit, ITEM_SLOT_OCLOTHING, 1, 1, 1)
+	obvious_changeling.equip_to_slot_if_possible(ling_helmet ITEM_SLOT_HEAD, 1, 1, 1)
+	var/list/tendril_range = orange(3, obvious_changeling)
+	for(var/i in 1 to rand(4,7))
+		var/turf/target_turf = pick_n_take(tendril_range)
+		obvious_changeling.Beam(target_turf, icon_state = "tentacle", time = 5 SECONDS)
+	addtimer(CALLBACK(src,.proc/become_hidden, obvious_changeling, ling_suit, ling_helmet), 5 SECONDS)
+
+/datum/antagonist/changeling/proc/become_hidden(mob/living/obvious_changeling, suit, helmet)
+	to_chat(obvious_changeling, "<span class='warning'>Our true form is once again concealed.</span>")
+	obvious_changeling.temporarilyRemoveItemFromInventory(suit, force = TRUE)
+	qdel(suit)
+	obvious_changeling.temporarilyRemoveItemFromInventory(helmet, force = TRUE)
+	qdel(helmet)
+
+/obj/item/clothing/suit/armor/changeling
+	name = "chitinous mass"
+	desc = "A tough, hard covering of black chitin."
+	icon_state = "lingarmor"
+	item_flags = DROPDEL
+	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
+	armor = list(MELEE = 40, BULLET = 40, LASER = 40, ENERGY = 50, BOMB = 10, BIO = 4, RAD = 0, FIRE = 90, ACID = 90)
+	flags_inv = HIDEJUMPSUIT
+	cold_protection = 0
+	heat_protection = 0
+
+/obj/item/clothing/suit/armor/changeling/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CHANGELING_TRAIT)
+	if(ismob(loc))
+		loc.visible_message("<span class='warning'>[loc.name]\'s flesh turns black, quickly transforming into a hard, chitinous mass!</span>", "<span class='warning'>We harden our flesh, creating a suit of armor!</span>", "<span class='hear'>You hear organic matter ripping and tearing!</span>")
+
+/obj/item/clothing/head/helmet/changeling
+	name = "chitinous mass"
+	desc = "A tough, hard covering of black chitin with transparent chitin in front."
+	icon_state = "lingarmorhelmet"
+	item_flags = DROPDEL
+	armor = list(MELEE = 40, BULLET = 40, LASER = 40, ENERGY = 50, BOMB = 10, BIO = 4, RAD = 0, FIRE = 90, ACID = 90)
+	flags_inv = HIDEEARS|HIDEHAIR|HIDEEYES|HIDEFACIALHAIR|HIDEFACE|HIDESNOUT
+
+/obj/item/clothing/head/helmet/changeling/Initialize()
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, CHANGELING_TRAIT)
 
 /datum/antagonist/changeling/apply_innate_effects(mob/living/mob_override)
 	//Brains optional.

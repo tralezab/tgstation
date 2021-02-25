@@ -26,7 +26,6 @@
 		return FALSE
 	to_chat(user, "<span class='notice'>We transform our appearance.</span>")
 	..()
-	changeling.purchasedpowers -= src
 
 	var/newmob = user.humanize()
 

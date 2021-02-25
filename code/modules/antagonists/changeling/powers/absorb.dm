@@ -3,7 +3,6 @@
 	desc = "We will steal the identity of the victim. Requires us to strangle them. In this process their identity is ruined."
 	button_icon_state = "absorb_dna"
 	chemical_cost = 0
-	dna_cost = 0
 	req_human = 1
 
 /datum/action/changeling/absorb_dna/can_sting(mob/living/carbon/user)

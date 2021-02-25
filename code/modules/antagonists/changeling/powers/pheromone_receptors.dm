@@ -8,7 +8,6 @@
 	desc = "We attune our senses to track other changelings by scent.  The closer they are, the easier we can find them."
 	helptext = "We will know the general direction of nearby changelings, with closer scents being stronger. This is somewhat expensive and lasts until disabled or we run out of chemicals."
 	chemical_cost = 20 //-5 chemicals while this is on as well
-	dna_cost = 2
 	var/receptors_active = FALSE
 
 /datum/action/changeling/pheromone_receptors/sting_action(mob/living/carbon/user, mob/target, forced_end = FALSE)
