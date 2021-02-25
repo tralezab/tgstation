@@ -49,9 +49,7 @@ const BrokenTramDimmer = () => {
   );
 };
 
-const MovingTramDimmer = (context) => {
-  const { act, data } = useBackend(context);
-  const { current_loc } = data;
+const MovingTramDimmer = () => {
   return (
     <Dimmer>
       <Stack vertical>
@@ -71,10 +69,6 @@ const MovingTramDimmer = (context) => {
   );
 };
 
-
-
-
-
 export const TramControl = (props, context) => {
   const { act, data } = useBackend(context);
   const {
@@ -89,6 +83,25 @@ export const TramControl = (props, context) => {
     transitIndex,
     setTransitIndex,
   ] = useLocalState(context, 'transit-index', 1);
+  const MovingTramDimmer = () => {
+    return (
+      <Dimmer>
+        <Stack vertical>
+          <Stack.Item>
+            <Icon
+              ml={10}
+              name="sync-alt"
+              color="green"
+              size={11}
+            />
+          </Stack.Item>
+          <Stack.Item mt={5} fontSize="14px" color="green">
+            The tram is travelling to {current_loc[0].name}!
+          </Stack.Item>
+        </Stack>
+      </Dimmer>
+    );
+  };
   const Destination = props => {
     const { dest } = props;
     const getDestColor = (dest) => {
@@ -149,38 +162,39 @@ export const TramControl = (props, context) => {
       <Window.Content>
         {!!broken && (
           <BrokenTramDimmer />
+        ) || (
+          <Section fill>
+            {!!moving && (
+              <MovingTramDimmer />
+            )}
+            <Stack ml="-6px" vertical fill>
+              <Stack.Item grow fontSize="16px" mt={1} mb={9} textAlign="center">
+                Nanotrasen Transit System
+              </Stack.Item>
+              <Stack.Item mb={4}>
+                <Stack fill>
+                  <Stack.Item grow={2} />
+                  {destinations.map(dest => (
+                    <Stack.Item key={dest.name} grow={1} >
+                      <Destination dest={dest} />
+                    </Stack.Item>
+                  ))}
+                  <Stack.Item grow={1} />
+                </Stack>
+              </Stack.Item>
+              <Stack.Item fontSize="16px" mt={1} mb={9} textAlign="center" grow>
+                <Button
+                  disabled={
+                    current_loc[0].name === destinations[transitIndex].name
+                  }
+                  content="Send Tram"
+                  onClick={() => act('send', {
+                    destination: destinations[transitIndex].name,
+                  })} />
+              </Stack.Item>
+            </Stack>
+          </Section>
         )}
-        {!!moving && (
-          <MovingTramDimmer />
-        )}
-        <Section fill>
-          <Stack vertical fill>
-            <Stack.Item grow fontSize="16px" mt={1} mb={9} textAlign="center">
-              Nanotrasen Transit System
-            </Stack.Item>
-            <Stack.Item mb={4}>
-              <Stack fill>
-                <Stack.Item grow={2} />
-                {destinations.map(dest => (
-                  <Stack.Item key={dest.name} grow={1} >
-                    <Destination dest={dest} />
-                  </Stack.Item>
-                ))}
-                <Stack.Item grow={1} />
-              </Stack>
-            </Stack.Item>
-            <Stack.Item fontSize="16px" mt={1} mb={9} textAlign="center" grow>
-              <Button
-                disabled={
-                  current_loc[0].name === destinations[transitIndex].name
-                }
-                content="Send Tram"
-                onClick={() => act('send', {
-                  destIndex: destinations[transitIndex].name,
-                })} />
-            </Stack.Item>
-          </Stack>
-        </Section>
       </Window.Content>
     </Window>
   );

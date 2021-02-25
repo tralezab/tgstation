@@ -52,7 +52,7 @@
 
 /obj/machinery/computer/tram_controls/ui_act(action, params)
 	. = ..()
-	if(.)
+	if(. || tram_part.travelling)
 		return
 	var/destination_name = params["destination"]
 	var/obj/effect/landmark/tram/to_where
@@ -64,3 +64,4 @@
 	if(tram_part.controls_locked || tram_part.travelling) // someone else started
 		return
 	tram_part.tram_travel(tram_part.from_where, to_where)
+	update_static_data(usr) //show new location of tram
