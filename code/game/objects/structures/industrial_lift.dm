@@ -414,8 +414,6 @@ GLOBAL_LIST_EMPTY(lifts)
 	. = ..()
 	find_our_location()
 
-
-
 /obj/structure/industrial_lift/tram/proc/find_our_location()
 	for(var/obj/effect/landmark/tram/our_location in GLOB.landmarks_list)
 		if(our_location.destination_id == initial_id)
