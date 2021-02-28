@@ -3223,6 +3223,7 @@
 #include "code\modules\spells\spell_types\pointed\mind_transfer.dm"
 #include "code\modules\spells\spell_types\pointed\pointed.dm"
 #include "code\modules\station_goals\bsa.dm"
+#include "code\modules\station_goals\comms_array.dm"
 #include "code\modules\station_goals\dna_vault.dm"
 #include "code\modules\station_goals\shield.dm"
 #include "code\modules\station_goals\station_goal.dm"

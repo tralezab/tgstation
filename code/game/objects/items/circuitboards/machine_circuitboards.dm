@@ -33,6 +33,15 @@
 		/obj/item/stock_parts/manipulator/pico = 5,
 		/obj/item/stack/cable_coil = 2)
 
+/obj/item/circuitboard/machine/comms_array
+	name = "Communication Array Hub (Machine Board)"
+	icon_state = "command"
+	build_path = /obj/machinery/comms_array //No freebies!
+	req_components = list(
+		/obj/item/stock_parts/capacitor/super = 5,
+		/obj/item/stock_parts/manipulator/pico = 5,
+		/obj/item/stack/cable_coil = 2)
+
 //Engineering
 
 /obj/item/circuitboard/machine/announcement_system

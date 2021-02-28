@@ -880,6 +880,41 @@
 	crate_name= "shield control board crate"
 
 
+/datum/supply_pack/engineering/comms_array
+	name = "Communication Array Parts"
+	desc = "Nanotrasen's state of the art Communication Array, used in the outposts of Nanotrasen controlled space and otherwise locationally distant stations. You'll need to buy some extra communication arrays to finish this. Highly advanced research is required for proper construction. "
+	cost = CARGO_CRATE_VALUE * 22
+	special = TRUE
+	access_view = ACCESS_HEADS
+	contains = list(/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array
+					)
+	crate_name= "communication array parts crate"
+
+/datum/supply_pack/engineering/extra_arrays
+	name = "Extra Communication Arrays"
+	desc = "Secure the longevity of the current state of humanity within this massive library of scientific knowledge, capable of granting superhuman powers and abilities. Highly advanced research is required for proper construction. Also contains five DNA probes."
+	cost = CARGO_CRATE_VALUE * 24
+	special = TRUE
+	access_view = ACCESS_HEADS
+	contains = list(
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array,
+					/obj/item/circuitboard/machine/comms_array
+					)
+	crate_name= "extra arrays crate"
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////// Engine Construction /////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
