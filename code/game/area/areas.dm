@@ -13,7 +13,7 @@
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	invisibility = INVISIBILITY_LIGHTING
 
-	var/area_flags = VALID_TERRITORY | BLOBS_ALLOWED | UNIQUE_AREA
+	var/area_flags = VALID_TERRITORY | BLOBS_ALLOWED | UNIQUE_AREA | CULT_PERMITTED
 
 	///Do we have an active fire alarm?
 	var/fire = FALSE
@@ -59,7 +59,7 @@
 
 	var/ambience_index = AMBIENCE_GENERIC
 	var/list/ambientsounds
-	flags_1 = CAN_BE_DIRTY_1 | CULT_PERMITTED_1
+	flags_1 = CAN_BE_DIRTY_1
 
 	var/list/firedoors
 	var/list/cameras
@@ -183,7 +183,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  * Sets machine power levels in the area
  */
 /area/LateInitialize()
-	power_change()		// all machines set to current power level, also updates icon
+	power_change() // all machines set to current power level, also updates icon
 	update_beauty()
 
 /area/proc/RunGeneration()
@@ -230,6 +230,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /area/Destroy()
 	if(GLOB.areas_by_type[type] == src)
 		GLOB.areas_by_type[type] = null
+	GLOB.sortedAreas -= src
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
@@ -243,7 +244,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		return
 	if (state != poweralm)
 		poweralm = state
-		if(istype(source))	//Only report power alarms on the z-level where the source is located.
+		if(istype(source)) //Only report power alarms on the z-level where the source is located.
 			for (var/item in GLOB.silicon_mobs)
 				var/mob/living/silicon/aiPlayer = item
 				if (!state)
@@ -322,7 +323,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		for(var/FD in firedoors)
 			var/obj/machinery/door/firedoor/D = FD
 			var/cont = !D.welded
-			if(cont && opening)	//don't open if adjacent area is on fire
+			if(cont && opening) //don't open if adjacent area is on fire
 				for(var/I in D.affecting_areas)
 					var/area/A = I
 					if(A.fire)
@@ -347,7 +348,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		ModifyFiredoors(FALSE)
 		for(var/item in firealarms)
 			var/obj/machinery/firealarm/F = item
-			F.update_icon()
+			F.update_appearance()
 	if (!(area_flags & NO_ALERTS)) //Check here instead at the start of the proc so that fire alarms can still work locally even in areas that don't send alerts
 		for (var/item in GLOB.alert_consoles)
 			var/obj/machinery/computer/station_alert/a = item
@@ -377,7 +378,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 		ModifyFiredoors(TRUE)
 		for(var/item in firealarms)
 			var/obj/machinery/firealarm/F = item
-			F.update_icon()
+			F.update_appearance()
 	if (!(area_flags & NO_ALERTS)) //Check here instead at the start of the proc so that fire alarms can still work locally even in areas that don't send alerts
 		for (var/item in GLOB.silicon_mobs)
 			var/mob/living/silicon/aiPlayer = item
@@ -399,7 +400,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /area/process()
 	if(!triggered_firealarms)
 		firereset() //If there are no breaches or fires, and this alert was caused by a breach or fire, die
-	if(firedoors_last_closed_on + 100 < world.time)	//every 10 seconds
+	if(firedoors_last_closed_on + 100 < world.time) //every 10 seconds
 		ModifyFiredoors(FALSE)
 
 /**
@@ -482,11 +483,13 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 			weather_icon = TRUE
 	if(!weather_icon)
 		icon_state = null
+	return ..()
 
 /**
  * Update the icon of the area (overridden to always be null for space
  */
 /area/space/update_icon_state()
+	SHOULD_CALL_PARENT(FALSE)
 	icon_state = null
 
 
@@ -496,7 +499,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  * evalutes a mixture of variables mappers can set, requires_power, always_unpowered and then
  * per channel power_equip, power_light, power_environ
  */
-/area/proc/powered(chan)		// return true if the area has power to given channel
+/area/proc/powered(chan) // return true if the area has power to given channel
 
 	if(!requires_power)
 		return TRUE
@@ -524,10 +527,10 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  * Updates the area icon, calls power change on all machinees in the area, and sends the `COMSIG_AREA_POWER_CHANGE` signal.
  */
 /area/proc/power_change()
-	for(var/obj/machinery/M in src)	// for each machine in the area
-		M.power_change()				// reverify power status (to update icons etc.)
+	for(var/obj/machinery/M in src) // for each machine in the area
+		M.power_change() // reverify power status (to update icons etc.)
 	SEND_SIGNAL(src, COMSIG_AREA_POWER_CHANGE)
-	update_icon()
+	update_appearance()
 
 
 /**
@@ -564,14 +567,15 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /**
  * Call back when an atom enters an area
  *
- * Sends signals COMSIG_AREA_ENTERED and COMSIG_ENTER_AREA (to the atom)
+ * Sends signals COMSIG_AREA_ENTERED and COMSIG_ENTER_AREA (to a list of atoms)
  *
  * If the area has ambience, then it plays some ambience music to the ambience channel
  */
 /area/Entered(atom/movable/M)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, M)
-	SEND_SIGNAL(M, COMSIG_ENTER_AREA, src) //The atom that enters the area
+	for(var/atom/movable/recipient as anything in M.area_sensitive_contents)
+		SEND_SIGNAL(recipient, COMSIG_ENTER_AREA, src)
 	if(!isliving(M))
 		return
 
@@ -597,11 +601,12 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /**
  * Called when an atom exits an area
  *
- * Sends signals COMSIG_AREA_EXITED and COMSIG_EXIT_AREA (to the atom)
+ * Sends signals COMSIG_AREA_EXITED and COMSIG_EXIT_AREA (to a list of atoms)
  */
 /area/Exited(atom/movable/M)
 	SEND_SIGNAL(src, COMSIG_AREA_EXITED, M)
-	SEND_SIGNAL(M, COMSIG_EXIT_AREA, src) //The atom that exits the area
+	for(var/atom/movable/recipient as anything in M.area_sensitive_contents)
+		SEND_SIGNAL(recipient, COMSIG_EXIT_AREA, src)
 
 
 /**

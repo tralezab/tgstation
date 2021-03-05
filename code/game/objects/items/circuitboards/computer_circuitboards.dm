@@ -15,9 +15,9 @@
 	build_path = /obj/machinery/computer/bsa_control
 
 //obj/item/circuitboard/computer/shield
-//	name = "Shield Control (Computer Board)"
-//	icon_state = "command"
-//	build_path = /obj/machinery/computer/stationshield
+// name = "Shield Control (Computer Board)"
+// icon_state = "command"
+// build_path = /obj/machinery/computer/stationshield
 
 //Engineering
 
@@ -458,6 +458,11 @@
 	build_path = /obj/machinery/computer/camera_advanced/syndie
 
 //Service
+
+/obj/item/circuitboard/computer/chef_order
+	name = "Produce Orders Console (Computer Board)"
+	icon_state = "supply"
+	build_path = /obj/machinery/computer/chef_order
 
 //Supply
 
