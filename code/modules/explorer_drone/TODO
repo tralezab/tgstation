@@ -1,6 +1,5 @@
 Exploration todos:
 
-Traders display how many times they'll trade
 Mk II drones with more tool slots/other buffs researchable at R&D ?
 Could use more scan conditions
 Improve scanning computer UI
@@ -11,7 +10,6 @@ Unit test for json loading?
 Sprites for everything
 Typelists for event/site stuff to reduce costs
 Figure out some way to cache adventure prototypes / defer loading somehow so it scales better with a lot of adventure files.
-Split sites/events definitions into separate files.
 $QV(QualityName) replacement in descriptions.
 
 Opt:
