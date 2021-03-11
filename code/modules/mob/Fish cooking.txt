@@ -1,0 +1,32 @@
+Fish cooking
+Fish breeding
+Cytology input
+Botany input
+
+Fishing Ideas
+
+
+Carp plushie as replacement
+
+Further improvments:
+
+Rotating aquarium -> changing limits and paths -> static overlays per aq type
+Alpha cutout outside the glass for vs contents ? Is this even doable ? Aquarium plane master seems like overkill.
+Smoothing - aquariums near each other share surface size
+
+
+
+/obj/item/food/carpmeat : /obj/item/food/fishmeat/carp
+
+
+Special fish sources:
+Cytology:
+ Glow Fish - swabbed from fish meat
+ Ancient Fish - swabbed from fossil
+
+Botany:
+ Sponge?
+
+
+ Fishing
+    Roll: 100
