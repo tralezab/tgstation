@@ -51,7 +51,7 @@ GLOBAL_LIST_EMPTY(exploration_sites)
 	var/datum/exploration_event/adventure = generate_adventure(site_traits)
 	if(adventure)
 		add_event(adventure)
-	/// Fill other sites
+	/// Fill other events
 	for(var/i in 1 to rand(1,3))
 		var/datum/exploration_event/event = generate_event(site_traits)
 		if(event)
