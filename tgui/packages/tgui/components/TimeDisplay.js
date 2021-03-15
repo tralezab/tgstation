@@ -59,6 +59,6 @@ export class TimeDisplay extends Component {
       return this.state.value || null;
     }
 
-    return formatTime(val)
+    return formatTime(val);
   }
 }

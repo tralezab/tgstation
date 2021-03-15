@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { useBackend, useLocalState } from '../backend';
-import { BlockQuote, Box, Button, Dimmer, Icon, LabeledList, Modal, NoticeBox, ProgressBar, Section, Stack } from '../components';
+import { BlockQuote, Box, Button, Dimmer, Divider, Icon, LabeledList, Modal, NoticeBox, ProgressBar, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { resolveAsset } from '../assets';
 import { formatTime } from '../format';
@@ -42,6 +42,7 @@ type SiteData = {
   name: string,
   ref: string,
   description: string,
+  coordinates: string,
   distance: number,
   band_info: Record<string, number>,
   revealed: boolean,
@@ -102,12 +103,6 @@ type ExodroneConsoleData = {
   all_tools: Record<string, string>,
   all_bands: Record<string, string>
 }
-
-
-const STATUS2ICON = {
-  "Idle": "ellipsis-h",
-}
-
 
 export const ExodroneConsole = (props, context) => {
   const { data } = useBackend<ExodroneConsoleData>(context);
@@ -380,14 +375,14 @@ const DroneStatus = (props, context) => {
       </Stack.Item>
       <Stack.Item grow>
         <ProgressBar
-        width="200px"
-        ranges={{
-          good: [0.7 * drone_max_integrity, drone_max_integrity],
-          average: [0.4 * drone_max_integrity, 0.7 * drone_max_integrity],
-          bad: [-Infinity, 0.4 * drone_max_integrity],
-        }}
-        value={drone_integrity}
-        maxValue={drone_max_integrity} />
+          width="200px"
+          ranges={{
+            good: [0.7 * drone_max_integrity, drone_max_integrity],
+            average: [0.4 * drone_max_integrity, 0.7 * drone_max_integrity],
+            bad: [-Infinity, 0.4 * drone_max_integrity],
+          }}
+          value={drone_integrity}
+          maxValue={drone_max_integrity} />
       </Stack.Item>
     </Stack>);
 };
@@ -411,8 +406,8 @@ const NoSiteDimmer = () => {
         </Stack.Item>
       </Stack>
     </Dimmer>
-  )
-}
+  );
+};
 
 const TravelTargetSelectionScreen = (props, context) => {
   // List of sites and eta travel times to each
@@ -452,12 +447,12 @@ const TravelTargetSelectionScreen = (props, context) => {
       scrollable
       buttons={
         <>
-          {props.showCancelButton &&
-          (<Button
+          {props.showCancelButton
+          && (<Button
             ml={5}
             mr={0}
             content="Cancel"
-            onClick={() => setTravelDimmerShown(false)}/>
+            onClick={() => setTravelDimmerShown(false)} />
           ) || (
             ""
           )}
@@ -465,55 +460,58 @@ const TravelTargetSelectionScreen = (props, context) => {
             <DroneStatus />
           </Box>
         </>
-        }>
-      {!sites && (
+      }>
+      {!sites.length && (
         <NoSiteDimmer />
       )}
       {drone_status === "travel" && (
         <TravelDimmer />
+      ) || (
+        <>
+          {site && (
+            <Section
+              mt={1}
+              title="Home"
+              buttons={
+                <Box>
+                  <Button
+                    mr={1}
+                    content="Launch!"
+                    onClick={() => travel_to(null)}
+                    disabled={!can_travel} />
+                  ETA: {formatTime(site.distance * drone_travel_coefficent, "short")}
+                </Box>
+              }
+            />
+          )}
+          {sites.filter(destination => !site || destination.ref !== site.ref).map(destination => (
+            <Section
+              key={destination.ref}
+              title={destination.name}
+              buttons={
+                <>
+                  <Button
+                    mr={1}
+                    content="Launch!"
+                    onClick={() => travel_to(destination.ref)}
+                    disabled={!can_travel} />
+                  ETA: {formatTime(travel_cost(destination), "short")}
+                </>
+              }>
+              <LabeledList>
+                <LabeledList.Item label="Location">
+                  {destination.coordinates}
+                </LabeledList.Item>
+                <LabeledList.Item label="Description">
+                  {destination.description}
+                </LabeledList.Item>
+                <LabeledList.Divider />
+                {Object.keys(all_bands).filter(band => (destination.band_info[band] !== undefined && destination.band_info[band] !== 0)).map(band => (<LabeledList.Item key={band} label={band}>{destination.band_info[band]}</LabeledList.Item>))}
+              </LabeledList>
+            </Section>
+          ))}
+      </>
       )}
-      {site && (
-      <Section
-        mt={1}
-        title="Home"
-        buttons={
-          <Box>
-            <Button
-              mr={1}
-              content="Launch!"
-              onClick={() => travel_to(null)}
-              disabled={!can_travel} />
-            ETA: {formatTime(site.distance * drone_travel_coefficent, "short")}
-          </Box>
-          }
-      />
-      )}
-      {sites.filter(destination => !site || destination.ref !== site.ref).map(destination => (
-        <Section
-          key={destination.ref}
-          title={!!destination.revealed && destination.name || "Name at Location"}
-          buttons={
-            <>
-              <Button
-                mr={1}
-                content="Launch!"
-                onClick={() => travel_to(destination.ref)}
-                disabled={!can_travel} />
-              ETA: {formatTime(travel_cost(destination), "short")}
-            </>
-          }>
-          <LabeledList>
-            <LabeledList.Item label="Location">
-              {destination.name}
-            </LabeledList.Item>
-            <LabeledList.Item label="Description">
-              {destination.description}
-            </LabeledList.Item>
-            <LabeledList.Divider />
-            {Object.keys(all_bands).filter(band => (destination.band_info[band] !== undefined && destination.band_info[band] !== 0)).map(band => (<LabeledList.Item key={band} label={band}>{destination.band_info[band]}</LabeledList.Item>))}
-          </LabeledList>
-        </Section>
-      ))}
     </Section>
   );
 };
@@ -525,20 +523,20 @@ const TravelDimmer = (props, context) => {
     travel_time_left,
   } = data;
   return (
-  <Dimmer>
-    <Stack textAlign="center" vertical>
-      <Stack.Item>
-        <Icon
-          color="yellow"
-          name="route"
-          size={10}
-        />
-      </Stack.Item>
-      <Stack.Item fontSize="18px" color="yellow">
-        Travel Time: {formatTime(travel_time_left)}
-      </Stack.Item>
-    </Stack>
-  </Dimmer>
+    <Dimmer>
+      <Stack textAlign="center" vertical>
+        <Stack.Item>
+          <Icon
+            color="yellow"
+            name="route"
+            size={10}
+          />
+        </Stack.Item>
+        <Stack.Item fontSize="18px" color="yellow">
+          Travel Time: {formatTime(travel_time_left)}
+        </Stack.Item>
+      </Stack>
+    </Dimmer>
   );
 };
 
@@ -549,20 +547,20 @@ const TimeoutScreen = (props, context) => {
     wait_message,
   } = data;
   return (
-  <Dimmer>
-    <Stack textAlign="center" vertical>
-      <Stack.Item>
-        <Icon
-          color="green"
-          name="cog"
-          size={10}
-        />
-      </Stack.Item>
-      <Stack.Item fontSize="18px" color="green">
-        {wait_message} ({formatTime(wait_time_left)})
-      </Stack.Item>
-    </Stack>
-  </Dimmer>
+    <Dimmer>
+      <Stack textAlign="center" vertical>
+        <Stack.Item>
+          <Icon
+            color="green"
+            name="cog"
+            size={10}
+          />
+        </Stack.Item>
+        <Stack.Item fontSize="18px" color="green">
+          {wait_message} ({formatTime(wait_time_left)})
+        </Stack.Item>
+      </Stack>
+    </Dimmer>
   );
 };
 
@@ -583,12 +581,17 @@ const ExplorationScreen = (props, context) => {
   { return (<TravelTargetSelectionScreen showCancelButton />); }
   // List of repeatables, Explore button. Last found event popup and continue exploring. Return home button.
   return (
-    <Section fill title="Exploration">
+    <Section
+      fill
+      title="Exploration"
+      buttons={
+        <DroneStatus />
+      }>
       <Stack vertical fill>
         <Stack.Item grow>
           <LabeledList>
             <LabeledList.Item label="Site">{site.name}</LabeledList.Item>
-            <LabeledList.Item label="Location">{site.description}</LabeledList.Item>
+            <LabeledList.Item label="Location">{site.coordinates}</LabeledList.Item>
             <LabeledList.Item label="Description">{site.description}</LabeledList.Item>
           </LabeledList>
         </Stack.Item>
@@ -622,29 +625,52 @@ const EventScreen = (props, context) => {
     event,
   } = data;
   return (
-    <Section fill title="Exploration">
+    <Section
+      fill
+      title="Exploration"
+      buttons={
+        <DroneStatus />
+      }>
       {drone_status === "busy" && (
         <TimeoutScreen />
       )}
       <Stack vertical fill textAlign="center">
         <Stack.Item>
-          <img src={resolveAsset(event.image)}
-            height="100px"
-            width="200px"
-            style={{
-              '-ms-interpolation-mode': 'nearest-neighbor',
-            }} />
-        </Stack.Item>
-        <Stack.Item>
-          <BlockQuote style={{ "white-space": "pre-wrap" }}>{event.description}</BlockQuote>
+          <Stack fill>
+            <Stack.Item>
+              <img src={resolveAsset(event.image)}
+                height="125px"
+                width="250px"
+                style={{
+                  '-ms-interpolation-mode': 'nearest-neighbor',
+                }} />
+            </Stack.Item>
+            <Stack.Item >
+              <BlockQuote
+                style={{ "white-space": "pre-wrap" }}>
+                {event.description}
+              </BlockQuote>
+            </Stack.Item>
+          </Stack>
         </Stack.Item>
         <Stack.Divider />
-        <Stack.Item>
-          <Stack vertical>
-            <Stack.Item>
-              <Button disabled={!event.action_enabled} onClick={() => act("start_event")}>{event.action_text}</Button>
+        <Stack.Item grow>
+          <Stack vertical fill >
+            <Stack.Item grow />
+            <Stack.Item grow>
+              <Button
+                content={event.action_text}
+                disabled={!event.action_enabled}
+                onClick={() => act("start_event")} />
             </Stack.Item>
-            {!!event.skippable && (<Stack.Item><Button onClick={() => act("skip_event")}>{event.ignore_text}</Button></Stack.Item>)}
+            {!!event.skippable && (
+              <Stack.Item mt={2}>
+                <Button
+                  content={event.ignore_text}
+                  onClick={() => act("skip_event")}/>
+              </Stack.Item>
+            )}
+            <Stack.Item grow />
           </Stack>
         </Stack.Item>
       </Stack>
@@ -657,20 +683,28 @@ const AdventureScreen = (props, context) => {
     adventure_data,
   } = data;
   return (
-    <Section fill title="Exploration">
-      <Stack align="center">
-        <Stack.Item align="left">
-          <img
-            src={adventure_data.raw_image ? adventure_data.raw_image : resolveAsset(adventure_data.image)}
-            height="100px"
-            width="200px"
-            style={{
-              '-ms-interpolation-mode': 'nearest-neighbor',
-            }} />
-        </Stack.Item>
-        <Stack.Divider />
+    <Section
+      fill
+      title="Exploration"
+      buttons={
+        <DroneStatus />
+      }>
+      <Stack vertical>
         <Stack.Item>
-          <BlockQuote style={{ "white-space": "pre-wrap" }}>{adventure_data.description}</BlockQuote>
+          <Stack>
+            <Stack.Item>
+              <img
+                src={adventure_data.raw_image ? adventure_data.raw_image : resolveAsset(adventure_data.image)}
+                height="100px"
+                width="200px"
+                style={{
+                  '-ms-interpolation-mode': 'nearest-neighbor',
+                }} />
+            </Stack.Item>
+            <Stack.Item>
+              <BlockQuote style={{ "white-space": "pre-wrap" }}>{adventure_data.description}</BlockQuote>
+            </Stack.Item>
+          </Stack>
         </Stack.Item>
         <Stack.Item>
           <Stack vertical>
