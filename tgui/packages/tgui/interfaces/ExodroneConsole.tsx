@@ -211,9 +211,9 @@ const ToolSelectionModal = (props, context) => {
                 }} width={6} height={6}>
                   <Stack vertical>
                     <Stack.Item>
-                      {tool_name}
+                      {capitalize(tool_name)}
                     </Stack.Item>
-                    <Stack.Item textAlign="right">
+                    <Stack.Item ml={2.5}>
                       <Icon name={all_tools[tool_name]} size={3} />
                     </Stack.Item>
                   </Stack>
@@ -429,7 +429,10 @@ const TravelTargetSelectionScreen = (props, context) => {
       return target_site.distance * drone_travel_coefficent;
     }
   };
-
+  const [
+    choosingTools,
+    setChoosingTools,
+  ] = useLocalState(context, 'choosingTools', false);
   const [
     TravelDimmerShown,
     setTravelDimmerShown,
@@ -441,78 +444,74 @@ const TravelTargetSelectionScreen = (props, context) => {
   };
 
   return (
-    <Section
-      title="Travel Destinations"
-      fill
-      scrollable
-      buttons={
-        <>
-          {props.showCancelButton
-          && (<Button
-            ml={5}
-            mr={0}
-            content="Cancel"
-            onClick={() => setTravelDimmerShown(false)} />
-          ) || (
-            ""
-          )}
-          <Box mt={props.showCancelButton && -3.5}>
-            <DroneStatus />
-          </Box>
-        </>
-      }>
-      {!sites.length && (
-        <NoSiteDimmer />
-      )}
-      {drone_status === "travel" && (
-        <TravelDimmer />
-      ) || (
-        <>
-          {site && (
-            <Section
-              mt={1}
-              title="Home"
-              buttons={
-                <Box>
-                  <Button
-                    mr={1}
-                    content="Launch!"
-                    onClick={() => travel_to(null)}
-                    disabled={!can_travel} />
-                  ETA: {formatTime(site.distance * drone_travel_coefficent, "short")}
-                </Box>
-              }
-            />
-          )}
-          {sites.filter(destination => !site || destination.ref !== site.ref).map(destination => (
-            <Section
-              key={destination.ref}
-              title={destination.name}
-              buttons={
-                <>
-                  <Button
-                    mr={1}
-                    content="Launch!"
-                    onClick={() => travel_to(destination.ref)}
-                    disabled={!can_travel} />
-                  ETA: {formatTime(travel_cost(destination), "short")}
-                </>
-              }>
-              <LabeledList>
-                <LabeledList.Item label="Location">
-                  {destination.coordinates}
-                </LabeledList.Item>
-                <LabeledList.Item label="Description">
-                  {destination.description}
-                </LabeledList.Item>
-                <LabeledList.Divider />
-                {Object.keys(all_bands).filter(band => (destination.band_info[band] !== undefined && destination.band_info[band] !== 0)).map(band => (<LabeledList.Item key={band} label={band}>{destination.band_info[band]}</LabeledList.Item>))}
-              </LabeledList>
-            </Section>
-          ))}
-      </>
-      )}
-    </Section>
+    drone_status === "travel" && (
+      <TravelDimmer />
+    ) || (
+      <Section
+        title="Travel Destinations"
+        fill
+        scrollable
+        buttons={
+          <>
+            {props.showCancelButton && (
+              <Button
+                ml={5}
+                mr={0}
+                content="Cancel"
+                onClick={() => setTravelDimmerShown(false)} />
+            )}
+            <Box mt={props.showCancelButton && -3.5}>
+              <DroneStatus />
+            </Box>
+          </>
+        }>
+        {((sites && !sites.length) && !choosingTools) && (
+          <NoSiteDimmer />
+        )}
+        {site && (
+          <Section
+            mt={1}
+            title="Home"
+            buttons={
+              <Box>
+                <Button
+                  mr={1}
+                  content="Launch!"
+                  onClick={() => travel_to(null)}
+                  disabled={!can_travel} />
+                ETA: {formatTime(site.distance * drone_travel_coefficent, "short")}
+              </Box>
+            }
+          />
+        )}
+        {sites.filter(destination => !site || destination.ref !== site.ref).map(destination => (
+          <Section
+            key={destination.ref}
+            title={destination.name}
+            buttons={
+              <>
+                <Button
+                  mr={1}
+                  content="Launch!"
+                  onClick={() => travel_to(destination.ref)}
+                  disabled={!can_travel} />
+                ETA: {formatTime(travel_cost(destination), "short")}
+              </>
+            }>
+            <LabeledList>
+              <LabeledList.Item label="Location">
+                {destination.coordinates}
+              </LabeledList.Item>
+              <LabeledList.Item label="Description">
+                {destination.description}
+              </LabeledList.Item>
+              <LabeledList.Divider />
+              {Object.keys(all_bands).filter(band => (destination.band_info[band] !== undefined && destination.band_info[band] !== 0)).map(band => (<LabeledList.Item key={band} label={band}>{destination.band_info[band]}</LabeledList.Item>))}
+            </LabeledList>
+          </Section>
+        ))}
+      </Section>
+    )
   );
 };
 
@@ -523,20 +522,22 @@ const TravelDimmer = (props, context) => {
     travel_time_left,
   } = data;
   return (
-    <Dimmer>
-      <Stack textAlign="center" vertical>
-        <Stack.Item>
-          <Icon
-            color="yellow"
-            name="route"
-            size={10}
-          />
-        </Stack.Item>
-        <Stack.Item fontSize="18px" color="yellow">
-          Travel Time: {formatTime(travel_time_left)}
-        </Stack.Item>
-      </Stack>
-    </Dimmer>
+    <Section fill>
+      <Dimmer>
+        <Stack textAlign="center" vertical>
+          <Stack.Item>
+            <Icon
+              color="yellow"
+              name="route"
+              size={10}
+            />
+          </Stack.Item>
+          <Stack.Item fontSize="18px" color="yellow">
+            Travel Time: {formatTime(travel_time_left)}
+          </Stack.Item>
+        </Stack>
+      </Dimmer>
+    </Section>
   );
 };
 
@@ -547,20 +548,22 @@ const TimeoutScreen = (props, context) => {
     wait_message,
   } = data;
   return (
-    <Dimmer>
-      <Stack textAlign="center" vertical>
-        <Stack.Item>
-          <Icon
-            color="green"
-            name="cog"
-            size={10}
-          />
-        </Stack.Item>
-        <Stack.Item fontSize="18px" color="green">
-          {wait_message} ({formatTime(wait_time_left)})
-        </Stack.Item>
-      </Stack>
-    </Dimmer>
+    <Section fill>
+      <Dimmer>
+        <Stack textAlign="center" vertical>
+          <Stack.Item>
+            <Icon
+              color="green"
+              name="cog"
+              size={10}
+            />
+          </Stack.Item>
+          <Stack.Item fontSize="18px" color="green">
+            {wait_message} ({formatTime(wait_time_left)})
+          </Stack.Item>
+        </Stack>
+      </Dimmer>
+    </Section>
   );
 };
 
@@ -631,7 +634,7 @@ const EventScreen = (props, context) => {
       buttons={
         <DroneStatus />
       }>
-      {drone_status === "busy" && (
+      {(drone_status && drone_status === "busy") && (
         <TimeoutScreen />
       )}
       <Stack vertical fill textAlign="center">
@@ -667,7 +670,7 @@ const EventScreen = (props, context) => {
               <Stack.Item mt={2}>
                 <Button
                   content={event.ignore_text}
-                  onClick={() => act("skip_event")}/>
+                  onClick={() => act("skip_event")} />
               </Stack.Item>
             )}
             <Stack.Item grow />
@@ -686,36 +689,33 @@ const AdventureScreen = (props, context) => {
     <Section
       fill
       title="Exploration"
-      buttons={
-        <DroneStatus />
-      }>
-      <Stack vertical>
+      buttons={<DroneStatus />}>
+      <Stack>
         <Stack.Item>
-          <Stack>
-            <Stack.Item>
-              <img
-                src={adventure_data.raw_image ? adventure_data.raw_image : resolveAsset(adventure_data.image)}
-                height="100px"
-                width="200px"
-                style={{
-                  '-ms-interpolation-mode': 'nearest-neighbor',
-                }} />
-            </Stack.Item>
-            <Stack.Item>
-              <BlockQuote style={{ "white-space": "pre-wrap" }}>{adventure_data.description}</BlockQuote>
-            </Stack.Item>
-          </Stack>
+          <BlockQuote style={{ "white-space": "pre-wrap" }}>{adventure_data.description}</BlockQuote>
         </Stack.Item>
+        <Stack.Divider />
         <Stack.Item>
+          <img
+            src={adventure_data.raw_image ? adventure_data.raw_image : resolveAsset(adventure_data.image)}
+            height="100px"
+            width="200px"
+            style={{
+              '-ms-interpolation-mode': 'nearest-neighbor',
+            }} />
           <Stack vertical>
             <Stack.Divider />
+            <Stack.Item grow />
             {!!adventure_data.choices && adventure_data.choices.map(choice => (
-              <Stack.Item key={choice.key}><Button
-                content={choice.text}
-                textAlign="center"
-                onClick={() => act('adventure_choice', { choice: choice.key })}
-              />
-              </Stack.Item>))}
+              <Stack.Item key={choice.key}>
+                <Button
+                  fluid
+                  content={choice.text}
+                  textAlign="center"
+                  onClick={() => act('adventure_choice', { choice: choice.key })} />
+              </Stack.Item>
+            ))}
+            <Stack.Item grow />
           </Stack>
         </Stack.Item>
       </Stack>
@@ -729,13 +729,14 @@ const DroneScreen = (props, context) => {
     event,
   } = data;
   switch (drone_status) {
+    case "busy":
+      return (<TimeoutScreen />);
     case "idle":
     case "travel":
       return (<TravelTargetSelectionScreen />);
     case "adventure":
       return (<AdventureScreen />);
     case "exploration":
-    case "busy":
       if (event)
       { return (<EventScreen />); }
       else

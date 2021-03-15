@@ -122,11 +122,11 @@ const ScanInProgressModal = (props, context) => {
         </LabeledList.Item>
         <LabeledList.Item
           label="Emergency Stop">
-            <Button.Confirm
-              content="STOP SCAN"
-              color="red"
-              icon="times"
-              onClick={() => act("stop_scan")} />
+          <Button.Confirm
+            content="STOP SCAN"
+            color="red"
+            icon="times"
+            onClick={() => act("stop_scan")} />
         </LabeledList.Item>
       </LabeledList>
     </Modal>);
@@ -174,14 +174,14 @@ export const ExoscannerConsole = (props, context) => {
                 {scan_conditions && scan_conditions.map(condition => <NoticeBox key={condition} warning>{condition}</NoticeBox>)}
                 <Stack.Item grow>
                   {scan_power > 0 && (
-                      Array(scan_power).fill((
-                        <Icon
-                          name="satellite-dish"
-                          size={3} />
-                      ))
-                    ) || (
-                      "No properly configured scanner arrays detected."
-                    )}
+                    Array(scan_power).fill((
+                      <Icon
+                        name="satellite-dish"
+                        size={3} />
+                    ))
+                  ) || (
+                    "No properly configured scanner arrays detected."
+                  )}
                 </Stack.Item>
               </Stack>
             </Section>
@@ -216,14 +216,14 @@ export const ExoscannerConsole = (props, context) => {
                 <Button
                   content="View Experiments"
                   onClick={() => act("open_experiments")}
-                  icon="tasks"/>
+                  icon="tasks" />
               }>
               <Stack vertical>
                 {possible_sites.map(site => (
                   <Stack.Item key={site.ref}>
                     <Button
                       content={site.name}
-                      onClick={() => act("select_site", { "site_ref": site.ref })}/>
+                      onClick={() => act("select_site", { "site_ref": site.ref })} />
                   </Stack.Item>
                 ))}
               </Stack>
