@@ -178,10 +178,10 @@ GLOBAL_LIST_INIT(all_exodrone_tools,list(
 		var/obj/machinery/exodrone_launcher = find_unused_pad()
 		if(exodrone_launcher)
 			forceMove(get_turf(exodrone_launcher))
-			drone_log("Arrived at [station_name()]. Landing at [exodrone_launcher]")
+			drone_log("Arrived at [station_name()]. Landing at [exodrone_launcher].")
 		else
 			var/turf/drop_zone = drop_somewhere_on_station()
-			drone_log("Arrived at [station_name()]. Emergency landing at [drop_zone.loc.name]")
+			drone_log("Arrived at [station_name()]. Emergency landing at [drop_zone.loc.name].")
 		set_status(EXODRONE_IDLE)
 
 /obj/item/exodrone/proc/drop_somewhere_on_station()
@@ -289,7 +289,7 @@ GLOBAL_LIST_INIT(all_exodrone_tools,list(
 
 /obj/item/exodrone/proc/go_home()
 	start_travel(null)
-	drone_log("Caculated and executed course for [station_name()].")
+	drone_log("Calculated and executed course for [station_name()].")
 
 /// Deal damage in adventures/events
 /obj/item/exodrone/proc/damage(amount)
