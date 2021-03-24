@@ -8,6 +8,7 @@
 	ignores_fakedeath = TRUE
 	var/revive_ready = FALSE
 
+
 //Fake our own death and fully heal. You will appear to be dead but regenerate fully after a short delay.
 /datum/action/changeling/fakedeath/sting_action(mob/living/user)
 	..()
@@ -47,6 +48,10 @@
 		user.emote("scream")
 		user.regenerate_limbs(0, list(BODY_ZONE_HEAD))
 	user.regenerate_organs()
+	if(!iscarbon(user))
+		return
+	var/mob/living/carbon/scarred = owner
+	QDEL_LIST(scarred.all_scars)
 
 /datum/action/changeling/fakedeath/proc/ready_to_regenerate(mob/user)
 	if(user?.mind)

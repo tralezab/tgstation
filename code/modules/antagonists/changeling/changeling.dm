@@ -16,7 +16,8 @@
 	var/competitive_objectives = FALSE //Should we assign objectives in competition with other lings?
 
 	//Changeling Stuff
-
+	/// if this changeling has done something that revealed itself
+	var/is_obvious = FALSE
 	var/list/stored_profiles = list() //list of datum/changelingprofile
 	var/datum/changelingprofile/first_prof = null
 	var/dna_max = 6 //How many extra DNA strands the changeling can store for transformation.
@@ -100,10 +101,14 @@
 	if(powers)
 		remove_changeling_powers()
 	//Repurchase free powers.
-	for(var/path in all_powers)
-		var/datum/action/changeling/S = new path
-		powers += S
-		S.on_purchase(owner.current,TRUE)
+	for(var/datum/action/changeling/sting as anything in all_powers)
+		if(!initial(sting.button_icon_state))
+			continue //probably a prototype
+		if(initial(sting.ascended_ability))
+			continue //they need to earn this
+		sting = new sting
+		powers += sting
+		sting.on_purchase(owner.current,TRUE)
 
 	for(var/power in powers)
 		var/datum/action/changeling/S = power
@@ -277,19 +282,19 @@
 
 /datum/antagonist/changeling/proc/become_obvious()
 	var/mob/living/carbon/human/obvious_changeling = owner.current
-	if(!obvious_changeling || !istype(obvious_changeling))
+	if(is_obvious || !obvious_changeling || !istype(obvious_changeling))
 		return
+	is_obvious = TRUE
 	to_chat(obvious_changeling, "<span class='userdanger'>Our true form is being made clear!</span>")
 
-	..()
 	obvious_changeling.dropItemToGround(obvious_changeling.head)
 	obvious_changeling.dropItemToGround(obvious_changeling.wear_suit)
 
-	var/obj/item/clothing/suit/armor/changeling/ling_suit = new ling_suit(obvious_changeling)
-	var/obj/item/clothing/head/helmet/changeling/ling_helmet = new ling_helmet(obvious_changeling)
+	var/obj/item/clothing/suit/armor/changeling/ling_suit = new /obj/item/clothing/suit/armor/changeling(obvious_changeling)
+	var/obj/item/clothing/head/helmet/changeling/ling_helmet = new /obj/item/clothing/head/helmet/changeling(obvious_changeling)
 
 	obvious_changeling.equip_to_slot_if_possible(ling_suit, ITEM_SLOT_OCLOTHING, 1, 1, 1)
-	obvious_changeling.equip_to_slot_if_possible(ling_helmet ITEM_SLOT_HEAD, 1, 1, 1)
+	obvious_changeling.equip_to_slot_if_possible(ling_helmet, ITEM_SLOT_HEAD, 1, 1, 1)
 	var/list/tendril_range = orange(3, obvious_changeling)
 	for(var/i in 1 to rand(4,7))
 		var/turf/target_turf = pick_n_take(tendril_range)
@@ -302,6 +307,7 @@
 	qdel(suit)
 	obvious_changeling.temporarilyRemoveItemFromInventory(helmet, force = TRUE)
 	qdel(helmet)
+	is_obvious = FALSE
 
 /obj/item/clothing/suit/armor/changeling
 	name = "chitinous mass"
@@ -513,12 +519,6 @@
 	newprofile.profile_snapshot = profile_snapshot
 	newprofile.id_icon = id_icon
 
-/datum/antagonist/changeling/xenobio
-	name = "Xenobio Changeling"
-	give_objectives = FALSE
-	show_in_roundend = FALSE //These are here for admin tracking purposes only
-	you_are_greet = FALSE
-
 /datum/antagonist/changeling/roundend_report()
 	var/list/parts = list()
 
@@ -548,5 +548,3 @@
 
 	return parts.Join("<br>")
 
-/datum/antagonist/changeling/xenobio/antag_listing_name()
-	return ..() + "(Xenobio)"

@@ -449,7 +449,7 @@
 	if(occupants.len >= max_occupants)
 		to_chat(user, "<span class='warning'>[src] are full!</span>")
 		return
-	if(istype(target, /mob/living/simple_animal/hostile/retaliate/poison/snake) || istype(target, /mob/living/simple_animal/hostile/headcrab) || istype(target, /mob/living/carbon/alien/larva))
+	if(istype(target, /mob/living/simple_animal/hostile/retaliate/poison/snake) || istype(target, /mob/living/carbon/alien/larva))
 		occupants += target
 		target.forceMove(src)
 		to_chat(user, "<span class='notice'>[target] slithers into [src].</span>")

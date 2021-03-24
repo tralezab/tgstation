@@ -5,6 +5,7 @@
 	button_icon_state = "adrenaline"
 	chemical_cost = 30
 	req_human = 1
+	ascended_ability = TRUE
 	req_stat = UNCONSCIOUS
 
 //Recover from stuns.

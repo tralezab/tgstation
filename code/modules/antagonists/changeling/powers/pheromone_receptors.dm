@@ -5,6 +5,7 @@
 
 /datum/action/changeling/pheromone_receptors
 	name = "Pheromone Receptors"
+	button_icon_state = "pheromones"
 	desc = "We attune our senses to track other changelings by scent.  The closer they are, the easier we can find them."
 	helptext = "We will know the general direction of nearby changelings, with closer scents being stronger. This is somewhat expensive and lasts until disabled or we run out of chemicals."
 	chemical_cost = 20 //-5 chemicals while this is on as well
@@ -51,7 +52,7 @@
 
 	for(var/mob/living/carbon/C in GLOB.alive_mob_list)
 		if(C != owner && !C.mind)
-			var/datum/antagonist/changeling/antag_datum = C.mind.has_antag_datum(/datum/antagonist/changeling)
+			var/datum/antagonist/changeling/antag_datum = C.mind?.has_antag_datum(/datum/antagonist/changeling)
 			if(istype(antag_datum))
 				var/their_loc = get_turf(C)
 				var/distance = get_dist_euclidian(my_loc, their_loc)
