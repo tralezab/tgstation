@@ -114,6 +114,16 @@
 /turf/open/floor/grass/fairy/spawniconchange()
 	icon_state = "fairygrass[rand(0,3)]"
 
+/turf/open/floor/grass/thicket
+	name = "discolored grass patch"
+	desc = "This patch of grass has been discolored from the feeding cycle of the thicket."
+	icon_state = "thicket_grass"
+	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
+	floor_tile = null
+
+/turf/open/floor/grass/thicket/spawniconchange()
+	return
+
 /turf/open/floor/grass/snow
 	gender = PLURAL
 	name = "snow"
