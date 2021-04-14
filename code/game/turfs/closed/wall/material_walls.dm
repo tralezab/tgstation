@@ -24,3 +24,5 @@
 /turf/closed/wall/material/mat_update_desc(mat)
 	desc = "A huge chunk of [mat] used to separate rooms."
 
+/turf/closed/wall/material/meat
+	custom_materials = list(/datum/material/meat = 4000)

@@ -23,4 +23,5 @@
 
 /datum/map_generator/cave_generator/lavaland/meaty
 	open_turf_types = list(/turf/open/floor/plating/asteroid/basalt/lava_land_surface = 1)
-	closed_turf_types =  list(/turf/closed/mineral/random/volcanic = 1)
+	closed_turf_types =  list(/turf/closed/wall/material/meat
+)
