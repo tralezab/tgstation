@@ -92,3 +92,8 @@
 	name = "wumborian fugu den"
 	desc = "A den housing a nest of wumborian fugus, how do they all even fit in there?"
 	mob_types = list(/mob/living/simple_animal/hostile/asteroid/fugu)
+
+/obj/structure/spawner/mining/gutlunch
+	name = "gutlunch den"
+	desc = "A den housing a nest of gutlunches. They thrive in the thicket, despite the risks of being snatched up by the trees."
+	mob_types = list(/mob/living/simple_animal/hostile/asteroid/gutlunch)

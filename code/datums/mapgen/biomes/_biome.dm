@@ -15,26 +15,26 @@
 /datum/biome/proc/generate_turf(turf/gen_turf)
 	gen_turf.ChangeTurf(turf_type, null, CHANGETURF_DEFER_CHANGE)
 	if(length(fauna_types) && prob(fauna_density))
-		var/mob/fauna = pick(fauna_types)
+		var/mob/fauna = pickweight(fauna_types)
 		new fauna(gen_turf)
 
 	if(length(flora_types) && prob(flora_density))
-		var/obj/structure/flora = pick(flora_types)
+		var/obj/structure/flora = pickweight(flora_types)
 		new flora(gen_turf)
 
 /datum/biome/mudlands
 	turf_type = /turf/open/floor/plating/dirt/jungle/dark
-	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/rock/jungle, /obj/structure/flora/rock/pile/largejungle)
+	flora_types = list(/obj/structure/flora/grass/jungle = 1,/obj/structure/flora/grass/jungle/b = 1, /obj/structure/flora/rock/jungle = 1, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 3
 
 /datum/biome/plains
 	turf_type = /turf/open/floor/plating/grass/jungle
-	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/b, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
+	flora_types = list(/obj/structure/flora/grass/jungle = 1,/obj/structure/flora/grass/jungle/b = 1, /obj/structure/flora/tree/jungle = 1, /obj/structure/flora/rock/jungle = 1, /obj/structure/flora/junglebush = 1, /obj/structure/flora/junglebush/b = 1, /obj/structure/flora/junglebush/c = 1, /obj/structure/flora/junglebush/large = 1, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 15
 
 /datum/biome/jungle
 	turf_type = /turf/open/floor/plating/grass/jungle
-	flora_types = list(/obj/structure/flora/grass/jungle,/obj/structure/flora/grass/jungle/b, /obj/structure/flora/tree/jungle, /obj/structure/flora/rock/jungle, /obj/structure/flora/junglebush, /obj/structure/flora/junglebush/b, /obj/structure/flora/junglebush/c, /obj/structure/flora/junglebush/large, /obj/structure/flora/rock/pile/largejungle)
+	flora_types = list(/obj/structure/flora/grass/jungle = 1,/obj/structure/flora/grass/jungle/b = 1, /obj/structure/flora/tree/jungle = 1, /obj/structure/flora/rock/jungle = 1, /obj/structure/flora/junglebush = 1, /obj/structure/flora/junglebush/b = 1, /obj/structure/flora/junglebush/c = 1, /obj/structure/flora/junglebush/large = 1, /obj/structure/flora/rock/pile/largejungle)
 	flora_density = 40
 
 /datum/biome/jungle/deep

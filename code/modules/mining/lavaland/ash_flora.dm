@@ -146,6 +146,20 @@
 	. = ..()
 	AddElement(/datum/element/caltrop, min_damage = 3, max_damage = 6, probability = 70)
 
+/obj/structure/flora/ash/blood_pearl
+	icon_state = "blood_pearl"
+	name = "fruiting cacti"
+	desc = "Several prickly cacti, brimming with ripe fruit and covered in a thin layer of ash."
+	harvested_name = "cacti"
+	harvested_desc = "A bunch of prickly cacti. You can see fruits slowly growing beneath the covering of ash."
+	harvest = /obj/item/food/grown/ash_flora/cactus_fruit
+	needs_sharp_harvest = FALSE
+	harvest_amount_high = 1
+	harvest_time = 10
+	harvest_message_low = "You harvest the blood pearl." //any other message shouldn't show since you can only get one pearl
+	regrowth_time_low = 4800
+	regrowth_time_high = 7200
+
 ///Snow flora to exist on icebox.
 /obj/structure/flora/ash/chilly
 	icon_state = "chilly_pepper"
@@ -211,6 +225,32 @@
 	icon_state = "cactus_fruit"
 	seed = /obj/item/seeds/lavaland/cactus
 	wine_power = 50
+
+/obj/item/grown/blood_pearl
+	name = "blood pearl"
+	desc = "An exotic calcic creation of xenoflora. Gives out a nice glow, but is a bit fragile."
+	icon_state = "blood_pearl"
+	seed = /obj/item/seeds/lavaland/pearl
+	light_system = MOVABLE_LIGHT
+	light_color = COLOR_SOFT_RED
+	light_range = 7
+
+/obj/item/grown/blood_pearl/attack_self(mob/user, modifiers)
+	. = ..()
+	playsound(src, "shatter", 70, TRUE)
+	to_chat(user, "<span class='notice'>You shatter [src].</span>")
+	qdel(src)
+
+/obj/item/grown/blood_pearl/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(!.) //if the pearl wasn't caught
+		playsound(src, "shatter", 70, TRUE)
+		qdel(src)
+
+/obj/item/grown/blood_pearl/Destroy()
+	. = ..()
+	new /obj/item/shard(drop_location())
+	new /obj/item/shard(drop_location())
 
 //SEEDS
 
@@ -319,6 +359,17 @@
 	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
 	reagents_add = list(/datum/reagent/consumable/tinlux = 0.04, /datum/reagent/consumable/nutriment/vitamin = 0.02, /datum/reagent/drug/space_drugs = 0.02)
 
+/obj/item/seeds/lavaland/pearl
+	name = "pack of blood pearl seeds"
+	desc = "This mycelium grows into blood pearls, its name given from the byproduct it produces."
+	icon_state = "mycelium-ember"
+	species = "ember"
+	plantname = "Embershroom Mushrooms"
+	product = /obj/item/food/grown/ash_flora/mushroom_stem
+	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism, /datum/plant_gene/trait/glow, /datum/plant_gene/trait/fire_resistance)
+	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
+	reagents_add = list(/datum/reagent/carbon = 0.05)
+
 //CRAFTING
 
 /datum/crafting_recipe/mushroom_bowl
@@ -327,6 +378,7 @@
 	reqs = list(/obj/item/food/grown/ash_flora/shavings = 5)
 	time = 30
 	category = CAT_PRIMAL
+
 /obj/item/reagent_containers/glass/bowl/mushroom_bowl
 	name = "mushroom bowl"
 	desc = "A bowl made out of mushrooms. Not food, though it might have contained some at some point."

@@ -82,3 +82,6 @@
 /datum/map_generator/massdelete/regen
 	modules = list(/datum/map_generator_module/bottom_layer/massdelete/regeneration_delete)
 	buildmode_name = "Block: Mass Deletion - Leave Mobs and Turfs"
+
+/datum/map_generator_module/bottom_layer/plating
+	spawnableTurfs = list(/turf/open/floor/plating = 100)
