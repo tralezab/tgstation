@@ -18,21 +18,21 @@
 			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
 			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
 			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
-			BIOME_WILD = /datum/map_generator/blood_forest
+			BIOME_WILD = /datum/map_generator/contaminated_thicket
 			),
 		BIOME_MEDIUM_CORRUPTION = list(
 			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland/rusty,
 			BIOME_PEACEFUL = /datum/map_generator/biome_applier/tar_pits,
 			BIOME_NEUTRAL = /datum/map_generator/biome_applier/tar_pits,
 			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
-			BIOME_WILD = /datum/map_generator/blood_forest
+			BIOME_WILD = /datum/map_generator/contaminated_thicket
 			),
 		BIOME_HIGHMEDIUM_CORRUPTION = list(
 			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,
 			BIOME_PEACEFUL = /datum/map_generator/biome_applier/tar_pits,
 			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
 			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland/meaty,
-			BIOME_WILD = /datum/map_generator/blood_forest
+			BIOME_WILD = /datum/map_generator/contaminated_thicket
 			),
 		BIOME_HIGH_CORRUPTION = list(
 			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,

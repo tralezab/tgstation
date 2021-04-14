@@ -1,5 +1,5 @@
 
-
+//CONTAMINATED THICKET//
 
 /datum/biome/contaminated_thicket
 	turf_type = /turf/open/floor/grass/thicket
@@ -15,7 +15,7 @@
 	flora_density = 1
 	fauna_density = 2
 
-/datum/map_generator/thicket
+/datum/map_generator/contaminated_thicket
 
 	modules = list(
 		/datum/map_generator_module/bottom_layer/plating, //all old turfs to plating
@@ -27,7 +27,7 @@
 	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
 	var/perlin_zoom = 65
 
-/datum/map_generator/thicket/generate_terrain(list/turfs)
+/datum/map_generator/contaminated_thicket/generate_terrain(list/turfs)
 	var/height_seed = rand(0, 50000)
 
 	for(var/t in turfs) //Go through all the turfs and generate them
