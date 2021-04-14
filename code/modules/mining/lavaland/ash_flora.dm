@@ -146,6 +146,20 @@
 	. = ..()
 	AddElement(/datum/element/caltrop, min_damage = 3, max_damage = 6, probability = 70)
 
+/obj/structure/flora/ash/blood_pearl
+	icon_state = "blood_pearl"
+	name = "fruiting cacti"
+	desc = "Several prickly cacti, brimming with ripe fruit and covered in a thin layer of ash."
+	harvested_name = "cacti"
+	harvested_desc = "A bunch of prickly cacti. You can see fruits slowly growing beneath the covering of ash."
+	harvest = /obj/item/food/grown/ash_flora/cactus_fruit
+	needs_sharp_harvest = FALSE
+	harvest_amount_high = 1
+	harvest_time = 10
+	harvest_message_low = "You harvest the blood pearl." //any other message shouldn't show since you can only get one pearl
+	regrowth_time_low = 4800
+	regrowth_time_high = 7200
+
 ///Snow flora to exist on icebox.
 /obj/structure/flora/ash/chilly
 	icon_state = "chilly_pepper"
@@ -212,12 +226,31 @@
 	seed = /obj/item/seeds/lavaland/cactus
 	wine_power = 50
 
-/obj/item/food/grown/ash_flora/blood_pearl
+/obj/item/grown/blood_pearl
 	name = "blood pearl"
-	desc = "An exotic plant that grows glowing pearls. It's existence in the thicket has tainted the pearl a deep red."
-	icon_state = "mushroom_stem"
+	desc = "An exotic calcic creation of xenoflora. Gives out a nice glow, but is a bit fragile."
+	icon_state = "blood_pearl"
 	seed = /obj/item/seeds/lavaland/pearl
-	wine_power = 0
+	light_system = MOVABLE_LIGHT
+	light_color = COLOR_SOFT_RED
+	light_range = 7
+
+/obj/item/grown/blood_pearl/attack_self(mob/user, modifiers)
+	. = ..()
+	playsound(src, "shatter", 70, TRUE)
+	to_chat(user, "<span class='notice'>You shatter [src].</span>")
+	qdel(src)
+
+/obj/item/grown/blood_pearl/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	. = ..()
+	if(!.) //if the pearl wasn't caught
+		playsound(src, "shatter", 70, TRUE)
+		qdel(src)
+
+/obj/item/grown/blood_pearl/Destroy()
+	. = ..()
+	new /obj/item/shard(drop_location())
+	new /obj/item/shard(drop_location())
 
 //SEEDS
 

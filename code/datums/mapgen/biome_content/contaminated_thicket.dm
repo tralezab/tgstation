@@ -54,7 +54,7 @@
 			target = null
 			return
 		if(!vine_beam)
-			vine_beam = Beam(target, "vine", maxdistance=7, beam_type=/obj/effect/ebeam/vine)
+			vine_beam = Beam(target, "vine_red", maxdistance=7, beam_type=/obj/effect/ebeam/vine)
 		step_towards(target, src)
 		if(get_dist(src, target) < 1)
 			target.gib()
@@ -86,8 +86,20 @@
 	feed_animation()
 	new /mob/living/simple_animal/hostile/retaliate/thicket_guard(loc)
 
+/obj/structure/flora/tree/living/proc/Shoot(atom/targeted_atom)
+	if(!targeted_atom)
+		return
+	var/turf/startloc = get_turf(src)
+	var/obj/projectile/P = new /obj/projectile/thicketvine(startloc)
+	P.preparePixelProjectile(targeted_atom, startloc)
+	P.firer = src
+	P.original = targeted_atom
+	P.fire(null, targeted_atom)
+
+
 /obj/structure/flora/tree/living/attackby(obj/item/W, mob/user, params)
 	if(!("plants" in user.faction))
+		playsound()
 		visible_message("<span class='warning'>[src] unleashes an otherworldly wail!</span>")
 		for(var/mob/living/simple_animal/hostile/retaliate/thicket_guard/guard in orange(7, src))
 			guard.Retaliate()
@@ -179,9 +191,36 @@
 	faction = list("plants") //does not have normal factions so it will hunt gutlunches
 	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
 	icon_state = "tree_creation"
-	icon_living = "tree_creation_aggro"
 	friendly_verb_continuous = "stares down"
 	friendly_verb_simple = "stare down"
-	speak_emote = list("logs")
-	projectiletype = /obj/projectile/seedling
+	attack_verb_simple = "stab"
+	attack_verb_continuous = "stabs"
+	maxHealth = 40
+	health = 40
+	melee_damage_lower = 10
+	melee_damage_upper = 15
+	speak_emote = list("timbers")
+	projectiletype = /obj/projectile/thicketvine
 
+/mob/living/simple_animal/hostile/retaliate/thicket_guard/OpenFire(atom/A)
+	for(var/obj/structure/flora/tree/living/ProjectileOrigin in shuffle(orange(7, src)))
+		//tree shoots it instead, should make fighting these in the thicket a total bitch muahaha
+		ProjectileOrigin.Shoot(target)
+		return
+	..() //if there are no trees nearby, just fire from yourself
+
+/obj/projectile/thicketvine
+	name = "vine"
+	icon_state = "vine_red_end"
+	pass_flags = PASSTABLE
+	damage = 10
+	damage_type = BRUTE
+	stun = 1 SECONDS
+	range = 8
+	hitsound = 'sound/weapons/thudswoosh.ogg'
+	var/chain
+
+/obj/projectile/thicketvine/fire(setAngle)
+	if(firer)
+		chain = firer.Beam(src, icon_state = "vine_red")
+	..()
