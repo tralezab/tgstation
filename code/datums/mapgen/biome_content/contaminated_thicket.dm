@@ -1,5 +1,5 @@
 
-#define TIME_UNTIL_NEXT_ACTION 4 MINUTES
+#define TIME_UNTIL_NEXT_ACTION 3 MINUTES
 
 //corrupt trees
 /obj/structure/flora/tree/living
@@ -54,11 +54,10 @@
 			target = null
 			return
 		if(!vine_beam)
-			vine_beam = Beam(target, "vine_red", maxdistance=7, beam_type=/obj/effect/ebeam/vine)
+			vine_beam = Beam(target, "vine_red", maxdistance = 7, beam_type = /obj/effect/ebeam/vine)
 		step_towards(target, src)
-		if(get_dist(src, target) < 1)
+		if(get_dist(src, target) <= 1)
 			target.gib()
-
 			feed_animation()
 
 /obj/structure/flora/tree/living/proc/spread_vines()
@@ -188,17 +187,23 @@
 	ranged = TRUE
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	weather_immunities = list("lava","ash")
-	faction = list("plants") //does not have normal factions so it will hunt gutlunches
+	faction = list("plants", "lava", "ash")
 	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
+	deathmessage = "meaty innards fly out of its wooden shell."
+	attacked_sound = 'sound/creatures/venus_trap_hurt.ogg'
+	deathsound = 'sound/creatures/venus_trap_death.ogg'
+	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
 	icon_state = "tree_creation"
 	friendly_verb_continuous = "stares down"
 	friendly_verb_simple = "stare down"
-	attack_verb_simple = "stab"
-	attack_verb_continuous = "stabs"
+	attack_verb_simple = "bash"
+	attack_verb_continuous = "bashes"
+	attack_sound = 'sound/weapons/punch1.ogg'
 	maxHealth = 40
 	health = 40
-	melee_damage_lower = 10
-	melee_damage_upper = 15
+	obj_damage = 100
+	melee_damage_lower = 25
+	melee_damage_upper = 25
 	speak_emote = list("timbers")
 	projectiletype = /obj/projectile/thicketvine
 
@@ -218,7 +223,11 @@
 	stun = 1 SECONDS
 	range = 8
 	hitsound = 'sound/weapons/thudswoosh.ogg'
-	var/chain
+	var/datum/beam/chain
+
+/obj/projectile/thicketvine/Destroy()
+	QDEL_NULL(chain)
+	. = ..()
 
 /obj/projectile/thicketvine/fire(setAngle)
 	if(firer)

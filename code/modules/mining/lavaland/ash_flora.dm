@@ -148,17 +148,27 @@
 
 /obj/structure/flora/ash/blood_pearl
 	icon_state = "blood_pearl"
-	name = "fruiting cacti"
-	desc = "Several prickly cacti, brimming with ripe fruit and covered in a thin layer of ash."
-	harvested_name = "cacti"
-	harvested_desc = "A bunch of prickly cacti. You can see fruits slowly growing beneath the covering of ash."
-	harvest = /obj/item/food/grown/ash_flora/cactus_fruit
+	name = "complete blood pearl"
+	desc = "An exotic plant unbothered by the ashy storms of the planet. Excess mineral intake from these storms is turned into that bright red pearl, clutched by the plant."
+	harvested_name = "incomplete blood pearl"
+	harvested_desc = "An exotic plant unbothered by the ashy storms of the planet. It is missing its namesake, the bright red pearls it creates."
+	harvest = /obj/item/grown/blood_pearl
 	needs_sharp_harvest = FALSE
 	harvest_amount_high = 1
 	harvest_time = 10
 	harvest_message_low = "You harvest the blood pearl." //any other message shouldn't show since you can only get one pearl
+	light_color = COLOR_SOFT_RED
+	light_range = 7
 	regrowth_time_low = 4800
 	regrowth_time_high = 7200
+
+/obj/structure/flora/ash/blood_pearl/harvest(user)
+	. = ..()
+	light_range = 0
+
+/obj/structure/flora/ash/blood_pearl/regrow()
+	. = ..()
+	light_range = initial(light_range)
 
 ///Snow flora to exist on icebox.
 /obj/structure/flora/ash/chilly

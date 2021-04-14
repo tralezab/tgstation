@@ -96,4 +96,5 @@
 /obj/structure/spawner/mining/gutlunch
 	name = "gutlunch den"
 	desc = "A den housing a nest of gutlunches. They thrive in the thicket, despite the risks of being snatched up by the trees."
+	max_mobs = 1
 	mob_types = list(/mob/living/simple_animal/hostile/asteroid/gutlunch)
