@@ -14,3 +14,8 @@
 	smoothing_iterations = 50
 	birth_limit = 4
 	death_limit = 3
+
+
+/datum/map_generator/cave_generator/lavaland/mountain
+	open_turf_types = list(/turf/open/floor/plating/dirt/jungle/dark = 1)
+	closed_turf_types =  list(/turf/closed/mineral/random/volcanic = 1)
