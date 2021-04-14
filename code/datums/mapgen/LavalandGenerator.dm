@@ -1,7 +1,7 @@
 /datum/map_generator/lavaland_biomes
 	name = "Lavaland Biomes"
 	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
-	var/perlin_zoom = 65
+	var/perlin_zoom = 100
 	///Assoc lists of type of generation type, and the turfs in that generation type. Filled during generation for this datum
 	var/list/generation_turfs = list()
 	///2D list of all generation types based on heat and humidity combos.
@@ -39,7 +39,7 @@
 			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
 			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
 			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland/meaty,
-			BIOME_WILD =/datum/map_generator/cave_generator/lavaland/meaty
+			BIOME_WILD = /datum/map_generator/cave_generator/lavaland/meaty
 
 		)
 	)
@@ -48,8 +48,7 @@
 
 
 /datum/map_generator/lavaland_biomes/generate_terrain(list/turfs)
-	var/humidity_seed = rand(0, 50000)
-	var/heat_seed = rand(0, 50000)
+	var/serenity_seed = rand(0, 50000)
 
 	default_cave_generator = new default_cave_generator()
 	var/cave_noise_string = default_cave_generator.generate_noise() //Get noise from this cave generator and store it, we will use this for all caves in this generator.
@@ -57,13 +56,14 @@
 	for(var/generation_turf in turfs) //Go through all the turfs and assign them to the correct generator
 		var/turf/gen_turf = generation_turf
 		var/drift_x = (gen_turf.x + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
-		var/drift_y = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
+		var/y_position_to_use = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT))
+		var/drift_y = y_position_to_use / perlin_zoom
 
-		var/serenity = text2num(rustg_noise_get_at_coordinates("[humidity_seed]", "[drift_x]", "[drift_y]"))
+		var/serenity = text2num(rustg_noise_get_at_coordinates("[serenity_seed]", "[drift_x]", "[drift_y]"))
 		var/serenity_level  //Type of humidity zone we're in LOW-MEDIUM-HIGH
 		var/corruption_level //How deep into lavaland are we
 
-		switch(drift_y)
+		switch(clamp(y_position_to_use, CORRUPTION_START_Y_LEVEL, CORRUPTION_END_Y_LEVEL))
 			if(CORRUPTION_START_Y_LEVEL to CORRUPTION_MID1_Y_LEVEL)
 				corruption_level = BIOME_LOW_CORRUPTION
 			if(CORRUPTION_MID1_Y_LEVEL to CORRUPTION_MID2_Y_LEVEL)
@@ -100,5 +100,7 @@
 			cave_gen.string_gen = cave_noise_string //Use our pre-made cave noise to make sure all caves correctly connect
 
 		map_generator_instance.generate_terrain(generation_turfs[map_generator])
+
+	generation_turfs = list()
 
 	return ..()

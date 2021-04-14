@@ -1,4 +1,5 @@
 /datum/map_generator/blood_forest
+	name = "The Blood Forest"
 	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
 	var/perlin_zoom = 65
 

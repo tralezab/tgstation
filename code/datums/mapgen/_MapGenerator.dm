@@ -10,7 +10,7 @@
 
 ///This proc will be ran by areas on Initialize, and provides the areas turfs as argument to allow for generation.
 /datum/map_generator/proc/generate_terrain(list/turfs)
-	var/message = "[name] finished in [(REALTIMEOFDAY - start_time)/10]s!"
+	var/message = "[name] generated in [(REALTIMEOFDAY - start_time)/10]s!"
 	to_chat(world, "<span class='boldannounce'>[message]</span>")
 	log_world(message)
 	return
