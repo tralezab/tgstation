@@ -16,6 +16,6 @@
 	death_limit = 3
 
 
-/datum/map_generator/cave_generator/lavaland/mountain
+/datum/map_generator/cave_generator/lavaland/rusty
 	open_turf_types = list(/turf/open/floor/plating/dirt/jungle/dark = 1)
-	closed_turf_types =  list(/turf/closed/mineral/random/volcanic = 1)
+	closed_turf_types =  list(/turf/closed/wall/rust = 1)

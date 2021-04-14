@@ -14,12 +14,12 @@
 
 		var/datum/biome/selected_biome
 		switch(height)
-		if(0 to 0.3)
-			selected_biome = /datum/biome/blood_plains
-		if(0.3 to 0.85)
-			selected_biome = /datum/biome/blood_forest
-		if(height >= 0.85) //if height is above 0.85, mountain rock.
-			selected_biome = /datum/biome/mountain
+			if(0 to 0.3)
+				selected_biome = /datum/biome/plains
+			if(0.3 to 0.85)
+				selected_biome = /datum/biome/jungle
+			if(0.85 to 1) //if height is above 0.85, mountain rock.
+				selected_biome = /datum/biome/mountain
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)
 		CHECK_TICK

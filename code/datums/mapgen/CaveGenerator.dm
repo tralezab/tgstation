@@ -1,5 +1,5 @@
 /datum/map_generator/cave_generator
-	var/name = "Cave Generator"
+	name = "Cave Generator"
 	///Weighted list of the types that spawns if the turf is open
 	var/open_turf_types = list(/turf/open/floor/plating/asteroid/airless = 1)
 	///Weighted list of the types that spawns if the turf is closed
