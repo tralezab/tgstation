@@ -124,5 +124,25 @@ require only minor tweaks.
 #define BIOME_HIGHMEDIUM_HUMIDITY "highmedium_humidity"
 #define BIOME_HIGH_HUMIDITY "high_humidity"
 
+#define BIOME_LOW_CORRUPTION "low_corruption"
+#define BIOME_LOWMEDIUM_CORRUPTION "lowmedium_corruption"
+#define BIOME_MEDIUM_CORRUPTION "medium_corruption"
+#define BIOME_HIGHMEDIUM_CORRUPTION "highmedium_corruption"
+#define BIOME_HIGH_CORRUPTION "high_corruption"
+
+#define BIOME_SERENE "low_wildness"
+#define BIOME_PEACEFUL "lowmedium_wildness"
+#define BIOME_NEUTRAL "medium_wildness"
+#define BIOME_UNTAMED "highmedium_wildness"
+#define BIOME_WILD "high_wildness"
+
+#define  CORRUPTION_START_Y_LEVEL 35
+#define  CORRUPTION_MID1_Y_LEVEL 74
+#define  CORRUPTION_MID2_Y_LEVEL 113
+#define  CORRUPTION_MID3_Y_LEVEL 152
+#define  CORRUPTION_MID4_Y_LEVEL 191
+#define  CORRUPTION_END_Y_LEVEL 230
+
+
 ///the random offset applied to square coordinates, causes intermingling at biome borders
 #define BIOME_RANDOM_SQUARE_DRIFT 2

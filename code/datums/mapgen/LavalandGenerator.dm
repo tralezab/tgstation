@@ -6,20 +6,41 @@
 	var/list/generation_turfs = list()
 	///2D list of all generation types based on heat and humidity combos.
 	var/list/possible_generation_types = list(
-	BIOME_LOW_HEAT = list(
-		BIOME_LOW_HUMIDITY = /datum/map_generator/cave_generator/lavaland,
-		BIOME_MEDIUM_HUMIDITY = /datum/map_generator/cave_generator/lavaland,
-		BIOME_HIGH_HUMIDITY = /datum/map_generator/cave_generator/lavaland/rusty
-		),
-	BIOME_MEDIUM_HEAT = list(
-		BIOME_LOW_HUMIDITY = /datum/map_generator/cave_generator/lavaland,
-		BIOME_MEDIUM_HUMIDITY = /datum/map_generator/cave_generator/lavaland,
-		BIOME_HIGH_HUMIDITY = /datum/map_generator/blood_forest
-		),
-	BIOME_HIGH_HEAT = list(
-		BIOME_LOW_HUMIDITY = /datum/map_generator/cave_generator/lavaland,
-		BIOME_MEDIUM_HUMIDITY = /datum/map_generator/blood_forest,
-		BIOME_HIGH_HUMIDITY = /datum/map_generator/blood_forest
+		BIOME_LOW_CORRUPTION = list(
+			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,
+			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
+			BIOME_WILD = /datum/map_generator/cave_generator/lavaland
+			),
+		BIOME_LOWMEDIUM_CORRUPTION = list(
+			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,
+			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland/rusty,
+			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
+			BIOME_WILD = /datum/map_generator/blood_forest
+			),
+		BIOME_MEDIUM_CORRUPTION = list(
+			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland/rusty,
+			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
+			BIOME_WILD = /datum/map_generator/blood_forest
+			),
+		BIOME_HIGHMEDIUM_CORRUPTION = list(
+			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,
+			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland
+			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
+			BIOME_WILD = /datum/map_generator/blood_forest
+
+			),
+		BIOME_HIGH_CORRUPTION = list(
+			BIOME_SERENE = /datum/map_generator/cave_generator/lavaland,
+			BIOME_PEACEFUL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_NEUTRAL = /datum/map_generator/cave_generator/lavaland,
+			BIOME_UNTAMED = /datum/map_generator/cave_generator/lavaland,
+			BIOME_WILD = /datum/map_generator/cave_generator/lavaland
 		)
 	)
 
@@ -38,28 +59,35 @@
 		var/drift_x = (gen_turf.x + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
 		var/drift_y = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
 
-		var/humidity = text2num(rustg_noise_get_at_coordinates("[humidity_seed]", "[drift_x]", "[drift_y]"))
-		var/heat = text2num(rustg_noise_get_at_coordinates("[heat_seed]", "[drift_x]", "[drift_y]"))
-		var/heat_level //Type of heat zone we're in LOW-MEDIUM-HIGH
-		var/humidity_level  //Type of humidity zone we're in LOW-MEDIUM-HIGH
+		var/serenity = text2num(rustg_noise_get_at_coordinates("[humidity_seed]", "[drift_x]", "[drift_y]"))
+		var/serenity_level  //Type of humidity zone we're in LOW-MEDIUM-HIGH
+		var/corruption_level //How deep into lavaland are we
 
-		switch(heat)
-			if(0 to 0.33)
-				heat_level = BIOME_LOW_HEAT
-			if(0.33 to 0.66)
-				heat_level = BIOME_MEDIUM_HEAT
-			if(0.66 to 1)
-				heat_level = BIOME_HIGH_HEAT
+		switch(drift_y)
+			if(CORRUPTION_START_Y_LEVEL to CORRUPTION_MID1_Y_LEVEL)
+				corruption_level = BIOME_LOW_CORRUPTION
+			if(CORRUPTION_MID1_Y_LEVEL to CORRUPTION_MID2_Y_LEVEL)
+				corruption_level = BIOME_LOWMEDIUM_CORRUPTION
+			if(CORRUPTION_MID2_Y_LEVEL to CORRUPTION_MID3_Y_LEVEL)
+				corruption_level = BIOME_MEDIUM_CORRUPTION
+			if(CORRUPTION_MID3_Y_LEVEL to CORRUPTION_MID4_Y_LEVEL)
+				corruption_level = BIOME_HIGHMEDIUM_CORRUPTION
+			if(CORRUPTION_MID4_Y_LEVEL to CORRUPTION_END_Y_LEVEL)
+				corruption_level = BIOME_HIGH_CORRUPTION
 
-		switch(humidity)
-			if(0 to 0.33)
-				humidity_level = BIOME_LOW_HUMIDITY
-			if(0.33 to 0.66)
-				humidity_level = BIOME_MEDIUM_HUMIDITY
-			if(0.66 to 1)
-				humidity_level = BIOME_HIGH_HUMIDITY
+		switch(serenity)
+			if(0 to 0.2)
+				serenity_level = BIOME_SERENE
+			if(0.2 to 0.4)
+				serenity_level = BIOME_PEACEFUL
+			if(0.4 to 0.6)
+				serenity_level = BIOME_NEUTRAL
+			if(0.6 to 0.8)
+				serenity_level = BIOME_UNTAMED
+			if(0.8 to 1)
+				serenity_level = BIOME_WILD
 
-		var/generation_type = possible_generation_types[heat_level][humidity_level]
+		var/generation_type = possible_generation_types[corruption_level][serenity_level]
 
 		generation_turfs[generation_type] += list(generation_turf)
 
