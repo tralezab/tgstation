@@ -1,5 +1,3 @@
-//the random offset applied to square coordinates, causes intermingling at biome borders
-#define BIOME_RANDOM_SQUARE_DRIFT 2
 
 /datum/map_generator/jungle_generator
 	///2D list of all biomes based on heat and humidity combos.
@@ -34,7 +32,6 @@
 
 ///Seeds the rust-g perlin noise with a random number.
 /datum/map_generator/jungle_generator/generate_terrain(list/turfs)
-	. = ..()
 	var/height_seed = rand(0, 50000)
 	var/humidity_seed = rand(0, 50000)
 	var/heat_seed = rand(0, 50000)
@@ -78,6 +75,7 @@
 		selected_biome = SSmapping.biomes[selected_biome] //Get the instance of this biome from SSmapping
 		selected_biome.generate_turf(gen_turf)
 		CHECK_TICK
+	return ..()
 
 /turf/open/genturf
 	name = "ungenerated turf"

@@ -1,5 +1,5 @@
 /datum/map_generator/cave_generator
-	var/name = "Cave Generator"
+	name = "Cave Generator"
 	///Weighted list of the types that spawns if the turf is open
 	var/open_turf_types = list(/turf/open/floor/plating/asteroid/airless = 1)
 	///Weighted list of the types that spawns if the turf is closed
@@ -22,7 +22,7 @@
 	var/flora_spawn_chance = 2
 	///Base chance of spawning features
 	var/feature_spawn_chance = 0.1
-	///Unique ID for this spawner
+	///Noise map for this spawner
 	var/string_gen
 
 	///Chance of cells starting closed
@@ -46,9 +46,8 @@
 		feature_spawn_list = list(/obj/structure/geyser/random = 1)
 
 /datum/map_generator/cave_generator/generate_terrain(list/turfs)
-	. = ..()
-	var/start_time = REALTIMEOFDAY
-	string_gen = rustg_cnoise_generate("[initial_closed_chance]", "[smoothing_iterations]", "[birth_limit]", "[death_limit]", "[world.maxx]", "[world.maxy]") //Generate the raw CA data
+	if(!string_gen)
+		string_gen = generate_noise()
 
 	for(var/i in turfs) //Go through all the turfs and generate them
 		var/turf/gen_turf = i
@@ -138,7 +137,8 @@
 
 					new picked_mob(new_open_turf)
 		CHECK_TICK
+	return ..()
 
-	var/message = "[name] finished in [(REALTIMEOFDAY - start_time)/10]s!"
-	to_chat(world, "<span class='boldannounce'>[message]</span>")
-	log_world(message)
+
+/datum/map_generator/cave_generator/proc/generate_noise()
+	return rustg_cnoise_generate("[initial_closed_chance]", "[smoothing_iterations]", "[birth_limit]", "[death_limit]", "[world.maxx]", "[world.maxy]") //Generate the raw CA data
