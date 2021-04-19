@@ -35,7 +35,7 @@
 		icon_state = "[base_icon_state][rand(0,12)]"
 
 /// Drops itemstack when dug and changes icon
-/turf/open/floor/plating/asteroid/proc/getDug()
+/turf/open/floor/plating/asteroid/proc/getDug(mob/user)
 	dug = TRUE
 	new digResult(src, 5)
 	if(postdig_icon_change)
@@ -79,7 +79,7 @@
 				if(!can_dig(user))
 					return TRUE
 				to_chat(user, "<span class='notice'>You dig a hole.</span>")
-				getDug()
+				getDug(user)
 				SSblackbox.record_feedback("tally", "pick_used_mining", 1, W.type)
 				return TRUE
 		else if(istype(W, /obj/item/storage/bag/ore))
@@ -92,6 +92,23 @@
 
 /turf/open/floor/plating/lavaland_baseturf
 	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+
+/turf/open/floor/plating/asteroid/meaty
+	name = "ground"
+	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
+	planetary_atmos = TRUE
+	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "materialfloor"
+	custom_materials = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)
+	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
+	floor_variance = 0
+	digResult = /obj/item/stack/sheet/meat
+	postdig_icon_change = FALSE
+
+/turf/open/floor/plating/asteroid/meaty/getDug(user)
+	. = ..()
+	remove_tile(user, TRUE)
 
 /turf/open/floor/plating/asteroid/basalt
 	name = "volcanic floor"
@@ -115,7 +132,7 @@
 	. = ..()
 	set_basalt_light(src)
 
-/turf/open/floor/plating/asteroid/getDug()
+/turf/open/floor/plating/asteroid/basalt/getDug(user)
 	set_light(0)
 	return ..()
 

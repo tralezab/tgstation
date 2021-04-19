@@ -16,12 +16,6 @@
 	fauna_density = 2
 
 /datum/map_generator/contaminated_thicket
-
-	modules = list(
-		/datum/map_generator_module/bottom_layer/plating, //all old turfs to plating
-		/datum/map_generator_module/bottom_layer/massdelete/leave_turfs, //then clean up everything else
-	)
-
 	buildmode_name = "Biome: Contaminated Thicket"
 
 	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
@@ -51,34 +45,6 @@
 	return ..()
 
 /datum/map_generator/cave_generator/lavaland/living_biome
-	name = "Living Biome"
+	buildmode_name = "Biome: Living Biome"
 	open_turf_types = list(/turf/open/floor/material/ground/meat = 1)
 	closed_turf_types =  list(/turf/closed/mineral/random/high_chance/volcanic/meat = 1)
-
-//Misc Biome shit, move this out
-
-/mob/living/simple_animal/hostile/asteroid/peroxisome
-	name = "biome peroxisome"
-	desc = "A living defense system of the living biome. Protects other creatures nearby, but is mostly harmless itself."
-	loot = list(/obj/effect/decal/remains/human)
-	speed = 5
-	move_to_delay = 5
-	retreat_distance = 4
-	ranged = TRUE
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	weather_immunities = list("lava","ash")
-	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
-	deathmessage = "rapidly evaporates into a red mist, leaving only bone behind."
-	attacked_sound = 'sound/creatures/venus_trap_hurt.ogg'
-	deathsound = 'sound/creatures/venus_trap_death.ogg'
-	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
-	icon_state = "tree_creation"
-	friendly_verb_continuous = "stares down"
-	friendly_verb_simple = "stare down"
-	attack_verb_simple = "bash"
-	attack_verb_continuous = "bashes"
-	attack_sound = 'sound/weapons/punch1.ogg'
-	maxHealth = 40
-	health = 40
-	obj_damage = 100
-	speak_emote = list("slithers")

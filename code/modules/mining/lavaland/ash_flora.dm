@@ -374,11 +374,11 @@
 /obj/item/seeds/lavaland/pearl
 	name = "pack of blood pearl seeds"
 	desc = "This mycelium grows into blood pearls, its name given from the byproduct it produces."
-	icon_state = "mycelium-ember"
+	icon_state = "seed-bloodpearl"
 	species = "ember"
 	plantname = "Embershroom Mushrooms"
 	product = /obj/item/food/grown/ash_flora/mushroom_stem
-	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism, /datum/plant_gene/trait/glow/red, /datum/plant_gene/trait/fire_resistance)
+	genes = list(/datum/plant_gene/trait/glow/red, /datum/plant_gene/trait/fire_resistance)
 	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
 	reagents_add = list(/datum/reagent/carbon = 0.05)
 
