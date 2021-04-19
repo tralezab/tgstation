@@ -22,7 +22,3 @@
 	closed_turf_types =  list(/turf/closed/wall/rust = 1)
 
 
-/datum/map_generator/cave_generator/lavaland/meaty
-	name = "The Living Caves"
-	open_turf_types = list(/turf/open/floor/plating/asteroid/basalt/lava_land_surface = 1)
-	closed_turf_types =  list(/turf/closed/wall/material/meat = 1)

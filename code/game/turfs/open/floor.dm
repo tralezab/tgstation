@@ -336,6 +336,7 @@
 			return TRUE
 	return FALSE
 
+///spawned from tiles, custom materials added from them!
 /turf/open/floor/material
 	name = "floor"
 	icon_state = "materialfloor"
@@ -350,3 +351,14 @@
 	if(.)
 		var/obj/item/stack/tile = .
 		tile.set_mats_per_unit(custom_materials, 1)
+
+///naturally occuring for lavaland and not creatable from tiles, custom materials on the turf itself's definition
+/turf/open/floor/material/ground
+	name = "ground"
+	icon_state = "materialground"
+	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
+	planetary_atmos = TRUE
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
+
+/turf/open/floor/material/ground/meat
+	custom_materials = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)

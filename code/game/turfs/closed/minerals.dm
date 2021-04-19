@@ -231,6 +231,14 @@
 		/obj/item/stack/ore/uranium = 35, /obj/item/stack/ore/diamond = 30, /obj/item/stack/ore/gold = 45, /obj/item/stack/ore/titanium = 45,
 		/obj/item/stack/ore/silver = 50, /obj/item/stack/ore/plasma = 50, /obj/item/stack/ore/bluespace_crystal)
 
+/turf/closed/mineral/random/high_chance/volcanic/meat
+	name = "\proper meat"
+	environment_type = "meat"
+	custom_materials = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)
+	material_flags = MATERIAL_COLOR
+	baseturfs = /turf/open/floor/material/ground/meat
+
+
 /turf/closed/mineral/random/low_chance
 	icon_state = "rock_lowchance"
 	mineralChance = 6

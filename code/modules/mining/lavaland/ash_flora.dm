@@ -157,18 +157,19 @@
 	harvest_amount_high = 1
 	harvest_time = 10
 	harvest_message_low = "You harvest the blood pearl." //any other message shouldn't show since you can only get one pearl
-	light_color = COLOR_SOFT_RED
+	light_color = COLOR_RED
 	light_range = 7
 	regrowth_time_low = 4800
 	regrowth_time_high = 7200
+	number_of_variants = 1
 
 /obj/structure/flora/ash/blood_pearl/harvest(user)
 	. = ..()
-	light_range = 0
+	set_light_range(0)
 
 /obj/structure/flora/ash/blood_pearl/regrow()
 	. = ..()
-	light_range = initial(light_range)
+	set_light_range(initial(light_range))
 
 ///Snow flora to exist on icebox.
 /obj/structure/flora/ash/chilly
@@ -240,9 +241,10 @@
 	name = "blood pearl"
 	desc = "An exotic calcic creation of xenoflora. Gives out a nice glow, but is a bit fragile."
 	icon_state = "blood_pearl"
+	throwforce = 15
 	seed = /obj/item/seeds/lavaland/pearl
 	light_system = MOVABLE_LIGHT
-	light_color = COLOR_SOFT_RED
+	light_color = COLOR_RED
 	light_range = 7
 
 /obj/item/grown/blood_pearl/attack_self(mob/user, modifiers)
@@ -258,9 +260,9 @@
 		qdel(src)
 
 /obj/item/grown/blood_pearl/Destroy()
+	new /obj/item/shard(drop_location())
+	new /obj/item/shard(drop_location())
 	. = ..()
-	new /obj/item/shard(drop_location())
-	new /obj/item/shard(drop_location())
 
 //SEEDS
 
@@ -376,7 +378,7 @@
 	species = "ember"
 	plantname = "Embershroom Mushrooms"
 	product = /obj/item/food/grown/ash_flora/mushroom_stem
-	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism, /datum/plant_gene/trait/glow, /datum/plant_gene/trait/fire_resistance)
+	genes = list(/datum/plant_gene/trait/plant_type/fungal_metabolism, /datum/plant_gene/trait/glow/red, /datum/plant_gene/trait/fire_resistance)
 	growing_icon = 'icons/obj/hydroponics/growing_mushrooms.dmi'
 	reagents_add = list(/datum/reagent/carbon = 0.05)
 

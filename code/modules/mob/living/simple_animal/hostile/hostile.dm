@@ -345,7 +345,6 @@
 		else if(target != null && prob(40))//No more pulling a mob forever and having a second player attack it, it can switch targets now if it finds a more suitable one
 			FindTarget()
 
-
 /mob/living/simple_animal/hostile/proc/AttackingTarget(atom/attacked_target)
 	SEND_SIGNAL(src, COMSIG_HOSTILE_ATTACKINGTARGET, target)
 	in_melee = TRUE

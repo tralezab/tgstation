@@ -50,40 +50,12 @@
 		CHECK_TICK
 	return ..()
 
+/datum/map_generator/cave_generator/lavaland/living_biome
+	name = "Living Biome"
+	open_turf_types = list(/turf/open/floor/material/ground/meat = 1)
+	closed_turf_types =  list(/turf/closed/mineral/random/high_chance/volcanic/meat = 1)
+
 //Misc Biome shit, move this out
-
-///firemander!
-/mob/living/simple_animal/hostile/asteroid/firemander
-	name = "firemander"
-	desc = "An amphibian that has lava-proof skin. One of the last few \"true\" original inhabitants of lavaland pre-corruption. \
-	The significant temperature increase of the planet has done absolutely nothing but increase its hunting grounds."
-	loot = list(/obj/effect/gibspawner/human)
-	speed = 5
-	move_to_delay = 5
-	ranged = TRUE
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	weather_immunities = list("lava","ash")
-	faction = list("plants", "lava", "ash")
-	icon = 'icons/mob/lavaland/lavaland_monsters.dmi'
-	deathmessage = "meaty innards fly out of its wooden shell."
-	attacked_sound = 'sound/creatures/venus_trap_hurt.ogg'
-	deathsound = 'sound/creatures/venus_trap_death.ogg'
-	attack_sound = 'sound/creatures/venus_trap_hit.ogg'
-	icon_state = "tree_creation"
-	friendly_verb_continuous = "stares down"
-	friendly_verb_simple = "stare down"
-	attack_verb_simple = "bash"
-	attack_verb_continuous = "bashes"
-	attack_sound = 'sound/weapons/punch1.ogg'
-	maxHealth = 40
-	health = 40
-	obj_damage = 100
-	melee_damage_lower = 25
-	melee_damage_upper = 25
-	speak_emote = list("slithers")
-
-/mob/living/simple_animal/hostile/asteroid/firemander/OpenFire(atom/A)
-	..()
 
 /mob/living/simple_animal/hostile/asteroid/peroxisome
 	name = "biome peroxisome"
