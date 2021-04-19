@@ -16,6 +16,7 @@
 	fauna_density = 2
 
 /datum/map_generator/contaminated_thicket
+	name = "Contaminated Thicket"
 	buildmode_name = "Biome: Contaminated Thicket"
 
 	///Used to select "zoom" level into the perlin noise, higher numbers result in slower transitions
@@ -24,8 +25,7 @@
 /datum/map_generator/contaminated_thicket/generate_terrain(list/turfs)
 	var/height_seed = rand(0, 50000)
 
-	for(var/t in turfs) //Go through all the turfs and generate them
-		var/turf/gen_turf = t
+	for(var/turf/gen_turf as anything in turfs) //Go through all the turfs and generate them
 		var/drift_x = (gen_turf.x + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
 		var/drift_y = (gen_turf.y + rand(-BIOME_RANDOM_SQUARE_DRIFT, BIOME_RANDOM_SQUARE_DRIFT)) / perlin_zoom
 
@@ -45,6 +45,9 @@
 	return ..()
 
 /datum/map_generator/cave_generator/lavaland/living_biome
+	name = "Living Biome"
 	buildmode_name = "Biome: Living Biome"
-	open_turf_types = list(/turf/open/floor/material/ground/meat = 1)
+	open_turf_types = list(/turf/open/floor/plating/asteroid/meat = 1)
 	closed_turf_types =  list(/turf/closed/mineral/random/high_chance/volcanic/meat = 1)
+	flora_spawn_list = list(/obj/structure/fluff/biome_tumor/orange = 1, /obj/structure/fluff/biome_tumor/green = 1)
+	mob_spawn_list = list(/mob/living/simple_animal/hostile/asteroid/firemander = 1)

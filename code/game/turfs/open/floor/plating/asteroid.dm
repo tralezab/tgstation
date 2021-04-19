@@ -93,20 +93,19 @@
 /turf/open/floor/plating/lavaland_baseturf
 	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
 
-/turf/open/floor/plating/asteroid/meaty
+/turf/open/floor/plating/asteroid/meat
 	name = "ground"
 	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
 	planetary_atmos = TRUE
 	baseturfs = /turf/open/floor/plating/asteroid/basalt/lava_land_surface
-	icon = 'icons/turf/floors.dmi'
-	icon_state = "materialfloor"
+	icon_state = "materialground"
 	custom_materials = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)
 	material_flags = MATERIAL_ADD_PREFIX | MATERIAL_COLOR | MATERIAL_AFFECT_STATISTICS
 	floor_variance = 0
 	digResult = /obj/item/stack/sheet/meat
 	postdig_icon_change = FALSE
 
-/turf/open/floor/plating/asteroid/meaty/getDug(user)
+/turf/open/floor/plating/asteroid/meat/getDug(user)
 	. = ..()
 	remove_tile(user, TRUE)
 

@@ -236,7 +236,7 @@
 	environment_type = "meat"
 	custom_materials = list(/datum/material/meat = MINERAL_MATERIAL_AMOUNT)
 	material_flags = MATERIAL_COLOR
-	baseturfs = /turf/open/floor/material/ground/meat
+	baseturfs = /turf/open/floor/plating/asteroid/meat
 
 
 /turf/closed/mineral/random/low_chance
