@@ -23,12 +23,13 @@
 /datum/ai_controller/kitchenbot/TryPossessPawn(atom/new_pawn)
 	if(!ismovable(new_pawn))
 		return AI_CONTROLLER_INCOMPATIBLE
-	var/atom/movable/cool_pawn
+	var/atom/movable/cool_pawn = new_pawn
 	cool_pawn.pass_flags |= PASSTABLE | PASSMACHINE
 	RegisterSignal(cool_pawn, COMSIG_ATOM_ATTACK_HAND, .proc/on_attack_hand)
 	return ..() //Run parent at end
 
 /datum/ai_controller/kitchenbot/UnpossessPawn(destroy)
+	forget_everything()
 	var/atom/movable/cool_pawn = pawn
 	UnregisterSignal(pawn, list(COMSIG_ATOM_ATTACK_HAND))
 	cool_pawn.pass_flags = initial(cool_pawn.pass_flags)
@@ -44,7 +45,11 @@
 		if(KITCHENBOT_MODE_IDLE)//off, or on but no mode
 			return
 		if(KITCHENBOT_MODE_REFUSE)//handle refuse
-			current_behaviors += GET_AI_BEHAVIOR(/datum/ai_behavior/find_and_set/find_refuse)
+			if(behavior_cooldowns[/datum/ai_behavior/find_and_set/find_refuse] < world.time)
+				to_chat(world, "searching")
+				current_behaviors += GET_AI_BEHAVIOR(/datum/ai_behavior/find_and_set/find_refuse)
+			else
+				to_chat(world, "skipping cooldown: [behavior_cooldowns[/datum/ai_behavior/find_and_set/find_refuse]] < [world.time]")
 			var/list/things_to_bin = blackboard[BB_KITCHENBOT_REFUSE_LIST]
 			var/obj/target = blackboard[BB_KITCHENBOT_TARGET_TO_DISPOSE]
 			if(!target)
@@ -190,16 +195,15 @@
 	change_mode(new_mode)
 
 /datum/ai_controller/kitchenbot/proc/forget_everything()
-	//kitchenbot forgets a lot of stuff when you turn them off (lets them relearn new things)
 	current_movement_target = null
 	blackboard[BB_KITCHENBOT_MODE] = KITCHENBOT_MODE_IDLE
 	blackboard[BB_KITCHENBOT_REFUSE_LIST] = list()
 	var/obj/item/held_refuse = blackboard[BB_KITCHENBOT_TARGET_TO_DISPOSE]
-	if(held_refuse && (held_refuse in src))
+	if(held_refuse && (held_refuse in pawn.contents))
 		held_refuse.forceMove(pawn.drop_location())
 	blackboard[BB_KITCHENBOT_TARGET_TO_DISPOSE] = null
 	blackboard[BB_KITCHENBOT_ITEMS_WATCHED] = list()
 	var/obj/item/held_grillable = blackboard[BB_KITCHENBOT_TARGET_IN_STOCKPILE]
-	if(held_grillable && (held_grillable in src))
+	if(held_grillable && (held_grillable in pawn.contents))
 		held_grillable.forceMove(pawn.drop_location())
 	blackboard[BB_KITCHENBOT_TARGET_IN_STOCKPILE] = null

@@ -36,11 +36,11 @@
 	var/BB_text = controller.blackboard[BB_KITCHENBOT_TASK_TEXT]
 	var/BB_sound = controller.blackboard[BB_KITCHENBOT_TASK_SOUND]
 	controller.pawn.audible_message("<span class='hear'>[controller.pawn] [BB_text]!</span>")
-	playsound(controller.pawn, BB_sound, 50, FALSE)
+	if(BB_sound)
+		playsound(controller.pawn, BB_sound, 50, FALSE)
 
 //GRIDDLING
 
-//kitchenbot exclusive
 /datum/ai_behavior/find_and_set/find_stockpile_target
 	action_cooldown = 5 SECONDS
 	bb_key_to_set = BB_KITCHENBOT_TARGET_IN_STOCKPILE
