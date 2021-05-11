@@ -31,7 +31,7 @@
 /obj/item/fireaxe/ComponentInitialize()
 	. = ..()
 	//axes are not known for being precision butchering tools
-	AddComponent(/datum/component/butchering, speed = 10 SECONDS, effectiveness = 80, bonus_modifier = 0, butcher_sound = hitsound)
+	AddComponent(/datum/component/butchering, speed = 10 SECONDS, effectiveness = 80, butcher_sound = hitsound)
 	AddComponent(/datum/component/two_handed, force_unwielded = 5, force_wielded = 24, icon_wielded = "[base_icon_state]1")
 
 /// triggered on wield of two handed item

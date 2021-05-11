@@ -856,7 +856,7 @@
 	spirits = list()
 	START_PROCESSING(SSobj, src)
 	AddElement(/datum/element/point_of_interest)
-	AddComponent(/datum/component/butchering, 150, 90)
+	AddComponent(/datum/component/butchering, speed = 15 SECONDS, effectiveness = 90)
 
 /obj/item/melee/ghost_sword/Destroy()
 	for(var/mob/dead/observer/G in spirits)

@@ -114,7 +114,7 @@
 
 /obj/item/pen/fountain/captain/Initialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 200, 115) //the pen is mightier than the sword
+	AddComponent(/datum/component/butchering, speed = 20 SECONDS, effectiveness = 115) //the pen is mightier than the sword
 
 /obj/item/pen/fountain/captain/reskin_obj(mob/M)
 	..()
@@ -218,7 +218,7 @@
 
 /obj/item/pen/edagger/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 60, 100, 0, 'sound/weapons/blade1.ogg')
+	AddComponent(/datum/component/butchering, speed = 60, effectiveness = 100, butcher_sound = 'sound/weapons/blade1.ogg')
 	AddElement(/datum/element/update_icon_updates_onmob)
 
 /obj/item/pen/edagger/get_sharpness()

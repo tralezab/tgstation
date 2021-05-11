@@ -138,7 +138,7 @@
 
 /obj/item/gun/energy/plasmacutter/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 25, 105, 0, 'sound/weapons/plasma_cutter.ogg')
+	AddComponent(/datum/component/butchering, speed = 25, effectiveness = 105, butcher_sound = 'sound/weapons/plasma_cutter.ogg')
 	AddElement(/datum/element/update_icon_blocker)
 	AddElement(/datum/element/tool_flash, 1)
 

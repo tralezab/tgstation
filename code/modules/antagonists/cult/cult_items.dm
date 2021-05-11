@@ -70,7 +70,7 @@
 
 /obj/item/melee/cultblade/Initialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 40, 100)
+	AddComponent(/datum/component/butchering, speed = 4 SECONDS, effectiveness = 100)
 
 /obj/item/melee/cultblade/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	if(IS_CULTIST(owner) && prob(final_block_chance))
@@ -146,7 +146,7 @@
 	. = ..()
 	jaunt = new(src)
 	linked_action = new(src)
-	AddComponent(/datum/component/butchering, 50, 80)
+	AddComponent(/datum/component/butchering, speed = 5 SECONDS, effectiveness = 80)
 	AddComponent(/datum/component/two_handed, require_twohands=TRUE)
 
 
@@ -698,7 +698,7 @@
 
 /obj/item/melee/cultblade/halberd/ComponentInitialize()
 	. = ..()
-	AddComponent(/datum/component/butchering, 100, 90)
+	AddComponent(/datum/component/butchering, speed = 10 SECONDS, effectiveness = 90)
 	AddComponent(/datum/component/two_handed, force_unwielded=17, force_wielded=24)
 
 /// triggered on wield of two handed item
