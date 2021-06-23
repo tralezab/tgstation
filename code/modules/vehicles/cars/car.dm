@@ -87,7 +87,10 @@
 /obj/vehicle/sealed/car/vehicle_move(direction)
 	if(!COOLDOWN_FINISHED(src, cooldown_vehicle_move))
 		return FALSE
-	COOLDOWN_START(src, cooldown_vehicle_move, vehicle_move_delay)
+	var/movement_delay = vehicle_move_delay
+	if(direction in GLOB.diagonals)
+		added_delay *= 2
+	COOLDOWN_START(src, cooldown_vehicle_move, movement_delay)
 
 	if(COOLDOWN_FINISHED(src, enginesound_cooldown))
 		COOLDOWN_START(src, enginesound_cooldown, engine_sound_length)
