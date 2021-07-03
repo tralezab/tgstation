@@ -19,13 +19,15 @@
 
 /turf/open/floor/plating/catwalk_floor/Initialize()
 	. = ..()
-	update_icon(UPDATE_OVERLAYS)
+	update_appearance()
 
 /turf/open/floor/plating/catwalk_floor/update_overlays()
 	. = ..()
-	var/static/catwalk_overlay
+	var/static/image/catwalk_overlay
 	if(isnull(catwalk_overlay))
 		catwalk_overlay = iconstate2appearance(icon, "catwalk_above")
+		catwalk_overlay.layer = CATWALK_LAYER
+		catwalk_overlay.plane = GAME_PLANE // because turfs are by default on a lower plane, the overlay is too unless we do this
 	if(covered)
 		. += catwalk_overlay
 
@@ -33,7 +35,7 @@
 	. = ..()
 	covered = !covered
 	user.balloon_alert(user, "[!covered ? "cover removed" : "cover added"]")
-	update_icon(UPDATE_OVERLAYS)
+	update_appearance()
 
 /turf/open/floor/plating/catwalk_floor/pry_tile(obj/item/crowbar, mob/user, silent)
 	if(covered)
