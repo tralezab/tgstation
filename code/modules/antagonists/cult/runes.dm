@@ -773,7 +773,6 @@ structure_check() searches for nearby cultist structures required for the invoca
 /obj/effect/rune/manifest/Initialize()
 	. = ..()
 
-
 /obj/effect/rune/manifest/can_invoke(mob/living/user)
 	if(!(user in get_turf(src)))
 		to_chat(user, "<span class='cult italic'>You must be standing on [src]!</span>")
@@ -883,6 +882,13 @@ structure_check() searches for nearby cultist structures required for the invoca
 	for(var/obj/item/organ/brain/B in .) //they're not that smart, really
 		. -= B
 
+/datum/outfit/ghost_cultist
+	name = "Cultist Ghost"
+
+	uniform = /obj/item/clothing/under/color/black/ghost
+	suit = /obj/item/clothing/suit/hooded/cultrobes/alt/ghost
+	shoes = /obj/item/clothing/shoes/cult/alt/ghost
+	l_hand = /obj/item/melee/cultblade/ghost
 
 /obj/effect/rune/apocalypse
 	cultist_name = "Apocalypse"
