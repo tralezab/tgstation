@@ -199,7 +199,6 @@
 	var/mob/living/datum_owner = mob_override || owner.current
 
 	add_antag_hud(antag_hud_type, antag_hud_name, datum_owner)
-	handle_clown_mutation(datum_owner, mob_override ? null : "Your training has allowed you to overcome your clownish nature, allowing you to wield weapons without harming yourself.")
 	datum_owner.AddComponent(/datum/component/codeword_hearing, GLOB.syndicate_code_phrase_regex, "blue", src)
 	datum_owner.AddComponent(/datum/component/codeword_hearing, GLOB.syndicate_code_response_regex, "red", src)
 
@@ -207,7 +206,6 @@
 	. = ..()
 	var/mob/living/datum_owner = mob_override || owner.current
 	remove_antag_hud(antag_hud_type, datum_owner)
-	handle_clown_mutation(datum_owner, removing = FALSE)
 
 	for(var/datum/component/codeword_hearing/component as anything in datum_owner.GetComponents(/datum/component/codeword_hearing))
 		component.delete_if_from_source(src)
