@@ -36,7 +36,7 @@
 	robust_searching = TRUE
 	search_objects = 3 //Ancient simplemob AI shitcode. This makes them ignore all other mobs.
 	del_on_death = TRUE
-	loot = list(/obj/effect/decal/cleanable/blood/gibs)
+	death_drops = list(/obj/effect/decal/cleanable/blood/gibs)
 	deathmessage = "is pulped into bugmash."
 
 	animal_species = /mob/living/simple_animal/hostile/asteroid/gutlunch

@@ -17,7 +17,7 @@
 	melee_damage_upper = 20
 	health = 1000
 	maxHealth = 1000
-	loot = list(/obj/effect/temp_visual/paperwiz_dying)
+	death_drops = list(/obj/effect/temp_visual/paperwiz_dying)
 	projectiletype = /obj/projectile/temp
 	projectilesound = 'sound/weapons/emitter.ogg'
 	attack_sound = 'sound/hallucinations/growl1.ogg'
@@ -100,7 +100,7 @@
 	minimum_distance = 0
 	retreat_distance = 0
 	ranged = 0
-	loot = list()
+	death_drops = list()
 	var/mob/living/simple_animal/hostile/boss/paper_wizard/original
 
 //Hit a fake? eat pain!

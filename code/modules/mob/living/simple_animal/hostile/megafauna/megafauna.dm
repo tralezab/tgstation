@@ -101,7 +101,7 @@
 
 /// Spawns crusher loot instead of normal loot
 /mob/living/simple_animal/hostile/megafauna/proc/spawn_crusher_loot()
-	loot = crusher_loot
+	AddElement(/datum/element/death_drops, list(crusher_loot))
 
 /mob/living/simple_animal/hostile/megafauna/gib()
 	if(health > 0)

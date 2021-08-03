@@ -54,7 +54,7 @@
 	if(. && ishuman(target) && prob(infection_chance))
 		try_to_zombie_infect(target)
 
-/mob/living/simple_animal/hostile/zombie/drop_loot()
-	. = ..()
+/mob/living/simple_animal/hostile/zombie/Destroy(force)
 	corpse.forceMove(drop_location())
 	corpse.create()
+	. = ..()

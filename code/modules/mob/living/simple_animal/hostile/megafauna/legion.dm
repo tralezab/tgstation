@@ -47,7 +47,7 @@
 	base_pixel_x = -32
 	pixel_y = -16
 	base_pixel_y = -16
-	loot = list(/obj/item/stack/sheet/bone = 3)
+	death_drops = list(/obj/item/stack/sheet/bone = 3)
 	vision_range = 13
 	wander = FALSE
 	elimination = TRUE
@@ -198,6 +198,7 @@
 		return
 	//We check what loot we should drop.
 	var/last_legion = TRUE
+	var/list/loot = death_drops.Copy()
 	for(var/mob/living/simple_animal/hostile/megafauna/legion/other in GLOB.mob_living_list)
 		if(other != src)
 			last_legion = FALSE
@@ -209,6 +210,8 @@
 		loot = list(/obj/structure/closet/crate/necropolis/tendril)
 		if(!true_spawn)
 			loot = null
+	if(loot)
+		AddElement(/datum/element/death_drops, loot)
 	return ..()
 
 ///Splits legion into smaller skulls.

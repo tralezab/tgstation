@@ -28,7 +28,7 @@
 	pull_force = MOVE_FORCE_VERY_STRONG
 	butcher_results = list(/obj/item/food/meat/slab/bear = 3, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide/polar_bear_hide = 1)
-	loot = list()
+	death_drops = list()
 	crusher_loot = /obj/item/crusher_trophy/bear_paw
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE

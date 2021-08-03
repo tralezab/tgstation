@@ -40,10 +40,12 @@
 
 /mob/living/simple_animal/hostile/asteroid/goldgrub/Initialize()
 	. = ..()
-	var/i = rand(1,3)
-	while(i)
-		loot += pick(/obj/item/stack/ore/silver, /obj/item/stack/ore/gold, /obj/item/stack/ore/uranium, /obj/item/stack/ore/diamond)
-		i--
+	var/list/ore_drops = list()
+	var/iterations = rand(1,3)
+	while(iterations)
+		ore_drops += pick(/obj/item/stack/ore/silver, /obj/item/stack/ore/gold, /obj/item/stack/ore/uranium, /obj/item/stack/ore/diamond)
+		iterations--
+	AddElement(/datum/element/death_drops, ore_drops)
 	spit = new
 	burrow = new
 	spit.Grant(src)

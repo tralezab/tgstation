@@ -120,7 +120,7 @@
 	var/sentience_type = SENTIENCE_ORGANIC
 
 	///List of things spawned at mob's loc when it dies.
-	var/list/loot = list()
+	var/list/death_drops
 	///Causes mob to be deleted on death, useful for mobs that spawn lootable corpses.
 	var/del_on_death = 0
 	var/deathmessage = ""
@@ -179,6 +179,8 @@
 		ADD_TRAIT(src, TRAIT_ADVANCEDTOOLUSER, ROUNDSTART_TRAIT)
 		ADD_TRAIT(src, TRAIT_CAN_STRIP, ROUNDSTART_TRAIT)
 
+	if(death_drops)
+		AddElement(/datum/element/death_drops, loot)
 	if(speak)
 		speak = string_list(speak)
 	if(speak_emote)
@@ -188,7 +190,7 @@
 	if(emote_see)
 		emote_see = string_list(emote_hear)
 	if(atmos_requirements)
-		atmos_requirements = string_assoc_list(atmos_requirements)
+		AddElement(/datum/element/atmos_requirements, atmos_requirements, unsuitable_atmos_damage)
 	if(damage_coeff)
 		damage_coeff = string_assoc_list(damage_coeff)
 	if(footstep_type)
@@ -298,45 +300,6 @@
 					else
 						manual_emote(pick(emote_hear))
 
-/mob/living/simple_animal/proc/environment_air_is_safe()
-	. = TRUE
-
-	if(pulledby && pulledby.grab_state >= GRAB_KILL && atmos_requirements["min_oxy"])
-		. = FALSE //getting choked
-
-	if(isturf(loc) && isopenturf(loc))
-		var/turf/open/ST = loc
-		if(ST.air)
-			var/ST_gases = ST.air.gases
-			ST.air.assert_gases(arglist(GLOB.hardcoded_gases))
-
-			var/tox = ST_gases[/datum/gas/plasma][MOLES]
-			var/oxy = ST_gases[/datum/gas/oxygen][MOLES]
-			var/n2  = ST_gases[/datum/gas/nitrogen][MOLES]
-			var/co2 = ST_gases[/datum/gas/carbon_dioxide][MOLES]
-
-			ST.air.garbage_collect()
-
-			if(atmos_requirements["min_oxy"] && oxy < atmos_requirements["min_oxy"])
-				. = FALSE
-			else if(atmos_requirements["max_oxy"] && oxy > atmos_requirements["max_oxy"])
-				. = FALSE
-			else if(atmos_requirements["min_tox"] && tox < atmos_requirements["min_tox"])
-				. = FALSE
-			else if(atmos_requirements["max_tox"] && tox > atmos_requirements["max_tox"])
-				. = FALSE
-			else if(atmos_requirements["min_n2"] && n2 < atmos_requirements["min_n2"])
-				. = FALSE
-			else if(atmos_requirements["max_n2"] && n2 > atmos_requirements["max_n2"])
-				. = FALSE
-			else if(atmos_requirements["min_co2"] && co2 < atmos_requirements["min_co2"])
-				. = FALSE
-			else if(atmos_requirements["max_co2"] && co2 > atmos_requirements["max_co2"])
-				. = FALSE
-		else
-			if(atmos_requirements["min_oxy"] || atmos_requirements["min_tox"] || atmos_requirements["min_n2"] || atmos_requirements["min_co2"])
-				. = FALSE
-
 /mob/living/simple_animal/proc/environment_temperature_is_safe(datum/gas_mixture/environment)
 	. = TRUE
 	var/areatemp = get_temperature(environment)
@@ -354,13 +317,6 @@
 					adjust_bodytemperature(clamp(temp_delta * delta_time / 10, temp_delta, 0))
 			else
 				adjust_bodytemperature(clamp(temp_delta * delta_time / 10, 0, temp_delta))
-
-	if(!environment_air_is_safe() && unsuitable_atmos_damage)
-		adjustHealth(unsuitable_atmos_damage * delta_time)
-		if(unsuitable_atmos_damage > 0)
-			throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-	else
-		clear_alert("not_enough_oxy")
 
 	handle_temperature_damage(delta_time, times_fired)
 
@@ -434,16 +390,10 @@
 	. += ""
 	. += "Health: [round((health / maxHealth) * 100)]%"
 
-/mob/living/simple_animal/proc/drop_loot()
-	if(loot.len)
-		for(var/i in loot)
-			new i(loc)
-
 /mob/living/simple_animal/death(gibbed)
 	if(nest)
 		nest.spawned_mobs -= src
 		nest = null
-	drop_loot()
 	if(dextrous)
 		drop_all_held_items()
 	if(!gibbed)

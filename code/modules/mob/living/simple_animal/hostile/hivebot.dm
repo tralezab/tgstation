@@ -33,7 +33,7 @@
 	bubble_icon = "machine"
 	speech_span = SPAN_ROBOT
 	del_on_death = 1
-	loot = list(/obj/effect/decal/cleanable/robot_debris)
+	death_drops = list(/obj/effect/decal/cleanable/robot_debris)
 	var/alert_light
 
 	footstep_type = FOOTSTEP_MOB_CLAW

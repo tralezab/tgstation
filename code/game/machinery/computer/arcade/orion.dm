@@ -492,7 +492,7 @@ GLOBAL_LIST_INIT(orion_events, generate_orion_events())
 	name = "spaceport security"
 	desc = "Premier corporate security forces for all spaceports found along the Orion Trail."
 	faction = list("orion")
-	loot = list()
+	death_drops = list()
 	del_on_death = TRUE
 
 /obj/item/orion_ship

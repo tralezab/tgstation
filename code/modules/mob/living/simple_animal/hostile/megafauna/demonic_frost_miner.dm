@@ -32,7 +32,7 @@ Difficulty: Extremely Hard
 	gps_name = "Bloodchilling Signal"
 	ranged = TRUE
 	crusher_loot = list(/obj/effect/decal/remains/plasma, /obj/item/crusher_trophy/ice_block_talisman, /obj/item/ice_energy_crystal)
-	loot = list(/obj/effect/decal/remains/plasma, /obj/item/ice_energy_crystal)
+	death_drops = list(/obj/effect/decal/remains/plasma, /obj/item/ice_energy_crystal)
 	wander = FALSE
 	del_on_death = TRUE
 	blood_volume = BLOOD_VOLUME_NORMAL

@@ -41,7 +41,7 @@
 	maxbodytemp = 1200
 
 	deathmessage = "is hacked into pieces!"
-	loot = list(/obj/item/stack/sheet/mineral/wood)
+	death_drops = list(/obj/item/stack/sheet/mineral/wood)
 	gold_core_spawnable = HOSTILE_SPAWN
 	del_on_death = 1
 
@@ -89,7 +89,7 @@
 	health_doll_icon = "festivus_pole"
 	response_help_continuous = "rubs"
 	response_help_simple = "rub"
-	loot = list(/obj/item/stack/rods)
+	death_drops = list(/obj/item/stack/rods)
 	speak_emote = list("polls")
 	faction = list()
 	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)

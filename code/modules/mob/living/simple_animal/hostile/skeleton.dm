@@ -33,7 +33,7 @@
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	deathmessage = "collapses into a pile of bones!"
 	del_on_death = 1
-	loot = list(/obj/effect/decal/remains/human)
+	death_drops = list(/obj/effect/decal/remains/human)
 
 	footstep_type = FOOTSTEP_MOB_SHOE
 
@@ -49,7 +49,7 @@
 	melee_damage_lower = 17
 	melee_damage_upper = 20
 	deathmessage = "collapses into a pile of bones, its gear falling to the floor!"
-	loot = list(/obj/effect/decal/remains/human,
+	death_drops = list(/obj/effect/decal/remains/human,
 				/obj/item/spear,
 				/obj/item/clothing/shoes/winterboots,
 				/obj/item/clothing/suit/hooded/wintercoat)
@@ -72,7 +72,7 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 30
 	deathmessage = "collapses into a pile of bones, its gear clanging as it hits the ground!"
-	loot = list(/obj/effect/decal/remains/human,
+	death_drops = list(/obj/effect/decal/remains/human,
 				/obj/item/clothing/suit/armor/riot/chaplain,
 				/obj/item/clothing/head/helmet/chaplain,
 				/obj/item/claymore/weak{name = "holy sword"})
@@ -85,7 +85,7 @@
 	health = 75
 	weather_immunities = list(WEATHER_SNOW)
 	color = rgb(114,228,250)
-	loot = list(/obj/effect/decal/remains/human{color = rgb(114,228,250)})
+	death_drops = list(/obj/effect/decal/remains/human{color = rgb(114,228,250)})
 
 /mob/living/simple_animal/hostile/skeleton/plasmaminer
 	name = "shambling miner"
@@ -100,7 +100,7 @@
 	melee_damage_upper = 20
 	light_color = LIGHT_COLOR_PURPLE
 	deathmessage = "collapses into a pile of bones, their suit dissolving among the plasma!"
-	loot = list(/obj/effect/decal/remains/plasma)
+	death_drops = list(/obj/effect/decal/remains/plasma)
 
 /mob/living/simple_animal/hostile/skeleton/plasmaminer/jackhammer
 	desc = "A plasma-soaked miner, their exposed limbs turned into a grossly incandescent bone seemingly made of plasma. They seem to still have their mining tool in their hand, gripping tightly."
@@ -116,7 +116,7 @@
 	attack_verb_simple = "blast"
 	attack_sound = 'sound/weapons/sonic_jackhammer.ogg'
 	attack_vis_effect = null // jackhammer moment
-	loot = list(/obj/effect/decal/remains/plasma, /obj/item/pickaxe/drill/jackhammer)
+	death_drops = list(/obj/effect/decal/remains/plasma, /obj/item/pickaxe/drill/jackhammer)
 
 /mob/living/simple_animal/hostile/skeleton/plasmaminer/Initialize()
 	. = ..()

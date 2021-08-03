@@ -18,7 +18,7 @@
 	attack_verb_simple = "punch"
 	attack_sound = 'sound/weapons/punch1.ogg'
 	del_on_death = TRUE
-	loot = list(/obj/effect/mob_spawn/human/corpse)
+	death_drops = list(/obj/effect/mob_spawn/human/corpse)
 	atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
 	unsuitable_atmos_damage = 2.5
 	casingtype = /obj/item/ammo_casing/shotgun/buckshot
@@ -237,7 +237,7 @@
 	buyphrase = "Bone appetit!"
 	icon_state = "mrbones"
 	gender = MALE
-	loot = list(/obj/effect/decal/remains/human)
+	death_drops = list(/obj/effect/decal/remains/human)
 	lore = list(
 		"Hello, I am Mr. Bones!",
 		"The ride never ends!",

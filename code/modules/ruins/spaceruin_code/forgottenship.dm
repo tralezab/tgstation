@@ -167,7 +167,7 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 	minimum_distance = 4
 	casingtype = /obj/item/ammo_casing/c46x30mm
 	projectilesound = 'sound/weapons/gun/general/heavy_shot_suppressed.ogg'
-	loot = list(/obj/effect/mob_spawn/human/corpse/nanotrasenassaultsoldier)
+	death_drops = list(/obj/effect/mob_spawn/human/corpse/nanotrasenassaultsoldier)
 
 /mob/living/simple_animal/hostile/nanotrasen/elite
 	name = "Nanotrasen Elite Assault Officer"
@@ -188,5 +188,5 @@ GLOBAL_VAR_INIT(fscpassword, generate_password())
 	minbodytemp = 0
 	projectiletype = /obj/projectile/beam/laser
 	projectilesound = 'sound/weapons/laser.ogg'
-	loot = list(/obj/effect/gibspawner/human)
+	death_drops = list(/obj/effect/gibspawner/human)
 	faction = list(ROLE_DEATHSQUAD)

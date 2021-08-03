@@ -35,7 +35,7 @@
 	gender = MALE//lavaland elite goliath says that i'''' 't s female and i ''t s stronger because of sexual dimorphism, so normal goliaths should be male
 	var/pre_attack = 0
 	var/pre_attack_icon = "Goliath_preattack"
-	loot = list(/obj/item/stack/sheet/animalhide/goliath_hide)
+	death_drops = list(/obj/item/stack/sheet/animalhide/goliath_hide)
 
 	footstep_type = FOOTSTEP_MOB_HEAVY
 
@@ -99,7 +99,7 @@
 	crusher_loot = /obj/item/crusher_trophy/goliath_tentacle
 	butcher_results = list(/obj/item/food/meat/slab/goliath = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list(/obj/item/stack/sheet/animalhide/goliath_hide = 1)
-	loot = list()
+	death_drops = list()
 	stat_attack = HARD_CRIT
 	robust_searching = 1
 
@@ -147,7 +147,7 @@
 	speed = 4
 	pre_attack_icon = "Goliath_preattack"
 	throw_message = "does nothing to the rocky hide of the"
-	loot = list(/obj/item/stack/sheet/animalhide/goliath_hide) //A throwback to the asteroid days
+	death_drops = list(/obj/item/stack/sheet/animalhide/goliath_hide) //A throwback to the asteroid days
 	butcher_results = list(/obj/item/food/meat/slab/goliath = 2, /obj/item/stack/sheet/bone = 2)
 	guaranteed_butcher_results = list()
 	crusher_drop_mod = 30

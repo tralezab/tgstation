@@ -119,11 +119,11 @@
 				icon_state = "purified_soulstone"
 				A.icon_state = "shade_holy"
 				A.name = "Purified [initial(A.name)]"
-				A.loot = list(/obj/item/ectoplasm/angelic)
+				A.death_drops = list(/obj/item/ectoplasm/angelic)
 			if(THEME_WIZARD)
 				icon_state = "mystic_soulstone"
 				A.icon_state = "shade_wizard"
-				A.loot = list(/obj/item/ectoplasm/mystic)
+				A.death_drops = list(/obj/item/ectoplasm/mystic)
 			if(THEME_CULT)
 				icon_state = "soulstone"
 		name = initial(name)

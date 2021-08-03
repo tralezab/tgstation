@@ -584,6 +584,9 @@
 ///from base of mob/living/death(): (gibbed)
 #define COMSIG_LIVING_DEATH "living_death"
 
+///from /mob/living/Life(): (delta_time = SSMOBS_DT)
+#define COMSIG_LIVING_NON_STASIS_LIFE "living_non_stasis_life"
+
 ///sent from borg recharge stations: (amount, repairs)
 #define COMSIG_PROCESS_BORGCHARGER_OCCUPANT "living_charge"
 ///sent from borg mobs to itself, for tools to catch an upcoming destroy() due to safe decon (rather than detonation)

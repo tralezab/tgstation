@@ -39,6 +39,8 @@
 
 	if(!IS_IN_STASIS(src))
 
+		SEND_SIGNAL(src, COMSIG_LIVING_NON_STASIS_LIFE, delta_time)
+
 		if(stat != DEAD)
 			//Mutations and radiation
 			handle_mutations_and_radiation(delta_time, times_fired)

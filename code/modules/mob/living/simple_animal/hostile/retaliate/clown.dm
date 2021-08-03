@@ -27,7 +27,7 @@
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
 	del_on_death = 1
-	loot = list(/obj/effect/mob_spawn/human/clown/corpse)
+	death_drops = list(/obj/effect/mob_spawn/human/clown/corpse)
 
 	atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
 	minbodytemp = 270
@@ -67,7 +67,7 @@
 	response_disarm_continuous = "gently scoops and pours aside"
 	response_disarm_simple = "gently scoop and pour aside"
 	emote_see = list("bubbles", "oozes")
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/particle_effect/foam)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/particle_effect/foam)
 
 /mob/living/simple_animal/hostile/retaliate/clown/lube/Initialize()
 	. = ..()
@@ -88,7 +88,7 @@
 	maxHealth = 120
 	health = 120
 	speed = -10
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap, /obj/item/seeds/banana)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap, /obj/item/seeds/banana)
 	banana_time = 20
 
 /mob/living/simple_animal/hostile/retaliate/clown/honkling
@@ -103,7 +103,7 @@
 	melee_damage_upper = 1
 	attack_verb_continuous = "cheers up"
 	attack_verb_simple = "cheer up"
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap, /obj/item/seeds/banana/bluespace)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap, /obj/item/seeds/banana/bluespace)
 	banana_type = /obj/item/grown/bananapeel
 	attack_reagent = /datum/reagent/consumable/laughter
 
@@ -129,7 +129,7 @@
 	attack_verb_continuous = "limply slaps"
 	attack_verb_simple = "limply slap"
 	obj_damage = 5
-	loot = list(/obj/item/clothing/suit/hooded/bloated_human, /obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/suit/hooded/bloated_human, /obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
 
 /mob/living/simple_animal/hostile/retaliate/clown/fleshclown/Initialize()
 	. = ..()
@@ -160,7 +160,7 @@
 	melee_damage_lower = 5
 	attack_verb_continuous = "YA-HONKs"
 	attack_verb_simple = "YA-HONK"
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
 
 /mob/living/simple_animal/hostile/retaliate/clown/clownhulk
 	name = "Honk Hulk"
@@ -190,7 +190,7 @@
 	attack_verb_simple = "pummel"
 	obj_damage = 30
 	environment_smash = ENVIRONMENT_SMASH_WALLS
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/item/soap)
 
 /mob/living/simple_animal/hostile/retaliate/clown/clownhulk/chlown
 	name = "Chlown"
@@ -213,7 +213,7 @@
 	attack_verb_continuous = "steals the girlfriend of"
 	attack_verb_simple = "steal the girlfriend of"
 	attack_sound = 'sound/items/airhorn2.ogg'
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/effect/particle_effect/foam, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/effect/particle_effect/foam, /obj/item/soap)
 
 /mob/living/simple_animal/hostile/retaliate/clown/clownhulk/honcmunculus
 	name = "Honkmunculus"
@@ -236,7 +236,7 @@
 	attack_verb_continuous = "ferociously mauls"
 	attack_verb_simple = "ferociously maul"
 	environment_smash = ENVIRONMENT_SMASH_NONE
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/xeno/bodypartless, /obj/effect/particle_effect/foam, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/xeno/bodypartless, /obj/effect/particle_effect/foam, /obj/item/soap)
 	attack_reagent = /datum/reagent/peaceborg/confuse
 
 /mob/living/simple_animal/hostile/retaliate/clown/clownhulk/destroyer
@@ -259,7 +259,7 @@
 	attack_verb_simple = "act out divine vengeance on"
 	obj_damage = 50
 	environment_smash = ENVIRONMENT_SMASH_RWALLS
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/effect/particle_effect/foam, /obj/item/soap)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/human, /obj/effect/particle_effect/foam, /obj/item/soap)
 
 /mob/living/simple_animal/hostile/retaliate/clown/mutant
 	name = "Unknown"
@@ -287,7 +287,7 @@
 	melee_damage_upper = 20
 	attack_verb_continuous = "awkwardly flails at"
 	attack_verb_simple = "awkwardly flail at"
-	loot = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/xeno/bodypartless, /obj/item/soap, /obj/effect/gibspawner/generic, /obj/effect/gibspawner/generic/animal, /obj/effect/gibspawner/human/bodypartless, /obj/effect/gibspawner/human)
+	death_drops = list(/obj/item/clothing/mask/gas/clown_hat, /obj/effect/gibspawner/xeno/bodypartless, /obj/item/soap, /obj/effect/gibspawner/generic, /obj/effect/gibspawner/generic/animal, /obj/effect/gibspawner/human/bodypartless, /obj/effect/gibspawner/human)
 
 /mob/living/simple_animal/hostile/retaliate/clown/mutant/slow
 	speed = 20
@@ -309,7 +309,7 @@
 	damage_coeff = list(BRUTE = 1, BURN = 1, TOX = 1, CLONE = 2, STAMINA = 0, OXY = 1)
 	attack_verb_continuous = "slams"
 	attack_verb_simple = "slam"
-	loot = list(/obj/effect/gibspawner/xeno/bodypartless, /obj/effect/gibspawner/generic, /obj/effect/gibspawner/generic/animal, /obj/effect/gibspawner/human/bodypartless)
+	death_drops = list(/obj/effect/gibspawner/xeno/bodypartless, /obj/effect/gibspawner/generic, /obj/effect/gibspawner/generic/animal, /obj/effect/gibspawner/human/bodypartless)
 	deathsound = 'sound/misc/sadtrombone.ogg'
 	///This is the list of items we are ready to regurgitate,
 	var/list/prank_pouch = list()

@@ -32,7 +32,7 @@
 	aggro_vision_range = 9
 	turns_per_move = 5
 	gold_core_spawnable = HOSTILE_SPAWN
-	loot = list(/obj/item/stack/ore/diamond{layer = ABOVE_MOB_LAYER},
+	death_drops = list(/obj/item/stack/ore/diamond{layer = ABOVE_MOB_LAYER},
 				/obj/item/stack/ore/diamond{layer = ABOVE_MOB_LAYER})
 	var/lava_drinker = TRUE
 	var/warmed_up = FALSE
@@ -116,7 +116,7 @@
 	robust_searching = 1
 	crusher_loot = /obj/item/crusher_trophy/watcher_wing
 	gold_core_spawnable = NO_SPAWN
-	loot = list()
+	death_drops = list()
 	butcher_results = list(/obj/item/stack/ore/diamond = 2, /obj/item/stack/sheet/sinew = 2, /obj/item/stack/sheet/bone = 1)
 	lava_drinker = FALSE
 	search_objects = 1

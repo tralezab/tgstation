@@ -53,7 +53,7 @@
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	sentience_type = SENTIENCE_HUMANOID
 	combat_mode = TRUE
-	loot = list(/obj/effect/mob_spawn/human/corpse/nanotrasensoldier)
+	death_drops = list(/obj/effect/mob_spawn/human/corpse/nanotrasensoldier)
 	atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
 	unsuitable_atmos_damage = 7.5
 	status_flags = CANPUSH
@@ -74,5 +74,5 @@
 	minimum_distance = 5
 	casingtype = /obj/item/ammo_casing/c46x30mm
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
-	loot = list(/obj/item/gun/ballistic/automatic/wt550,
+	death_drops = list(/obj/item/gun/ballistic/automatic/wt550,
 				/obj/effect/mob_spawn/human/corpse/nanotrasensoldier)

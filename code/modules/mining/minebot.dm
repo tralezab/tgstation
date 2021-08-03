@@ -33,7 +33,7 @@
 						  /obj/item/stack/ore/plasma, /obj/item/stack/ore/uranium, /obj/item/stack/ore/iron,
 						  /obj/item/stack/ore/bananium, /obj/item/stack/ore/titanium)
 	healable = 0
-	loot = list(/obj/effect/decal/cleanable/robot_debris)
+	death_drops = list(/obj/effect/decal/cleanable/robot_debris)
 	del_on_death = TRUE
 	light_system = MOVABLE_LIGHT
 	light_range = 6

@@ -30,7 +30,7 @@
 	pressure_resistance = 100
 	unique_name = 1
 	AIStatus = AI_OFF //normal constructs don't have AI
-	loot = list(/obj/item/ectoplasm)
+	death_drops = list(/obj/item/ectoplasm)
 	del_on_death = TRUE
 	initial_language_holder = /datum/language_holder/construct
 	deathmessage = "collapses in a shattered heap."
@@ -195,11 +195,11 @@
 //////////////////////////Juggernaut-alts////////////////////////////
 /mob/living/simple_animal/hostile/construct/juggernaut/angelic
 	theme = THEME_HOLY
-	loot = list(/obj/item/ectoplasm/angelic)
+	death_drops = list(/obj/item/ectoplasm/angelic)
 
 /mob/living/simple_animal/hostile/construct/juggernaut/mystic
 	theme = THEME_WIZARD
-	loot = list(/obj/item/ectoplasm/mystic)
+	death_drops = list(/obj/item/ectoplasm/mystic)
 
 /mob/living/simple_animal/hostile/construct/juggernaut/noncult
 
@@ -255,12 +255,12 @@
 /mob/living/simple_animal/hostile/construct/wraith/angelic
 	theme = THEME_HOLY
 	construct_spells = list(/obj/effect/proc_holder/spell/targeted/ethereal_jaunt/shift/angelic)
-	loot = list(/obj/item/ectoplasm/angelic)
+	death_drops = list(/obj/item/ectoplasm/angelic)
 
 /mob/living/simple_animal/hostile/construct/wraith/mystic
 	theme = THEME_WIZARD
 	construct_spells = list(/obj/effect/proc_holder/spell/targeted/ethereal_jaunt/shift/mystic)
-	loot = list(/obj/item/ectoplasm/mystic)
+	death_drops = list(/obj/item/ectoplasm/mystic)
 
 /mob/living/simple_animal/hostile/construct/wraith/noncult
 
@@ -352,7 +352,7 @@
 /mob/living/simple_animal/hostile/construct/artificer/angelic
 	desc = "A bulbous construct dedicated to building and maintaining holy armies."
 	theme = THEME_HOLY
-	loot = list(/obj/item/ectoplasm/angelic)
+	death_drops = list(/obj/item/ectoplasm/angelic)
 	construct_spells = list(
 						/obj/effect/proc_holder/spell/aoe_turf/conjure/soulstone/purified,
 						/obj/effect/proc_holder/spell/aoe_turf/conjure/construct/lesser,
@@ -361,7 +361,7 @@
 
 /mob/living/simple_animal/hostile/construct/artificer/mystic
 	theme = THEME_WIZARD
-	loot = list(/obj/item/ectoplasm/mystic)
+	death_drops = list(/obj/item/ectoplasm/mystic)
 	construct_spells = list(
 						/obj/effect/proc_holder/spell/aoe_turf/conjure/wall,
 						/obj/effect/proc_holder/spell/aoe_turf/conjure/floor,

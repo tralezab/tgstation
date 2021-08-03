@@ -68,7 +68,7 @@
 							You gain strength the more attacks you land on live humanoids, though this resets when you return to the blood zone. You can also \
 							launch a devastating slam attack with right-click, capable of smashing bones in one strike.</B>"
 
-	loot = list(/obj/effect/decal/cleanable/blood, \
+	death_drops = list(/obj/effect/decal/cleanable/blood, \
 				/obj/effect/decal/cleanable/blood/innards, \
 				/obj/item/organ/heart/demon)
 	del_on_death = 1
@@ -210,7 +210,7 @@
 	icon_living = "bowmon"
 	deathmessage = "fades out, as all of its friends are released from its \
 		prison of hugs."
-	loot = list(/mob/living/simple_animal/pet/cat/kitten{name = "Laughter"})
+	death_drops = list(/mob/living/simple_animal/pet/cat/kitten{name = "Laughter"})
 
 	// Keep the people we hug!
 	var/list/consumed_mobs = list()

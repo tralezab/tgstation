@@ -56,7 +56,7 @@
 	projectiletype = /obj/projectile/beam/disabler/swarmer
 	ranged_cooldown_time = 20
 	projectilesound = 'sound/weapons/taser2.ogg'
-	loot = list(/obj/effect/decal/cleanable/robot_debris, /obj/item/stack/ore/bluespace_crystal)
+	death_drops = list(/obj/effect/decal/cleanable/robot_debris, /obj/item/stack/ore/bluespace_crystal)
 	del_on_death = TRUE
 	deathmessage = "explodes with a sharp pop!"
 	light_system = MOVABLE_LIGHT
