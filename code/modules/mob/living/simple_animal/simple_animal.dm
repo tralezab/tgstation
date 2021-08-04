@@ -180,7 +180,7 @@
 		ADD_TRAIT(src, TRAIT_CAN_STRIP, ROUNDSTART_TRAIT)
 
 	if(death_drops)
-		AddElement(/datum/element/death_drops, loot)
+		AddElement(/datum/element/death_drops, death_drops)
 	if(speak)
 		speak = string_list(speak)
 	if(speak_emote)
