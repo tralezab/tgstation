@@ -39,10 +39,12 @@
  */
 /datum/component/slippery/proc/Slip(datum/source, atom/movable/AM)
 	SIGNAL_HANDLER
+	/*
 
 	var/mob/victim = AM
 	if(istype(victim) && !(victim.movement_type & FLYING) && victim.slip(knockdown_time, parent, lube_flags, paralyze_time, force_drop_items) && callback)
 		callback.Invoke(victim)
+	*/
 
 /*
  * Gets called when COMSIG_ITEM_EQUIPPED is sent to parent.
