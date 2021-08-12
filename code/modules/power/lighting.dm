@@ -1022,172 +1022,224 @@
 // The directions are backwards on the lights we have now
 /obj/machinery/light/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Broken tube
 /obj/machinery/light/broken/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/broken/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/broken/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/broken/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Tube construct
 /obj/structure/light_construct/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/structure/light_construct/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/structure/light_construct/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/structure/light_construct/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Tube frames
 /obj/machinery/light/built/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/built/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/built/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/built/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- No nightlight tubes
 /obj/machinery/light/no_nightlight/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/no_nightlight/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/no_nightlight/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/no_nightlight/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Warm light tubes
 /obj/machinery/light/warm/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/warm/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/warm/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/warm/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- No nightlight warm light tubes
 /obj/machinery/light/warm/no_nightlight/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/warm/no_nightlight/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/warm/no_nightlight/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/warm/no_nightlight/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Cold light tubes
 /obj/machinery/light/cold/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/cold/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/cold/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/cold/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- No nightlight cold light tubes
 /obj/machinery/light/cold/no_nightlight/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/cold/no_nightlight/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/cold/no_nightlight/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/cold/no_nightlight/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Red tubes
 /obj/machinery/light/red/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/red/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/red/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/red/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Blacklight tubes
 /obj/machinery/light/blacklight/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/blacklight/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/blacklight/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/blacklight/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Dim tubes
 /obj/machinery/light/dim/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/dim/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/dim/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/dim/directional/west
 	dir = EAST
+	pixel_x = -10
 
 
 // -------- Bulb lights
 /obj/machinery/light/small/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/small/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/small/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/small/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Bulb construct
 /obj/structure/light_construct/small/directional/north
@@ -1198,61 +1250,79 @@
 
 /obj/structure/light_construct/small/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/structure/light_construct/small/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Bulb frames
 /obj/machinery/light/small/built/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/small/built/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/small/built/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/small/built/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Broken bulbs
 /obj/machinery/light/small/broken/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/small/broken/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/small/broken/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/small/broken/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Red bulbs
 /obj/machinery/light/small/red/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/small/red/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/small/red/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/small/red/directional/west
 	dir = EAST
+	pixel_x = -10
 
 // ---- Blacklight bulbs
 /obj/machinery/light/small/blacklight/directional/north
 	dir = SOUTH
+	pixel_y = 32
 
 /obj/machinery/light/small/blacklight/directional/south
 	dir = NORTH
+	pixel_y = -10
 
 /obj/machinery/light/small/blacklight/directional/east
 	dir = WEST
+	pixel_x = 10
 
 /obj/machinery/light/small/blacklight/directional/west
 	dir = EAST
+	pixel_x = -10
 
 #undef LIGHT_DRAIN_TIME
 #undef LIGHT_POWER_GAIN
