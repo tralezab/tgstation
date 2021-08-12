@@ -1,6 +1,8 @@
 //Defines for atom layers and planes
 //KEEP THESE IN A NICE ACSCENDING ORDER, PLEASE
 
+//Also reminder to everyone that planes override layers: things on the same plane will sort in order of layers
+
 #define CLICKCATCHER_PLANE -99
 
 #define PLANE_SPACE -95
@@ -20,6 +22,7 @@
 #define WALL_PLANE -5
 #define GAME_PLANE -4
 #define GAME_PLANE_RENDER_TARGET "GAME_PLANE"
+/// Doors, windows, frill shadow.
 #define UNDER_FRILL_PLANE -3
 #define UNDER_FRILL_RENDER_TARGET "UNDER_FRILL_PLANE"
 #define FRILL_PLANE -2

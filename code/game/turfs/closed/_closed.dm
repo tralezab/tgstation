@@ -1,4 +1,5 @@
 /turf/closed
+	plane = WALL_PLANE
 	layer = CLOSED_TURF_LAYER
 	opacity = TRUE
 	density = TRUE
@@ -6,6 +7,15 @@
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 	pass_flags_self = PASSCLOSEDTURF
+	/// Icon path. Smoothing objects larger than 32x32 require a visual object to represent the excess part, in order not to increase its hitbox. We call that a frill.
+	var/frill_icon
+
+
+/turf/closed/Initialize(mapload)
+	. = ..()
+	if(frill_icon)
+		AddElement(/datum/element/frill, frill_icon)
+
 
 /turf/closed/AfterChange()
 	. = ..()
@@ -45,6 +55,7 @@
 	name = "sandstone wall"
 	desc = "A wall with sandstone plating. Rough."
 	icon = 'icons/turf/walls/sandstone_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_sandstone_frill.dmi'
 	icon_state = "sandstone_wall-0"
 	base_icon_state = "sandstone_wall"
 	baseturfs = /turf/closed/indestructible/sandstone
@@ -83,18 +94,21 @@
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_WALLS)
+	frill_icon = 'icons/effects/frills/wall_reinforced_frill.dmi'
 
 
 /turf/closed/indestructible/riveted
-	icon = 'icons/turf/walls/riveted.dmi'
-	icon_state = "riveted-0"
-	base_icon_state = "riveted"
+	icon = 'icons/turf/walls/riveted_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_riveted_frill.dmi'
+	icon_state = "riveted_wall-0"
+	base_icon_state = "riveted_wall"
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS)
 	canSmoothWith = list(SMOOTH_GROUP_CLOSED_TURFS)
 
 /turf/closed/indestructible/syndicate
 	icon = 'icons/turf/walls/plastitanium_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_plastitanium_frill.dmi'
 	icon_state = "plastitanium_wall-0"
 	base_icon_state = "plastitanium_wall"
 	smoothing_flags = SMOOTH_BITMASK
@@ -103,9 +117,11 @@
 
 /turf/closed/indestructible/riveted/uranium
 	icon = 'icons/turf/walls/uranium_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_uranium_frill.dmi'
 	icon_state = "uranium_wall-0"
 	base_icon_state = "uranium_wall"
 	smoothing_flags = SMOOTH_BITMASK
+
 
 /turf/closed/indestructible/riveted/plastinum
 	name = "plastinum wall"
@@ -117,6 +133,7 @@
 
 /turf/closed/indestructible/wood
 	icon = 'icons/turf/walls/wood_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_wood_frill.dmi'
 	icon_state = "wood_wall-0"
 	base_icon_state = "wood_wall"
 	smoothing_flags = SMOOTH_BITMASK
@@ -139,6 +156,7 @@
 	name = "runed metal wall"
 	desc = "A cold metal wall engraved with indecipherable symbols. Studying them causes your head to pound. Effectively impervious to conventional methods of destruction."
 	icon = 'icons/turf/walls/cult_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_cult_frill.dmi'
 	icon_state = "cult_wall-0"
 	base_icon_state = "cult_wall"
 	smoothing_flags = SMOOTH_BITMASK
@@ -186,7 +204,6 @@
 
 /turf/closed/indestructible/fakedoor
 	name = "CentCom Access"
-	icon = 'icons/obj/doors/airlocks/centcom/centcom.dmi'
 	icon_state = "fake_door"
 
 /turf/closed/indestructible/rock
@@ -242,6 +259,7 @@
 	name = "impervious iron wall"
 	desc = "A wall with tough iron plating."
 	icon = 'icons/turf/walls/iron_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_iron_frill.dmi'
 	icon_state = "iron_wall-0"
 	base_icon_state = "iron_wall"
 	smoothing_flags = SMOOTH_BITMASK

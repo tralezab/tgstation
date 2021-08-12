@@ -2,9 +2,9 @@
 
 /obj/structure/noticeboard
 	name = "notice board"
-	desc = "A board for pinning important notices upon."
+	desc = "A board for pinning important notices upon. It is made of the finest Spanish cork."
 	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "nboard00"
+	icon_state = "noticeboard"
 	density = FALSE
 	anchored = TRUE
 	max_integrity = 150
@@ -39,7 +39,9 @@
 		if(istype(I, /obj/item/paper))
 			I.forceMove(src)
 			notices++
-	icon_state = "nboard0[notices]"
+	update_icon()
+
+	AddElement(/datum/element/wall_mount)
 
 //attaching papers!!
 /obj/structure/noticeboard/attackby(obj/item/O, mob/user, params)
@@ -51,7 +53,7 @@
 			if(!user.transferItemToLoc(O, src))
 				return
 			notices++
-			icon_state = "nboard0[notices]"
+			update_icon()
 			to_chat(user, span_notice("You pin the [O] to the noticeboard."))
 		else
 			to_chat(user, span_warning("The notice board is full!"))
@@ -124,6 +126,11 @@
 	for(var/obj/item/content in contents)
 		remove_item(content)
 	qdel(src)
+
+/obj/structure/noticeboard/update_overlays()
+	. = ..()
+	if(notices)
+		. += "notices_[notices]"
 
 // Notice boards for the heads of staff (plus the qm)
 

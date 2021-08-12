@@ -69,6 +69,28 @@
 	QDEL_NULL(cell)
 	return ..()
 
+
+/obj/machinery/light_construct/setDir(newdir)
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			plane = OVER_FRILL_PLANE
+			pixel_x = 0
+			pixel_y = 24
+		if(SOUTH)
+			plane = WALL_PLANE
+			pixel_x = 0
+			pixel_y = 16
+		if(EAST)
+			plane = WALL_PLANE
+			pixel_x = 0
+			pixel_y = 0
+		if(WEST)
+			plane = WALL_PLANE
+			pixel_x = 0
+			pixel_y = 0
+
+
 /obj/structure/light_construct/get_cell()
 	return cell
 
@@ -345,6 +367,8 @@
 /obj/machinery/light/Initialize(mapload)
 	. = ..()
 
+	AddElement(/datum/element/wall_mount)
+
 	if(!mapload) //sync up nightshift lighting for player made lights
 		var/area/A = get_area(src)
 		var/obj/machinery/power/apc/temp_apc = A.get_apc()
@@ -352,6 +376,7 @@
 
 	if(start_with_cell && !no_emergency)
 		cell = new/obj/item/stock_parts/cell/emergency_light(src)
+
 
 	RegisterSignal(src, COMSIG_LIGHT_EATER_ACT, .proc/on_light_eater)
 	AddElement(/datum/element/atmos_sensitive, mapload)
@@ -996,238 +1021,238 @@
 // -------- Directional presets
 // The directions are backwards on the lights we have now
 /obj/machinery/light/directional/north
-	dir = NORTH
-
-/obj/machinery/light/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/directional/south
+	dir = NORTH
+
 /obj/machinery/light/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Broken tube
 /obj/machinery/light/broken/directional/north
-	dir = NORTH
-
-/obj/machinery/light/broken/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/broken/directional/south
+	dir = NORTH
+
 /obj/machinery/light/broken/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/broken/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Tube construct
 /obj/structure/light_construct/directional/north
-	dir = NORTH
-
-/obj/structure/light_construct/directional/south
 	dir = SOUTH
 
+/obj/structure/light_construct/directional/south
+	dir = NORTH
+
 /obj/structure/light_construct/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/structure/light_construct/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Tube frames
 /obj/machinery/light/built/directional/north
-	dir = NORTH
-
-/obj/machinery/light/built/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/built/directional/south
+	dir = NORTH
+
 /obj/machinery/light/built/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/built/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- No nightlight tubes
 /obj/machinery/light/no_nightlight/directional/north
-	dir = NORTH
-
-/obj/machinery/light/no_nightlight/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/no_nightlight/directional/south
+	dir = NORTH
+
 /obj/machinery/light/no_nightlight/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/no_nightlight/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Warm light tubes
 /obj/machinery/light/warm/directional/north
-	dir = NORTH
-
-/obj/machinery/light/warm/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/warm/directional/south
+	dir = NORTH
+
 /obj/machinery/light/warm/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/warm/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- No nightlight warm light tubes
 /obj/machinery/light/warm/no_nightlight/directional/north
-	dir = NORTH
-
-/obj/machinery/light/warm/no_nightlight/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/warm/no_nightlight/directional/south
+	dir = NORTH
+
 /obj/machinery/light/warm/no_nightlight/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/warm/no_nightlight/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Cold light tubes
 /obj/machinery/light/cold/directional/north
-	dir = NORTH
-
-/obj/machinery/light/cold/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/cold/directional/south
+	dir = NORTH
+
 /obj/machinery/light/cold/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/cold/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- No nightlight cold light tubes
 /obj/machinery/light/cold/no_nightlight/directional/north
-	dir = NORTH
-
-/obj/machinery/light/cold/no_nightlight/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/cold/no_nightlight/directional/south
+	dir = NORTH
+
 /obj/machinery/light/cold/no_nightlight/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/cold/no_nightlight/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Red tubes
 /obj/machinery/light/red/directional/north
-	dir = NORTH
-
-/obj/machinery/light/red/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/red/directional/south
+	dir = NORTH
+
 /obj/machinery/light/red/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/red/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Blacklight tubes
 /obj/machinery/light/blacklight/directional/north
-	dir = NORTH
-
-/obj/machinery/light/blacklight/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/blacklight/directional/south
+	dir = NORTH
+
 /obj/machinery/light/blacklight/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/blacklight/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Dim tubes
 /obj/machinery/light/dim/directional/north
-	dir = NORTH
-
-/obj/machinery/light/dim/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/dim/directional/south
+	dir = NORTH
+
 /obj/machinery/light/dim/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/dim/directional/west
-	dir = WEST
+	dir = EAST
 
 
 // -------- Bulb lights
 /obj/machinery/light/small/directional/north
-	dir = NORTH
-
-/obj/machinery/light/small/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/small/directional/south
+	dir = NORTH
+
 /obj/machinery/light/small/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/small/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Bulb construct
 /obj/structure/light_construct/small/directional/north
-	dir = NORTH
-
-/obj/structure/light_construct/small/directional/south
 	dir = SOUTH
 
+/obj/structure/light_construct/small/directional/south
+	dir = NORTH
+
 /obj/structure/light_construct/small/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/structure/light_construct/small/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Bulb frames
 /obj/machinery/light/small/built/directional/north
-	dir = NORTH
-
-/obj/machinery/light/small/built/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/small/built/directional/south
+	dir = NORTH
+
 /obj/machinery/light/small/built/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/small/built/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Broken bulbs
 /obj/machinery/light/small/broken/directional/north
-	dir = NORTH
-
-/obj/machinery/light/small/broken/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/small/broken/directional/south
+	dir = NORTH
+
 /obj/machinery/light/small/broken/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/small/broken/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Red bulbs
 /obj/machinery/light/small/red/directional/north
-	dir = NORTH
-
-/obj/machinery/light/small/red/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/small/red/directional/south
+	dir = NORTH
+
 /obj/machinery/light/small/red/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/small/red/directional/west
-	dir = WEST
+	dir = EAST
 
 // ---- Blacklight bulbs
 /obj/machinery/light/small/blacklight/directional/north
-	dir = NORTH
-
-/obj/machinery/light/small/blacklight/directional/south
 	dir = SOUTH
 
+/obj/machinery/light/small/blacklight/directional/south
+	dir = NORTH
+
 /obj/machinery/light/small/blacklight/directional/east
-	dir = EAST
+	dir = WEST
 
 /obj/machinery/light/small/blacklight/directional/west
-	dir = WEST
+	dir = EAST
 
 #undef LIGHT_DRAIN_TIME
 #undef LIGHT_POWER_GAIN

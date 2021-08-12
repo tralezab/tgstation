@@ -4,7 +4,7 @@
 	name = "wall"
 	desc = "A huge chunk of iron used to separate rooms."
 	icon = 'icons/turf/walls/wall.dmi'
-	icon_state = "wall-0"
+	icon_state = "wall"
 	base_icon_state = "wall"
 	explosion_block = 1
 
@@ -18,6 +18,7 @@
 	smoothing_flags = SMOOTH_BITMASK
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_WALLS)
+	frill_icon = 'icons/effects/frills/wall_metal_frill.dmi'
 
 	rcd_memory = RCD_MEMORY_WALL
 
@@ -48,6 +49,8 @@
 			underlay_appearance.icon_state = fixed_underlay["icon_state"]
 		fixed_underlay = string_assoc_list(fixed_underlay)
 		underlays += underlay_appearance
+
+	icon_state = "black"
 
 
 /turf/closed/wall/Destroy()

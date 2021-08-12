@@ -168,6 +168,7 @@
 
 /obj/structure/reagent_dispensers/peppertank/Initialize()
 	. = ..()
+	AddElement(/datum/element/wall_mount)
 	if(prob(1))
 		desc = "IT'S PEPPER TIME, BITCH!"
 
@@ -221,21 +222,9 @@
 	density = FALSE
 	reagent_id = /datum/reagent/consumable/virus_food
 
-/obj/structure/reagent_dispensers/virusfood/directional/north
-	dir = SOUTH
-	pixel_y = 30
-
-/obj/structure/reagent_dispensers/virusfood/directional/south
-	dir = NORTH
-	pixel_y = -30
-
-/obj/structure/reagent_dispensers/virusfood/directional/east
-	dir = WEST
-	pixel_x = 30
-
-/obj/structure/reagent_dispensers/virusfood/directional/west
-	dir = EAST
-	pixel_x = -30
+/obj/structure/reagent_dispensers/virusfood/Initialize()
+	. = ..()
+	AddElement(/datum/element/wall_mount)
 
 /obj/structure/reagent_dispensers/cooking_oil
 	name = "vat of cooking oil"

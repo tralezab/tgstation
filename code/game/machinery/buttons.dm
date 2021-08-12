@@ -22,8 +22,6 @@
 	. = ..()
 	if(built)
 		setDir(ndir)
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 		panel_open = TRUE
 		update_appearance()
 
@@ -41,6 +39,7 @@
 			board.accesses = req_one_access
 
 	setup_device()
+	AddElement(/datum/element/wall_mount)
 
 /obj/machinery/button/update_icon_state()
 	if(panel_open)
@@ -56,8 +55,6 @@
 	. = ..()
 	if(!panel_open)
 		return
-	if(device)
-		. += "button-device"
 	if(board)
 		. += "button-board"
 
@@ -173,7 +170,7 @@
 		return
 
 	use_power(5)
-	icon_state = "[skin]1"
+	flick("[icon_state]1", src)
 
 	if(device)
 		device.pulsed()

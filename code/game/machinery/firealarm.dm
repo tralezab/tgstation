@@ -38,6 +38,8 @@
 	var/area/myarea = null
 	//Has this firealarm been triggered by its enviroment?
 	var/triggered = FALSE
+	///Has this fire_alarm been trigged in a cold enviroment?
+	var/cold_alarm = FALSE
 
 /obj/machinery/firealarm/Initialize(mapload, dir, building)
 	. = ..()
@@ -46,14 +48,11 @@
 	if(building)
 		buildstage = 0
 		panel_open = TRUE
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 	update_appearance()
 	myarea = get_area(src)
 	LAZYADD(myarea.firealarms, src)
-
+	AddElement(/datum/element/wall_mount)
 	AddElement(/datum/element/atmos_sensitive, mapload)
-	RegisterSignal(SSsecurity_level, COMSIG_SECURITY_LEVEL_CHANGED, .proc/check_security_level)
 
 /obj/machinery/firealarm/Destroy()
 	myarea.firereset(src)
@@ -72,38 +71,27 @@
 
 /obj/machinery/firealarm/update_overlays()
 	. = ..()
-	if(machine_stat & NOPOWER)
-		return
+	SSvis_overlays.remove_vis_overlay(src, managed_vis_overlays)
 
-	. += "fire_overlay"
-	if(is_station_level(z))
-		. += "fire_[SSsecurity_level.current_level]"
-		. += mutable_appearance(icon, "fire_[SSsecurity_level.current_level]")
-		. += emissive_appearance(icon, "fire_[SSsecurity_level.current_level]")
-	else
-		. += "fire_[SEC_LEVEL_GREEN]"
-		. += mutable_appearance(icon, "fire_[SEC_LEVEL_GREEN]")
-		. += emissive_appearance(icon, "fire_[SEC_LEVEL_GREEN]")
+	if(!is_operational)
+		return
 
 	var/area/area = get_area(src)
 
 	if(!detecting || !area.fire)
-		. += "fire_off"
-		. += mutable_appearance(icon, "fire_off")
-		. += emissive_appearance(icon, "fire_off")
+		. += "fire_allgood"
+		. += mutable_appearance(icon, "fire_allgood")
+		. += emissive_appearance(icon, "fire_allgood")
 	else if(obj_flags & EMAGGED)
 		. += "fire_emagged"
-		. += mutable_appearance(icon, "fire_emagged")
-		. += emissive_appearance(icon, "fire_emagged")
+		. +=  mutable_appearance(icon, "fire_emagged", layer, EMISSIVE_PLANE, dir)
+	else if(cold_alarm)
+		. += "fire_cold"
+		. +=  mutable_appearance(icon, "fire_cold", layer, EMISSIVE_PLANE, dir)
 	else
-		. += "fire_on"
-		. += mutable_appearance(icon, "fire_on")
-		. += emissive_appearance(icon, "fire_on")
+		. += "fire_hot"
+		. +=  mutable_appearance(icon, "fire_hot", layer, EMISSIVE_PLANE, dir)
 
-	if(!panel_open && detecting && triggered) //It just looks horrible with the panel open
-		. += "fire_detected"
-		. += mutable_appearance(icon, "fire_detected")
-		. += emissive_appearance(icon, "fire_detected") //Pain
 
 /obj/machinery/firealarm/emp_act(severity)
 	. = ..()
@@ -133,7 +121,10 @@
 	if(!triggered)
 		triggered = TRUE
 		myarea.triggered_firealarms += 1
-		update_appearance()
+		if(exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT)
+			cold_alarm = TRUE
+		else
+			cold_alarm = FALSE
 	alarm()
 
 /obj/machinery/firealarm/atmos_end()
@@ -166,6 +157,8 @@
 	playsound(loc, 'goon/sound/machinery/FireAlarm.ogg', 75)
 	if(user)
 		log_game("[user] triggered a fire alarm at [COORD(src)]")
+	triggered = TRUE
+	update_icon()
 
 /obj/machinery/firealarm/proc/reset(mob/user)
 	if(!is_operational)
@@ -174,6 +167,7 @@
 	area.firereset()
 	if(user)
 		log_game("[user] reset a fire alarm at [COORD(src)]")
+	update_icon()
 
 /obj/machinery/firealarm/attack_hand(mob/user, list/modifiers)
 	if(buildstage != 2)

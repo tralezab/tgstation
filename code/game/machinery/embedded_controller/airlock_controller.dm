@@ -211,6 +211,10 @@
 	var/sensor_tag
 	var/sanitize_external
 
+/obj/machinery/embedded_controller/radio/airlock_controller/Initialize()
+	. = ..()
+	AddElement(/datum/element/wall_mount)
+
 /obj/machinery/embedded_controller/radio/airlock_controller/incinerator_toxmix
 	name = "Incinerator Access Console"
 	airpump_tag = INCINERATOR_TOXMIX_DP_VENTPUMP

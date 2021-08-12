@@ -37,6 +37,7 @@
 
 	if(!name)
 		name = "light switch ([area.name])"
+	AddElement(/datum/element/wall_mount)
 
 	update_appearance()
 

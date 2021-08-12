@@ -8,6 +8,7 @@
 	var/datum/radio_frequency/radio_connection
 
 
+
 /obj/machinery/door/airlock/receive_signal(datum/signal/signal)
 	if(!signal)
 		return
@@ -101,6 +102,10 @@
 
 	var/on = TRUE
 	var/alert = FALSE
+
+/obj/machinery/airlock_sensor/Initialize()
+	. = ..()
+	AddElement(/datum/element/wall_mount)
 
 /obj/machinery/airlock_sensor/incinerator_toxmix
 	id_tag = INCINERATOR_TOXMIX_AIRLOCK_SENSOR

@@ -47,6 +47,7 @@
 /obj/machinery/igniter/Initialize()
 	. = ..()
 	icon_state = "igniter[on]"
+	AddElement(/datum/element/wall_mount)
 
 /obj/machinery/igniter/update_icon_state()
 	icon_state = "[base_icon_state][(machine_stat & NOPOWER) ? 0 : on]"

@@ -2,6 +2,7 @@
 	name = "runed metal wall"
 	desc = "A cold metal wall engraved with indecipherable symbols. Studying them causes your head to pound."
 	icon = 'icons/turf/walls/cult_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_cult_frill.dmi'
 	icon_state = "cult_wall-0"
 	base_icon_state = "cult_wall"
 	smoothing_flags = SMOOTH_BITMASK
@@ -73,8 +74,17 @@
 	hardness = 35
 	slicing_duration = 150 //welding through the ice+metal
 	bullet_sizzle = TRUE
+	frill_icon = null
 
 /turf/closed/wall/rust
+	name = "rusted wall"
+	desc = "A rusted metal wall."
+	icon = 'icons/turf/walls/rusty_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_rusty_frill.dmi'
+	icon_state = "rusty_wall-0"
+	base_icon_state = "rusty_wall"
+	smoothing_flags = SMOOTH_BITMASK
+	hardness = 45
 	//SDMM supports colors, this is simply for easier mapping
 	//and should be removed on initialize
 	color = COLOR_ORANGE_BROWN
@@ -85,6 +95,14 @@
 	AddElement(/datum/element/rust)
 
 /turf/closed/wall/r_wall/rust
+	name = "rusted reinforced wall"
+	desc = "A huge chunk of rusted reinforced metal."
+	icon = 'icons/turf/walls/rusty_reinforced_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_rusty_reinforced_frill.dmi'
+	icon_state = "rusty_reinforced_wall-0"
+	base_icon_state = "rusty_reinforced_wall"
+	smoothing_flags = SMOOTH_BITMASK
+	hardness = 15
 	//SDMM supports colors, this is simply for easier mapping
 	//and should be removed on initialize
 	color = COLOR_ORANGE_BROWN
@@ -98,6 +116,7 @@
 	name = "clockwork wall"
 	desc = "A huge chunk of bronze, decorated like gears and cogs."
 	icon = 'icons/turf/walls/clockwork_wall.dmi'
+	frill_icon = 'icons/effects/frills/wall_clockwork_frill.dmi'
 	icon_state = "clockwork_wall-0"
 	base_icon_state = "clockwork_wall"
 	smoothing_flags = SMOOTH_BITMASK

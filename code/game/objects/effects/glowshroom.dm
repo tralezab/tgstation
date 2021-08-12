@@ -85,15 +85,7 @@ GLOBAL_VAR_INIT(glowshrooms, 0)
 	setDir(calc_dir())
 	base_icon_state = initial(icon_state)
 	if(!floor)
-		switch(dir) //offset to make it be on the wall rather than on the floor
-			if(NORTH)
-				pixel_y = 32
-			if(SOUTH)
-				pixel_y = -32
-			if(EAST)
-				pixel_x = 32
-			if(WEST)
-				pixel_x = -32
+		AddElement(/datum/element/wall_mount)
 		icon_state = "[base_icon_state][rand(1,3)]"
 	else //if on the floor, glowshroom on-floor sprite
 		icon_state = base_icon_state
