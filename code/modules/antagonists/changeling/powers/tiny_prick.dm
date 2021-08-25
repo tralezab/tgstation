@@ -69,7 +69,7 @@
 	helptext = "The victim will transform much like a changeling would. Does not provide a warning to others. Mutations will not be transferred, and monkeys will become human."
 	button_icon_state = "sting_transform"
 	chemical_cost = 50
-	dna_cost = 3
+	dna_cost = -1
 	var/datum/changelingprofile/selected_dna = null
 
 /datum/action/changeling/sting/transformation/Trigger()
