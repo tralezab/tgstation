@@ -122,7 +122,7 @@
 			return
 		carbon_antag.adjustFireLoss(15)
 		playsound(carbon_antag, 'sound/hallucinations/wail.ogg', 50, TRUE)
-		carbon_antag.emote("me",1,"unleashes an inhuman scream!",TRUE)
+		carbon_antag.manual_emote("unleashes an inhuman scream!")
 		carbon_antag.Knockdown(delta_time SECONDS + 0.5 SECONDS, TRUE)
 
 
