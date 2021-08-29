@@ -47,12 +47,11 @@
 	var/badass = FALSE
 	if(objectives.len)
 		report += printobjectives(objectives)
-		for(var/datum/objective/objective in objectives)
+		for(var/datum/objective/objective as anything in objectives)
 			if(objective.check_completion())
 				option_chosen = TRUE
 				if(istype(objective, /datum/objective/hijack))
 					badass = TRUE
-				break
 
 	if(objectives.len == 0 || option_chosen)
 		if(badass)
