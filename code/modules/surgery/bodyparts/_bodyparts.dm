@@ -909,6 +909,8 @@
 			if(aux_zone)
 				aux.color = "#[draw_color]"
 
+	if(bodypart.owner && HAS_TRAIT(bodypart.owner TRAIT_INVERTED_COLORS))
+		//todo add a filter to invert colors, actually move this to universal_corrections.dm
 	if(blocks_emissive)
 		var/mutable_appearance/limb_em_block = mutable_appearance(limb.icon, limb.icon_state, plane = EMISSIVE_PLANE, appearance_flags = KEEP_APART)
 		limb_em_block.dir = image_dir

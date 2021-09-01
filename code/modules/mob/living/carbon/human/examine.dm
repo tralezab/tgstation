@@ -83,10 +83,12 @@
 			. += "[t_He] [t_has] [glasses.get_examine_string(user)] covering [t_his] eyes."
 		else if(eye_color == BLOODCULT_EYE)
 			if(IS_CULTIST(src) && HAS_TRAIT(src, TRAIT_CULT_EYES))
-				. += "<span class='warning'><B>[t_His] eyes are glowing an unnatural red!</B></span>"
+				. += span_boldwarning("[t_His] eyes are glowing an unnatural red!")
 			else if(HAS_TRAIT(src, TRAIT_BLOODSHOT_EYES))
-				. += "<span class='warning'><B>[t_His] eyes are bloodshot!</B></span>"
-
+				. += span_boldwarning("[t_His] eyes are bloodshot!")
+		else if(eye_color == NEGATIVE_EYE)
+			if(HAS_TRAIT(src, TRAIT_NEGATIVE_EYES))
+				. += span_boldwarning("In place of [t_His] eyes is an infinite scape of dancing stars...")
 	//ears
 	if(ears && !(obscured & ITEM_SLOT_EARS) && !(ears.item_flags & EXAMINE_SKIP))
 		. += "[t_He] [t_has] [ears.get_examine_string(user)] on [t_his] ears."

@@ -79,6 +79,7 @@
 #define ANTAG_HUD_SPACECOP 24
 #define ANTAG_HUD_HERETIC 25
 #define ANTAG_HUD_BRAINWASHED 26
+#define ANTAG_HUD_NEGA 27
 
 // Notification action types
 #define NOTIFY_JUMP "jump"

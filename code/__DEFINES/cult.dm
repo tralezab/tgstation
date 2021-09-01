@@ -26,8 +26,9 @@
 #define DEFAULT_TOOLTIP "6:-29,5:-2"
 //misc
 #define SOULS_TO_REVIVE 3
+///color of the eyes when they have cult eyes
 #define BLOODCULT_EYE "f00"
 //soulstone & construct themes
-#define THEME_CULT "cult" 
+#define THEME_CULT "cult"
 #define THEME_WIZARD "wizard"
 #define THEME_HOLY "holy"
