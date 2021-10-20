@@ -53,12 +53,12 @@ multiple modular subtrees with behaviors
 
 /datum/ai_controller/New(atom/new_pawn)
 	change_ai_movement_type(ai_movement)
-	init_subtrees()
 
 	if(idle_behavior)
 		idle_behavior = new idle_behavior()
 
-	PossessPawn(new_pawn)
+	if(PossessPawn(new_pawn))
+		init_subtrees() //we need to init subtrees after the pawn is possessed because the pawn could be incompatible and beforehand the pawn is null
 
 /datum/ai_controller/Destroy(force, ...)
 	forget_subtrees()
@@ -93,6 +93,7 @@ multiple modular subtrees with behaviors
 
 ///Proc to move from one pawn to another, this will destroy the target's existing controller.
 /datum/ai_controller/proc/PossessPawn(atom/new_pawn)
+	. = TRUE
 	if(pawn) //Reset any old signals
 		UnpossessPawn(FALSE)
 
@@ -101,7 +102,8 @@ multiple modular subtrees with behaviors
 
 	if(TryPossessPawn(new_pawn) & AI_CONTROLLER_INCOMPATIBLE)
 		qdel(src)
-		CRASH("[src] attached to [new_pawn] but these are not compatible!")
+		stack_trace("[src] attached to [new_pawn] but these are not compatible!")
+		return FALSE
 
 	pawn = new_pawn
 	pawn.ai_controller = src

@@ -90,5 +90,5 @@
 	if(!controller.blackboard[BB_ITEM_TARGET] || !DT_PROB(ITEM_AGGRO_ATTACK_CHANCE, delta_time))
 		return //no target, or didn't aggro
 
-	controller.queue_behavior(controller.blackboard[BB_ITEM_MOVE_AND_ATTACK_TYPE], BB_ITEM_TARGET, BB_ITEM_THROW_ATTEMPT_COUNT)
+	controller.queue_behavior(controller.blackboard[BB_ITEM_MOVE_AND_ATTACK_TYPE], BB_ITEM_AGGRO_LIST, BB_ITEM_TARGET, BB_ITEM_THROW_ATTEMPT_COUNT)
 	return SUBTREE_RETURN_FINISH_PLANNING
