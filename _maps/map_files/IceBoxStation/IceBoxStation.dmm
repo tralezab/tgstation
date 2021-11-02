@@ -2395,6 +2395,7 @@
 	name = "Brig Desk";
 	req_access_txt = "1"
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/dark,
 /area/security/brig)
 "amU" = (
@@ -11452,6 +11453,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/white,
 /area/medical/medbay)
 "coS" = (
@@ -26409,6 +26411,7 @@
 /turf/open/floor/iron/dark,
 /area/security/prison/safe)
 "jzP" = (
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/white/corner{
 	dir = 8
 	},
@@ -33232,6 +33235,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/command/bridge)
 "nat" = (
@@ -34023,6 +34027,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/engineering/lobby)
 "nuM" = (
@@ -52203,6 +52208,7 @@
 /obj/item/clipboard,
 /obj/item/pen/red,
 /obj/structure/table,
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/cargo/office)
 "wKl" = (

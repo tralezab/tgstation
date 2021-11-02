@@ -11931,6 +11931,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/security/warden)
 "bRs" = (
@@ -24218,6 +24219,7 @@
 	pixel_x = 8;
 	req_access_txt = "7"
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/science/lab)
 "dke" = (
@@ -55707,6 +55709,7 @@
 	},
 /obj/structure/table/reinforced,
 /obj/item/reagent_containers/food/drinks/soda_cans/thirteenloko,
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/engineering/break_room)
 "kGB" = (
@@ -97378,6 +97381,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/white,
 /area/hallway/primary/central/aft)
 "wNz" = (

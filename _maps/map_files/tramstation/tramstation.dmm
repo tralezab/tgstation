@@ -11087,6 +11087,16 @@
 	},
 /turf/open/floor/plating/airless,
 /area/science/test_area)
+"cpB" = (
+/obj/effect/turf_decal/trimline/purple/filled/line{
+	dir = 1
+	},
+/obj/structure/disposalpipe/segment{
+	dir = 4
+	},
+/obj/effect/mapping_helpers/candybowl_location,
+/turf/open/floor/iron/white,
+/area/science/lab)
 "cpF" = (
 /obj/effect/turf_decal/stripes{
 	dir = 4
@@ -23651,6 +23661,7 @@
 	pixel_x = 4;
 	pixel_y = -2
 	},
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron,
 /area/cargo/office)
 "gSB" = (
@@ -26216,6 +26227,13 @@
 /obj/structure/cable,
 /turf/open/floor/iron,
 /area/hallway/secondary/construction/engineering)
+"hRp" = (
+/obj/effect/turf_decal/trimline/yellow/filled/line{
+	dir = 1
+	},
+/obj/effect/mapping_helpers/candybowl_location,
+/turf/open/floor/iron,
+/area/engineering/break_room)
 "hRt" = (
 /obj/effect/turf_decal/siding/thinplating,
 /obj/effect/turf_decal/trimline/neutral/filled/line{
@@ -43141,6 +43159,7 @@
 /area/security/checkpoint/engineering)
 "ouE" = (
 /obj/structure/table,
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/showroomfloor,
 /area/security/warden)
 "ouR" = (
@@ -58744,6 +58763,7 @@
 	network = list("ss13","medbay")
 	},
 /obj/structure/cable,
+/obj/effect/mapping_helpers/candybowl_location,
 /turf/open/floor/iron/white,
 /area/medical/medbay/central)
 "uny" = (
@@ -101127,7 +101147,7 @@ afB
 kzB
 xwc
 nBR
-eyf
+hRp
 emj
 fNC
 kgi
@@ -177454,7 +177474,7 @@ pwI
 lMH
 jrL
 oky
-bWJ
+cpB
 xEz
 lJq
 kcl

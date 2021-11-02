@@ -65,10 +65,14 @@
 		balloon_alert(user, "[add_it] is stuck to you!")
 
 /obj/effect/mapping_helpers/candybowl_location
+	name = "Halloween Candy Bowl Placement"
+	late = TRUE
+	icon_state = "candybowl"
 
 /obj/effect/mapping_helpers/candybowl_location/LateInitialize()
-	if(locate(/datum/holiday/halloween) in SSevents.holidays)
+	if(SSevents.holidays && SSevents.holidays[HALLOWEEN])
 		var/turf/candybowl_turf = get_turf(src)
-		new /obj/structure/table(candybowl_turf)
+		if(!locate(/obj/structure/table) in candybowl_turf)
+			new /obj/structure/table(candybowl_turf)
 		new /obj/item/candybowl(candybowl_turf)
 	qdel(src)
