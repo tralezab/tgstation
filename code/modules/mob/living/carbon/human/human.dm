@@ -1030,9 +1030,6 @@
 /mob/living/carbon/human/species/android
 	race = /datum/species/android
 
-/mob/living/carbon/human/species/dullahan
-	race = /datum/species/dullahan
-
 /mob/living/carbon/human/species/felinid
 	race = /datum/species/human/felinid
 
@@ -1170,9 +1167,6 @@
 
 /mob/living/carbon/human/species/synth/military
 	race = /datum/species/synth/military
-
-/mob/living/carbon/human/species/vampire
-	race = /datum/species/vampire
 
 /mob/living/carbon/human/species/zombie
 	race = /datum/species/zombie

@@ -135,6 +135,16 @@
 /turf/open/floor/grass/fairy/spawniconchange()
 	icon_state = "fairygrass[rand(0,3)]"
 
+/turf/open/floor/grass/fall
+	name = "fall grass patch"
+	desc = "This patch of grass has been discolored from the seasonal cycle. Wait what the fuck everything I just said made no sense in space?!"
+	icon_state = "fallgrass"
+	initial_gas_mix = LAVALAND_DEFAULT_ATMOS
+	floor_tile = null
+
+/turf/open/floor/grass/fall/spawniconchange()
+	return
+
 /turf/open/floor/grass/snow
 	gender = PLURAL
 	name = "snow"

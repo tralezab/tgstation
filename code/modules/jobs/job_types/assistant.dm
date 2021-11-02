@@ -32,6 +32,11 @@ Assistant
 	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE | JOB_REOPEN_ON_ROUNDSTART_LOSS | JOB_ASSIGN_QUIRKS
 	rpg_title = "Lout"
 
+/datum/job/assistant/New()
+	. = ..()
+	if(SSevents.holidays[HALLOWEEN])
+		outfit = /datum/outfit/job/assistant/halloween
+
 /datum/outfit/job/assistant
 	name = "Assistant"
 	jobtype = /datum/job/assistant
@@ -66,3 +71,35 @@ Assistant
 	// This outfit is used by the assets SS, which is ran before the atoms SS
 	if (SSatoms.initialized == INITIALIZATION_INSSATOMS)
 		H.w_uniform?.update_greyscale()
+
+/datum/outfit/job/assistant/halloween
+	name = "Trick or Treater"
+	id_trim = /datum/id_trim/job/assistant/halloween
+
+/datum/outfit/job/assistant/halloween/pre_equip(mob/living/carbon/human/H)
+	. = ..()
+	switch(rand(1,8))
+		if(1)
+			suit = /obj/item/clothing/suit/dracula
+		if(2)
+			head = /obj/item/clothing/head/drfreezehat
+			suit = /obj/item/clothing/suit/drfreeze_coat
+			uniform = /obj/item/clothing/under/costume/drfreeze
+		if(3)
+			suit = /obj/item/clothing/suit/gothcoat
+		if(4)
+			head = /obj/item/clothing/head/lobsterhat
+			uniform = /obj/item/clothing/under/costume/lobster
+		if(5)
+			head = /obj/item/clothing/head/scarecrow_hat
+			mask = /obj/item/clothing/mask/scarecrow
+			uniform = /obj/item/clothing/under/costume/scarecrow
+		if(6)
+			mask = /obj/item/clothing/mask/mummy
+			uniform = /obj/item/clothing/under/costume/mummy
+		if(7)
+			head = /obj/item/clothing/head/jester/alt
+			shoes = /obj/item/clothing/shoes/clown_shoes/jester
+			uniform = /obj/item/clothing/under/rank/civilian/clown/jester/alt
+		if(8)
+			uniform = /obj/item/clothing/under/costume/skeleton

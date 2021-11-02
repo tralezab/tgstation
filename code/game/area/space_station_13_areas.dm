@@ -391,6 +391,21 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 /area/hallway
 	sound_environment = SOUND_AREA_STANDARD_STATION
 
+/area/hallway/Initialize(mapload)
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/area/hallway/LateInitialize()
+	. = ..()
+	if(locate(/datum/holiday/halloween) in SSevents.holidays)
+		halloween_nights()
+
+/area/hallway/proc/halloween_nights()
+	for(var/turf/open/not_grassy_enough in src)
+		if(istype(not_grassy_enough, /turf/open/floor/grass))
+			continue //i stand corrected that is very grassy
+		not_grassy_enough.PlaceOnTop(/turf/open/floor/grass/fall)
+
 /area/hallway/primary
 	name = "\improper Primary Hallway"
 
