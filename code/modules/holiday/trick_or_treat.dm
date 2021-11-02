@@ -76,3 +76,33 @@
 			new /obj/structure/table(candybowl_turf)
 		new /obj/item/candybowl(candybowl_turf)
 	qdel(src)
+
+/obj/item/storage/spooky
+	name = "trick-o-treat bag"
+	desc = "A pumpkin-shaped bag that holds all sorts of goodies!"
+	icon = 'icons/obj/halloween_items.dmi'
+	icon_state = "treatbag"
+	component_type = /datum/component/storage/concrete/spooky
+	///ckey of the person who originally spawned with this, given on the trick or treat outfit. only they are allowed to take candy out!
+	var/rightful_owner
+
+/datum/component/storage/concrete/spooky
+	can_hold = list(
+		/obj/item/food/cookie/sugar/spookyskull,
+		/obj/item/food/cookie/sugar/spookycoffin,
+		/obj/item/food/candy_corn,
+		/obj/item/food/candy,
+		/obj/item/food/candiedapple,
+		/obj/item/food/chocolatebar,
+	)
+	max_items = INFINITY
+	max_combined_w_class = INFINITY
+	can_hold_description = "candy"
+
+/datum/component/storage/concrete/spooky/remove_from_storage(atom/movable/removed_candy, atom/new_location)
+	var/client/usr_client = usr
+	if(usr_client.ckey != rightful_owner)
+		to_chat(usr, span_notice("you can't just steal candy from someone else's bag! That's beyond fucked up."))
+		return
+	. = ..()
+
