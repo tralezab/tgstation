@@ -30,7 +30,7 @@ SUBSYSTEM_DEF(nightshift)
 	var/emergency = SSsecurity_level.current_level >= SEC_LEVEL_RED
 	var/announcing = TRUE
 	var/time = station_time()
-	var/night_time = (time < nightshift_end_time) || (time > nightshift_start_time)
+	var/night_time = ((time < nightshift_end_time) || (time > nightshift_start_time) || SSevents.holidays && SSevents.holidays[HALLOWEEN])
 	if(high_security_mode != emergency)
 		high_security_mode = emergency
 		if(night_time)
@@ -50,7 +50,10 @@ SUBSYSTEM_DEF(nightshift)
 		nightshift_active = active
 		if(announce)
 			if (active)
-				announce("Good evening, crew. To reduce power consumption and stimulate the circadian rhythms of some species, all of the lights aboard the station have been dimmed for the night.")
+				if(SSevents.holidays && SSevents.holidays[HALLOWEEN])
+					announce("What a wonderful night for trick or treating!")
+				else
+					announce("Good evening, crew. To reduce power consumption and stimulate the circadian rhythms of some species, all of the lights aboard the station have been dimmed for the night.")
 			else
 				announce("Good morning, crew. As it is now day time, all of the lights aboard the station have been restored to their former brightness.")
 	for(var/obj/machinery/power/apc/APC as anything in currentrun)

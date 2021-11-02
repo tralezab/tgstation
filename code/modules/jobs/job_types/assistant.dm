@@ -75,8 +75,9 @@ Assistant
 /datum/outfit/job/assistant/halloween
 	name = "Trick or Treater"
 	id_trim = /datum/id_trim/job/assistant/halloween
+	r_hand = /obj/item/storage/spooky
 
-/datum/outfit/job/assistant/halloween/pre_equip(mob/living/carbon/human/H)
+/datum/outfit/job/assistant/halloween/pre_equip(mob/living/carbon/human/trick_or_treater)
 	. = ..()
 	switch(rand(1,8))
 		if(1)
@@ -103,3 +104,12 @@ Assistant
 			uniform = /obj/item/clothing/under/rank/civilian/clown/jester/alt
 		if(8)
 			uniform = /obj/item/clothing/under/costume/skeleton
+
+/datum/outfit/job/assistant/halloween/post_equip(mob/living/carbon/human/trick_or_treater, visualsOnly)
+	. = ..()
+	if(visualsOnly)
+		return
+	to_chat(trick_or_treater, span_boldannounce(\
+		"It's a wonderful halloween night to get some trick or treating done with your friends! \
+		If you're having some second thoughts on your costume tonight, the Autodrobe vending machine can help with that."\
+	))

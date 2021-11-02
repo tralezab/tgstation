@@ -8,11 +8,6 @@
 
 /datum/round_event/spooky/start()
 	..()
-	for(var/i in GLOB.human_list)
-		var/mob/living/carbon/human/H = i
-		var/obj/item/storage/backpack/b = locate() in H.contents
-		if(b)
-			new /obj/item/storage/spooky(b)
 
 	for(var/mob/living/simple_animal/pet/dog/corgi/ian/Ian in GLOB.mob_living_list)
 		Ian.place_on_head(new /obj/item/bedsheet(Ian))
