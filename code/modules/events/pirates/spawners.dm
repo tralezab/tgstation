@@ -103,7 +103,7 @@
 	spawn_oldpod = FALSE
 	mob_name = "a space pirate"
 	mob_species = /datum/species/skeleton
-	outfit = /datum/outfit/pirate
+	outfit = /datum/outfit/expedition_exogeologist
 	rank = "Expedition Exogeologist"
 
 /obj/effect/mob_spawn/human/pirate/expedition/captain

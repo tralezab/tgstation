@@ -9,6 +9,7 @@
 #define PIRATES_ROGUES "Rogues"
 #define PIRATES_SILVERSCALES "Silverscales"
 #define PIRATES_DUTCHMAN "Flying Dutchman"
+#define PIRATES_LOST_EXPEDITION "Lost Expedition"
 
 /datum/round_event_control/pirates/preRunEvent()
 	if (!SSmapping.empty_space)
