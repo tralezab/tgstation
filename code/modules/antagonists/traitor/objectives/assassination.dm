@@ -101,7 +101,7 @@
 
 /datum/traitor_objective/assassinate/behead/proc/on_head_pickup(datum/source, mob/taker)
 	SIGNAL_HANDLER
-	if(objective_status == OBJECTIVE_STATE_INACTIVE) //just in case- this shouldn't happen?
+	if(objective_state == OBJECTIVE_STATE_INACTIVE) //just in case- this shouldn't happen?
 		fail_objective()
 		return
 	if(taker == needs_to_hold_head)
@@ -112,32 +112,24 @@
 	SIGNAL_HANDLER
 	if(!istype(lost_head))
 		return
-	if(objective_status == OBJECTIVE_STATE_INACTIVE)
+	if(objective_state == OBJECTIVE_STATE_INACTIVE)
 		//no longer can be beheaded
 		fail_objective()
 
 /datum/traitor_objective/assassinate/generate_objective(datum/mind/generating_for, list/possible_duplicates)
-	var/list/datum/mind/owners = get_owners()
-	if(!dupe_search_range)
-		dupe_search_range = get_owners()
 	var/list/possible_targets = list()
 	var/try_target_late_joiners = FALSE
-	for(var/datum/mind/antegmind as anything in owners)
-		if(antegmind.late_joiner)
-			try_target_late_joiners = TRUE
+	if(generating_for.late_joiner)
+		try_target_late_joiners = TRUE
 	for(var/datum/mind/possible_target in get_crewmember_minds())
 		var/target_area = get_area(possible_target.current)
-		if(possible_target in owners)
+		if(possible_target == generating_for)
 			continue
 		if(!ishuman(possible_target.current))
 			continue
 		if(possible_target.current.stat == DEAD)
 			continue
-		if(!is_unique_objective(possible_target,dupe_search_range))
-			continue
 		if(!HAS_TRAIT(SSstation, STATION_TRAIT_LATE_ARRIVALS) && istype(target_area, /area/shuttle/arrival))
-			continue
-		if(possible_target in blacklist)
 			continue
 		possible_targets += possible_target
 	if(try_target_late_joiners)
