@@ -1,3 +1,18 @@
+/datum/traitor_objective_category/assassinate
+	name = "Assassination"
+	objectives = list(
+		//starter assassinations, basically just require you to kill someone
+		list(
+			/datum/traitor_objective/assassinate/calling_card = 1,
+			/datum/traitor_objective/assassinate/behead = 1,
+		) = 1,
+		//above but for heads
+		list(
+			/datum/traitor_objective/assassinate/calling_card = 1,
+			/datum/traitor_objective/assassinate/behead = 1,
+		) = 1,
+	)
+
 ///base objective prototype
 /datum/traitor_objective/assassinate
 	name = "Assassinate \[TARGET], the \[JOB TITLE]."
@@ -9,6 +24,12 @@
 	progression_reward = list(8 MINUTES, 12 MINUTES)
 	telecrystal_reward = 0
 
+	/**
+	 * Makes the objective only set heads as targets when true, and block them from being targets when false.
+	 * This also blocks the objective from generating UNTIL the un-heads_of_staff version (WHICH SHOULD BE A DIRECT PARENT) is completed.
+	 * example: calling card objective, you kill someone, you unlock the chance to roll a head of staff target version of calling card.
+	 */
+	var/heads_of_staff = FALSE
 	///target we need to kill
 	var/mob/living/kill_target
 
@@ -66,11 +87,14 @@
 	//you cannot plant anything on someone who is gone gone, so even if this happens after you're still liable to fail
 	fail_objective(penalty = FALSE)
 
+/datum/traitor_objective/assassinate/calling_card/heads_of_staff
+	heads_of_staff = TRUE
+
 /datum/traitor_objective/assassinate/behead
 	name = "Behead \[TARGET], the \[JOB TITLE]."
 	description = "Behead and hold your target's head to succeed this objective."
 
-	///
+	///the body who needs to hold the head
 	var/mob/living/needs_to_hold_head
 	///the head that needs to be picked up
 	var/obj/item/bodypart/head/behead_goal
@@ -116,7 +140,17 @@
 		//no longer can be beheaded
 		fail_objective()
 
+/datum/traitor_objective/assassinate/behead/heads_of_staff
+	heads_of_staff = TRUE
+
 /datum/traitor_objective/assassinate/generate_objective(datum/mind/generating_for, list/possible_duplicates)
+
+	var/parent_type = type2parent(type)
+	//don't roll head of staff types if you haven't completed the normal version
+	if(heads_of_staff && !handler.get_completion_count(parent_type))
+		// Locked if they don't have any of the risky bug room objective completed
+		return FALSE
+
 	var/list/possible_targets = list()
 	var/try_target_late_joiners = FALSE
 	if(generating_for.late_joiner)
@@ -131,6 +165,13 @@
 			continue
 		if(!HAS_TRAIT(SSstation, STATION_TRAIT_LATE_ARRIVALS) && istype(target_area, /area/shuttle/arrival))
 			continue
+		//removes heads of staff from being targets from non heads of staff assassinations, and vice versa
+		if(heads_of_staff)
+			if(!(possible_target.assigned_role.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND))
+				continue
+		else
+			if((possible_target.assigned_role.departments_bitflags & DEPARTMENT_BITFLAG_COMMAND))
+				continue
 		possible_targets += possible_target
 	if(try_target_late_joiners)
 		var/list/all_possible_targets = possible_targets.Copy()
