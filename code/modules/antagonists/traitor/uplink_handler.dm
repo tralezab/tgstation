@@ -90,7 +90,7 @@
 				break
 			target_list = objective_typepath
 			objective_typepath = pick_weight(objective_typepath)
-		if(islist(objective_typepath))
+		if(islist(objective_typepath) || !objective_typepath)
 			continue
 		var/datum/traitor_objective/objective = new objective_typepath(src)
 		if(!objective.generate_objective(owner, potential_duplicate_objectives[objective_typepath]))
@@ -137,8 +137,6 @@
 	potential_objectives -= to_remove
 	active_objectives -= to_remove
 	completed_objectives += to_remove
-	for(var/datum/traitor_objective/objective as anything in active_objectives)
-		objective.update_progression_cost()
 	update_objectives()
 	generate_objectives()
 
