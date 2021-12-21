@@ -698,8 +698,8 @@
 	name = "Bounty Hunter Ship"
 
 /datum/map_template/shuttle/battlecruiser/starfury
+	suffix = "starfury"
 	name = "SBC Starfury"
-	port_id = "battlecruiser"
 
 /datum/map_template/shuttle/ruin/caravan_victim
 	suffix = "caravan_victim"
