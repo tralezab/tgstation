@@ -525,7 +525,6 @@
 	dir = 8
 	},
 /obj/machinery/airalarm/directional/west{
-	pixel_x = -24;
 	req_access = 150
 	},
 /obj/machinery/shieldgen{
@@ -584,7 +583,6 @@
 	dir = 8
 	},
 /obj/machinery/airalarm/directional/east{
-	pixel_x = 24;
 	req_access = 150
 	},
 /obj/machinery/shieldgen{
@@ -2329,14 +2327,14 @@
 /obj/item/bedsheet/black{
 	layer = 3
 	},
-/obj/effect/mob_spawn/ghost_role{
-	dir = 4
-	},
 /obj/effect/turf_decal/tile/red{
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/red{
 	dir = 8
+	},
+/obj/effect/mob_spawn/ghost_role/human/syndicate/battlecruiser/assault{
+	dir = 4
 	},
 /turf/open/floor/iron/dark,
 /area/shuttle/sbc_starfury)
@@ -2635,12 +2633,12 @@
 /obj/item/bedsheet/black{
 	layer = 3
 	},
-/obj/effect/mob_spawn/ghost_role{
-	dir = 8
-	},
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
+	},
+/obj/effect/mob_spawn/ghost_role/human/syndicate/battlecruiser{
+	dir = 8
 	},
 /turf/open/floor/iron/dark,
 /area/shuttle/sbc_starfury)
@@ -2756,14 +2754,14 @@
 /obj/item/bedsheet/black{
 	layer = 3
 	},
-/obj/effect/mob_spawn/ghost_role{
-	dir = 4
-	},
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
 	},
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
+	},
+/obj/effect/mob_spawn/ghost_role/human/syndicate/battlecruiser{
+	dir = 4
 	},
 /turf/open/floor/iron/dark,
 /area/shuttle/sbc_starfury)
@@ -3496,7 +3494,6 @@
 /obj/item/ammo_box/magazine/sniper_rounds,
 /obj/item/gun/ballistic/automatic/sniper_rifle/syndicate,
 /obj/machinery/airalarm/directional/east{
-	pixel_x = 24;
 	req_access = 150
 	},
 /obj/machinery/light{
@@ -3514,12 +3511,12 @@
 /obj/item/bedsheet/black{
 	layer = 3
 	},
-/obj/effect/mob_spawn/ghost_role{
-	dir = 8
-	},
 /obj/effect/turf_decal/tile/red,
 /obj/effect/turf_decal/tile/red{
 	dir = 4
+	},
+/obj/effect/mob_spawn/ghost_role/human/syndicate/battlecruiser/assault{
+	dir = 8
 	},
 /turf/open/floor/iron/dark,
 /area/shuttle/sbc_starfury)
@@ -3634,7 +3631,7 @@
 /obj/item/bedsheet/syndie{
 	layer = 3
 	},
-/obj/effect/mob_spawn/ghost_role{
+/obj/effect/mob_spawn/ghost_role/human/syndicate/battlecruiser/captain{
 	dir = 4
 	},
 /turf/open/floor/carpet,
@@ -4025,6 +4022,7 @@
 /turf/open/floor/plating,
 /area/shuttle/sbc_starfury)
 "js" = (
+/obj/machinery/power/port_gen/pacman/super,
 /turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "jv" = (
@@ -4103,10 +4101,11 @@
 /turf/open/floor/plating,
 /area/shuttle/sbc_starfury)
 "jK" = (
-/obj/machinery/power/supermatter_crystal/shard{
-	anchored = 1;
-	engineering_channel = "Syndicate"
+/obj/structure/sign/warning/electricshock{
+	pixel_y = 32
 	},
+/obj/machinery/power/port_gen/pacman/super,
+/obj/structure/cable/layer1,
 /turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "jM" = (
@@ -4184,8 +4183,16 @@
 /turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "jY" = (
-/obj/structure/grille,
-/obj/structure/window/reinforced/plasma/fulltile,
+/obj/structure/rack,
+/obj/item/stack/sheet/mineral/uranium{
+	amount = 50
+	},
+/obj/item/stack/sheet/mineral/uranium{
+	amount = 50
+	},
+/obj/item/stack/sheet/mineral/uranium{
+	amount = 50
+	},
 /turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "kb" = (
@@ -4251,6 +4258,7 @@
 	name = "Supermatter Chamber";
 	req_access_txt = "150"
 	},
+/obj/structure/barricade/wooden/crude,
 /turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "ki" = (
@@ -4322,7 +4330,6 @@
 /area/shuttle/sbc_starfury)
 "kp" = (
 /obj/machinery/airalarm/directional/west{
-	pixel_x = -24;
 	req_access = 150
 	},
 /obj/effect/turf_decal/tile/yellow{
@@ -4361,7 +4368,6 @@
 /area/shuttle/sbc_starfury)
 "ky" = (
 /obj/machinery/airalarm/directional/east{
-	pixel_x = 24;
 	req_access = 150
 	},
 /obj/effect/turf_decal/tile/yellow,
@@ -4392,23 +4398,8 @@
 	},
 /turf/open/floor/iron,
 /area/shuttle/sbc_starfury)
-"kD" = (
-/obj/structure/sign/warning/electricshock,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
-/area/shuttle/sbc_starfury)
-"kE" = (
-/obj/machinery/door/airlock/engineering/glass{
-	heat_proof = 1;
-	id_tag = "syndie_battlecruiser_smbolt";
-	name = "Supermatter Chamber";
-	req_access_txt = "150"
-	},
-/obj/effect/turf_decal/delivery,
-/turf/open/floor/engine,
-/area/shuttle/sbc_starfury)
 "kF" = (
-/obj/structure/sign/warning/fire,
-/turf/closed/wall/mineral/plastitanium/nodiagonal,
+/turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "kG" = (
 /obj/effect/turf_decal/delivery,
@@ -4514,22 +4505,6 @@
 "kX" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
-	},
-/obj/machinery/button/door{
-	id = "syndie_battlecruiser_sm";
-	name = "Radiation Shutters";
-	pixel_x = 6;
-	pixel_y = 24;
-	req_access_txt = "150"
-	},
-/obj/machinery/button/door{
-	id = "syndie_battlecruiser_smbolt";
-	name = "Supermatter Bolt Control";
-	normaldoorcontrol = 1;
-	pixel_x = -6;
-	pixel_y = 24;
-	req_access_txt = "151";
-	specialfunctions = 4
 	},
 /obj/structure/cable/layer1,
 /turf/open/floor/engine,
@@ -4693,6 +4668,7 @@
 	req_access_txt = "150"
 	},
 /obj/structure/cable,
+/obj/structure/barricade/wooden/crude,
 /turf/open/floor/plating,
 /area/shuttle/sbc_starfury)
 "lB" = (
@@ -4903,6 +4879,7 @@
 /area/shuttle/sbc_corvette)
 "lZ" = (
 /obj/machinery/computer/shuttle{
+	dir = 8;
 	icon_keyboard = "syndie_key";
 	icon_screen = "syndishuttle";
 	light_color = "#FA8282";
@@ -5030,7 +5007,9 @@
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/sbc_corvette)
 "mj" = (
-/obj/machinery/computer/secure_data,
+/obj/machinery/computer/secure_data{
+	dir = 1
+	},
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
@@ -5097,16 +5076,9 @@
 /turf/closed/wall/mineral/plastitanium/nodiagonal,
 /area/shuttle/sbc_corvette)
 "mo" = (
-/obj/machinery/power/emitter{
-	!INVALID_VAR! = 2;
-	anchored = 1;
-	dir = 4
-	},
-/obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/obj/structure/cable,
-/turf/open/floor/plating,
+/obj/machinery/power/port_gen/pacman/super,
+/obj/structure/cable/layer1,
+/turf/open/floor/engine,
 /area/shuttle/sbc_starfury)
 "mp" = (
 /obj/structure/reflector/box{
@@ -5116,15 +5088,7 @@
 /turf/open/floor/iron/dark,
 /area/shuttle/sbc_starfury)
 "mq" = (
-/obj/machinery/power/emitter{
-	!INVALID_VAR! = 2;
-	anchored = 1;
-	dir = 8
-	},
-/obj/effect/turf_decal/stripes/line{
-	dir = 8
-	},
-/obj/structure/cable,
+/obj/machinery/power/emitter,
 /turf/open/floor/plating,
 /area/shuttle/sbc_starfury)
 "mr" = (
@@ -6368,7 +6332,7 @@ lk
 lA
 aS
 aH
-aH
+mq
 ae
 aH
 mN
@@ -6427,11 +6391,11 @@ iF
 ae
 ae
 jY
-jY
+jM
 jY
 ae
-ae
-kD
+kF
+kF
 kU
 lm
 ae
@@ -6496,17 +6460,17 @@ iG
 ae
 ae
 js
-js
+jM
 js
 ae
-kt
-ae
+kF
+kF
 kV
 ln
 lB
 lH
-mo
-mo
+lH
+lH
 ae
 aH
 mB
@@ -6564,12 +6528,12 @@ ae
 ae
 ae
 ae
-js
 jK
-js
+jM
+mo
 kh
-ku
-kE
+kF
+kF
 kW
 ku
 lB
@@ -6634,17 +6598,17 @@ gA
 ae
 ae
 js
-js
+jM
 js
 ae
-kv
-ae
+kF
+kF
 kX
 lp
 lB
 lJ
-mq
-mq
+lJ
+lJ
 ae
 aH
 mB
@@ -6703,10 +6667,10 @@ ec
 ae
 ae
 jY
-jY
+jM
 jY
 ae
-ae
+kF
 kF
 kU
 lm
