@@ -91,7 +91,7 @@
 			to_chat(user, span_danger("The card reports a long-range message already sent to the Syndicate fleet...?"))
 			return
 		battlecruiser_called = TRUE
-		summon_battlecruiser()
+		//summon_battlecruiser()
 		return
 	if(obj_flags & EMAGGED)
 		return
