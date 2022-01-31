@@ -65,6 +65,10 @@
 
 		"Families": {
 			"weight": 0
+		},
+
+		"Thief": {
+			"weight": 0
 		}
 	},
 
@@ -132,6 +136,10 @@
 		},
 
 		"Heretic Smuggler": {
+			"weight": 0
+		},
+
+		"Opportunist": {
 			"weight": 0
 		}
 	}
