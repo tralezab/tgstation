@@ -1,13 +1,3 @@
-
-/*
-* The proc for commending people, with options and logging.
-*
-* Arguments:
-* * from: mob, The reference to the mob who sent the commendation, just for the purposes of logging
-* * commend_type: typepath, What commendation is being applied, can be any subtype of /datum/commendation
-* * instant: bool, If TRUE (or if the round is already over), we'll give them the commendation now, if FALSE, we wait until the end of the round (which is the standard behavior)
-*/
-
 /**
  * ### plan_commendation
  *
