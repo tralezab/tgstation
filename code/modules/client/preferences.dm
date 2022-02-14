@@ -53,10 +53,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 	var/action_buttons_screen_locs = list()
 
-	///Someone thought we were nice! We get a little heart in OOC until we join the server past the below time (we can keep it until the end of the round otherwise)
-	var/hearted
-	///If we have a hearted commendations, we honor it every time the player loads preferences until this time has been passed
-	var/hearted_until
 	/// If we have persistent scars enabled
 	var/persistent_scars = TRUE
 	///What outfit typepaths we've favorited in the SelectEquipment menu

@@ -316,6 +316,9 @@ GLOBAL_LIST_INIT(preference_entries_by_key, init_preference_entries_by_key())
 	SHOULD_CALL_PARENT(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
 
+	if(category == PREFERENCE_CATEGORY_HIDDEN)
+		return FALSE
+
 	if (!isnull(relevant_mutant_bodypart) || !isnull(relevant_species_trait))
 		var/species_type = preferences.read_preference(/datum/preference/choiced/species)
 

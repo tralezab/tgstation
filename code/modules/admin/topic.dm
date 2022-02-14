@@ -1913,16 +1913,32 @@
 		poll_option_parse_href(href_list, poll, option)
 
 	else if(href_list["admincommend"])
-		var/mob/heart_recepient = locate(href_list["admincommend"])
-		if(!heart_recepient?.ckey)
+		var/mob/recepient = locate(href_list["admincommend"])
+		if(!recepient?.ckey)
 			to_chat(usr, span_warning("This mob either no longer exists or no longer is being controlled by someone!"))
 			return
 
+		var/list/all_commendation_types = subtypesof(/datum/commendation)
+		var/list/possible_commendation_types = list()
+		for(var/datum/commendation/commend_type as anything in all_commendation_types)
+			var/permission_level = initial(commend_type.rank_to_admin_award)
+			if(permission_level && check_rights(permission_level, FALSE))
+				possible_commendation_types[initial(commend_type.name)] = commend_type
+
+		if(!possible_commendation_types.len)
+			to_chat(usr, "<font color='red'>Error: You do not have sufficient rights to give any commendations.</font>", confidential = TRUE)
+			return
+
+		var/chosen = tgui_input_list(usr, "Choose a Commendation!", "Did someone fix genetics yet", possible_commendation_types)
+		if(!chosen)
+			return
+		chosen = possible_commendation_types[chosen]
+
 		switch(tgui_alert(usr, "Would you like the effects to apply immediately or at the end of the round? Applying them now will make it clear it was an admin commendation.", "<3?", list("Apply now", "Apply at round end", "Cancel")))
 			if("Apply now")
-				heart_recepient.receive_heart(usr, instant = TRUE)
+				recepient.plan_commendation(usr, chosen, instant = TRUE)
 			if("Apply at round end")
-				heart_recepient.receive_heart(usr)
+				recepient.plan_commendation(usr, chosen)
 			else
 				return
 

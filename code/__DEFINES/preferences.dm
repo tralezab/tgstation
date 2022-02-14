@@ -145,6 +145,10 @@
 /// such as hair color being affixed to hair.
 #define PREFERENCE_CATEGORY_SUPPLEMENTAL_FEATURES "supplemental_features"
 
+/// These are preferences that are never shown anywhere.
+/// One good example is commendations. Commendations are given to players, but cannot be set by players themselves.
+#define PREFERENCE_CATEGORY_HIDDEN "hidden"
+
 // Playtime is tracked in minutes
 /// The time needed to unlock hardcore random mode in preferences
 #define PLAYTIME_HARDCORE_RANDOM 120 // 2 hours

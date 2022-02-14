@@ -52,6 +52,13 @@ When using time2text(), please use "DDD" to find the weekday. Refrain from using
 
 #define HOURS MINUTES*60
 
+///Days are not exactly 24 hours, but it's close enough.
+#define DAYS HOURS*24
+
+///okay, so this is going by the AVERAGE month duration, floored. If you want exact specifics, you may want to consult /datum/foreign_calendar
+///to see if leap years are right for you.
+#define MONTHS DAYS*30
+
 #define TICKS *world.tick_lag
 
 #define MILLISECONDS * 0.01

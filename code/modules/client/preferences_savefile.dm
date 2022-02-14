@@ -179,10 +179,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["toggles"], toggles)
 	READ_FILE(S["ignoring"], ignoring)
 
-	// OOC commendations
-	READ_FILE(S["hearted_until"], hearted_until)
-	if(hearted_until > world.realtime)
-		hearted = TRUE
 	//favorite outfits
 	READ_FILE(S["favorite_outfits"], favorite_outfits)
 
@@ -266,7 +262,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["chat_toggles"], chat_toggles)
 	WRITE_FILE(S["ignoring"], ignoring)
 	WRITE_FILE(S["key_bindings"], key_bindings)
-	WRITE_FILE(S["hearted_until"], (hearted_until > world.realtime ? hearted_until : null))
 	WRITE_FILE(S["favorite_outfits"], favorite_outfits)
 	return TRUE
 

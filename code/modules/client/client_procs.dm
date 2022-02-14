@@ -1060,16 +1060,6 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 /client/proc/get_award_status(achievement_type, mob/user, value = 1)
 	return player_details.achievements.get_achievement_status(achievement_type)
 
-///Gives someone hearted status for OOC, from behavior commendations
-/client/proc/adjust_heart(duration = 24 HOURS)
-	var/new_duration = world.realtime + duration
-	if(prefs.hearted_until > new_duration)
-		return
-	to_chat(src, span_nicegreen("Someone awarded you a heart!"))
-	prefs.hearted_until = new_duration
-	prefs.hearted = TRUE
-	prefs.save_preferences()
-
 /// compiles a full list of verbs and sends it to the browser
 /client/proc/init_verbs()
 	if(IsAdminAdvancedProcCall())

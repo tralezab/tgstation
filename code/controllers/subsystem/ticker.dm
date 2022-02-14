@@ -57,7 +57,7 @@ SUBSYSTEM_DEF(ticker)
 	var/end_state = "undefined"
 
 	/// People who have been commended and will receive a heart
-	var/list/hearts
+	var/list/roundend_commendations
 
 	/// Why an emergency shuttle was called
 	var/emergency_reason
