@@ -242,3 +242,8 @@ GLOBAL_LIST_INIT(ai_employers, list(
 #define OBJECTIVE_STATE_FAILED 4
 /// If the objective is no longer valid
 #define OBJECTIVE_STATE_INVALID 5
+
+#define BLOODY_LUST_INACTIVE 0
+#define BLOODY_LUST_SOON 1
+#define BLOODY_LUST_IMMINENT 2
+#define BLOODY_LUST_ACTIVE 3

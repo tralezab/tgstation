@@ -800,6 +800,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait granted by [/mob/living/silicon/robot]
 /// Traits applied to a silicon mob by their model.
 #define MODEL_TRAIT "model_trait"
+/// Traits from the bloody lust antag datum.
+#define BLOODY_LUST_ADDICT_TRAIT "bloody_lust_addict"
 
 /// Trait granted by [mob/living/silicon/ai]
 /// Applied when the ai anchors itself

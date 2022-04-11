@@ -16,6 +16,7 @@
 #define ROLE_MALF "Malf AI"
 #define ROLE_OPERATIVE "Operative"
 #define ROLE_THIEF "Thief"
+#define ROLE_BLOODY_LUST_ADDICT "Bloody Lust Addict"
 #define ROLE_TRAITOR "Traitor"
 #define ROLE_WIZARD "Wizard"
 
