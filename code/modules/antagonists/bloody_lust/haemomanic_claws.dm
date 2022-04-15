@@ -22,8 +22,9 @@
 		return
 	addtimer(CALLBACK(other_claw, .proc/attempt_second_swipe), 3)
 
-/obj/item/hand/haemomanic/proc/attempt_second_swipe(var/mob/living/carbon/human/addict, atom/target)
-	if(!user || !target || get_dist(user, target) > 1)
+/obj/item/hand/haemomanic/proc/attempt_second_swipe(mob/living/carbon/human/addict, atom/target)
+	if(!addict || !target || get_dist(addict, target) > 1)
+		return //no longer valid swipe
 	melee_attack_chain(addict, target)
 
 /obj/item/hand/haemomanic/afterattack_secondary(atom/target, mob/user, proximity_flag, click_parameters)

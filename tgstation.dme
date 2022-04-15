@@ -2013,7 +2013,7 @@
 #include "code\modules\antagonists\blob\structures\node.dm"
 #include "code\modules\antagonists\blob\structures\resource.dm"
 #include "code\modules\antagonists\blob\structures\shield.dm"
-#include "code\modules\antagonists\bloody_lust\bloody_deformities.dm"
+#include "code\modules\antagonists\bloody_lust\bloody_limbs.dm"
 #include "code\modules\antagonists\bloody_lust\bloody_lust.dm"
 #include "code\modules\antagonists\bloody_lust\haemomanic_claws.dm"
 #include "code\modules\antagonists\brainwashing\brainwashing.dm"

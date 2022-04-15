@@ -333,6 +333,8 @@
 	var/mob/living/carbon/human/H = mymob
 	if(!istype(H) || !H.dna.species)
 		return
+	var/list/limb_blocks = list()
+	for(var/obj/item/bodypart/bodypart as anything in H.get_missing_limbs())
 	var/datum/species/S = H.dna.species
 	for(var/atom/movable/screen/inventory/inv in (static_inventory + toggleable_inventory))
 		if(inv.slot_id)
