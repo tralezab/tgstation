@@ -30,6 +30,7 @@
 		if(BLOODY_LUST_INACTIVE)
 			next_phase_in = 8 MINUTES
 			phase_message = span_boldnotice("The bloody lust subsides... for now. Your genes have been left permanently modified from the transformation, and you should do your best to hide your new deformities.")
+			apply_mutations()
 			ADD_TRAIT(addict, TRAIT_PACIFISM, BLOODY_LUST_ADDICT_TRAIT)
 			addict.stop_sound_channel(CHANNEL_HEARTBEAT)
 		if(BLOODY_LUST_SOON)
@@ -78,6 +79,10 @@
 /datum/antagonist/bloody_lust/proc/advance_phase()
 	transformation_state = WRAP(transformation_state++, BLOODY_LUST_INACTIVE, BLOODY_LUST_ACTIVE)
 	apply_phase_effects()
+
+/datum/antagonist/bloody_lust/proc/apply_mutations()
+	//add a mutation depending on how many transformations
+	return
 
 /datum/antagonist/bloody_lust/vv_edit_var(vname, vval)
 	. = ..()
