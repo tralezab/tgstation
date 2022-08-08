@@ -1101,7 +1101,6 @@
 #include "code\datums\mapgen\_MapGenerator.dm"
 #include "code\datums\mapgen\CaveGenerator.dm"
 #include "code\datums\mapgen\JungleGenerator.dm"
-#include "code\datums\mapgen\lavaland_cave_gen.dm"
 #include "code\datums\mapgen\biomes\_biome.dm"
 #include "code\datums\mapgen\biomes\biome_applier.dm"
 #include "code\datums\mapgen\biomes\bileworm_superhive\superhive_biome.dm"
