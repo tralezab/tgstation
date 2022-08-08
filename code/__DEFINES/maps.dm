@@ -176,6 +176,9 @@ Always compile, always use that verb, and always make sure that it works for wha
 #define PERLIN_LAYER_HUMIDITY "perlin_humidity"
 #define PERLIN_LAYER_HEAT "perlin_heat"
 
+#define BIOME_IS_NOT_MOUNTAINS "biome_no_mountains"
+#define BIOME_IS_MOUNTAINS "biome_mountains"
+
 #define BIOME_LOW_HEAT "low_heat"
 #define BIOME_LOWMEDIUM_HEAT "lowmedium_heat"
 #define BIOME_HIGHMEDIUM_HEAT "highmedium_heat"
@@ -185,8 +188,6 @@ Always compile, always use that verb, and always make sure that it works for wha
 #define BIOME_LOWMEDIUM_HUMIDITY "lowmedium_humidity"
 #define BIOME_HIGHMEDIUM_HUMIDITY "highmedium_humidity"
 #define BIOME_HIGH_HUMIDITY "high_humidity"
-
-//lavaland perlin
 
 #define BIOME_LOW_CORRUPTION "low_corruption"
 #define BIOME_LOWMEDIUM_CORRUPTION "lowmedium_corruption"
@@ -200,13 +201,6 @@ Always compile, always use that verb, and always make sure that it works for wha
 #define BIOME_UNTAMED "highmedium_wildness"
 #define BIOME_WILD "high_wildness"
 
-#define  WILDNESS_START_X_LEVEL 35
-#define  WILDNESS_MID1_X_LEVEL 74
-#define  WILDNESS_MID2_X_LEVEL 113
-#define  WILDNESS_MID3_X_LEVEL 152
-#define  WILDNESS_MID4_X_LEVEL 191
-#define  WILDNESS_END_X_LEVEL 230
-
 #define  CORRUPTION_START_Y_LEVEL 35
 #define  CORRUPTION_MID1_Y_LEVEL 74
 #define  CORRUPTION_MID2_Y_LEVEL 113
@@ -214,8 +208,8 @@ Always compile, always use that verb, and always make sure that it works for wha
 #define  CORRUPTION_MID4_Y_LEVEL 191
 #define  CORRUPTION_END_Y_LEVEL 230
 
-///the random offset applied to square coordinates, causes intermingling at biome borders
-#define BIOME_RANDOM_SQUARE_DRIFT 2
+///the random offset applied to square coordinates, causes intermingling at BIOME borders
+#define DEFAULT_BIOME_RANDOM_SQUARE_DRIFT 2
 
 // Bluespace shelter deploy checks for survival capsules
 /// Shelter spot is allowed

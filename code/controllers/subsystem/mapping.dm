@@ -34,8 +34,8 @@ SUBSYSTEM_DEF(mapping)
 	var/list/reservation_ready = list()
 	var/clearing_reserved_turfs = FALSE
 
-	///All possible biomes in assoc list as type || instance
-	var/list/biomes = list()
+	///All possible terrains in assoc list as type || instance
+	var/list/terrains = list()
 
 	// Z-manager stuff
 	var/station_start  // should only be used for maploading-related tasks
@@ -72,7 +72,7 @@ SUBSYSTEM_DEF(mapping)
 		if(!config || config.defaulted)
 			to_chat(world, span_boldannounce("Unable to load next or default map config, defaulting to Meta Station."))
 			config = old_config
-	initialize_biomes()
+	initialize_terrains()
 	loadWorld()
 	determine_fake_sale()
 	repopulate_sorted_areas()
@@ -641,11 +641,11 @@ GLOBAL_LIST_EMPTY(the_station_areas)
 	used_turfs.Cut()
 	reserve_turfs(clearing)
 
-///Initialize all biomes, assoc as type || instance
-/datum/controller/subsystem/mapping/proc/initialize_biomes()
-	for(var/biome_path in subtypesof(/datum/biome))
-		var/datum/biome/biome_instance = new biome_path()
-		biomes[biome_path] += biome_instance
+///Initialize all terrains, assoc as type || instance
+/datum/controller/subsystem/mapping/proc/initialize_terrains()
+	for(var/terrain_path in subtypesof(/datum/terrain))
+		var/datum/terrain/terrain_instance = new terrain_path()
+		terrains[terrain_path] += terrain_instance
 
 /datum/controller/subsystem/mapping/proc/reg_in_areas_in_z(list/areas)
 	for(var/B in areas)
