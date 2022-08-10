@@ -31,7 +31,11 @@
 	///Weighted list of the types that spawns if the turf is closed
 	closed_turf_types = list(/turf/closed/wall/material/wax = 1)
 
-
+	mob_spawn_list = list(
+		/mob/living/basic/blessmite = 1,
+		/mob/living/basic/waxweaver = 1,
+		/mob/living/basic/bileworm = 1,
+	)
 
 /area/ruin/beehive
 	name = "Beehive"
@@ -45,7 +49,7 @@
 	turf_type = /turf/closed/wall/material/wax
 
 /datum/terrain/bee_core
-	turf_type = /turf/open/floor/mineral/wax
+	turf_type = /turf/open/floor/mineral/wax/lavaland_atmos
 
 
 
@@ -63,10 +67,11 @@
 
 /turf/open/floor/mineral/wax
 	name = "waxy floor"
-	icon_state = "gold"
+	icon = 'icons/turf/floors/material_colored.dmi'
+	icon_state = "dirt"
 	material_flags = MATERIAL_GREYSCALE | MATERIAL_EFFECTS
 	floor_tile = /obj/item/stack/tile/mineral/gold
-	icons = list("wax","wax_dam")
+	icons = list("dirt","dirt_dam")
 	custom_materials = list(/datum/material/gold = 500)
 
 /turf/open/floor/mineral/wax/lavaland_atmos

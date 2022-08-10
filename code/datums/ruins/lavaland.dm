@@ -258,7 +258,7 @@
 	suffix = "lavaland_surface_beehive.dmm"
 	cost = 0
 	always_place = TRUE
-  allow_duplicates = FALSE
+	allow_duplicates = FALSE
 
 /datum/map_template/ruin/lavaland/bileworm_nest
 	name = "Bileworm Nest"
@@ -266,6 +266,6 @@
 	description = "A small sanctuary from the harsh wilderness... if you're a bileworm, that is."
 	cost = 5
 	suffix = "lavaland_surface_bileworm_nest.dmm"
-  allow_duplicates = FALSE
+	allow_duplicates = FALSE
 
 
