@@ -96,6 +96,29 @@ GLOBAL_LIST_INIT(infuser_entries, prepare_entries())
 	)
 	infusion_desc = "nomadic"
 
+/datum/infuser_entry/spider
+	name = "Spider"
+	infuse_mob_name = "arachnid"
+	desc = "Nature's handymen, constructing all kinds of little forts. Very useful when applied to humans!"
+	threshold_desc = "you grow some more arms to work with, and discover the secret of web-tunnelling!"
+	qualities = list(
+		"uses webs to construct homes anywhere",
+		"mind sharp, good at construction in general",
+		"arms are small and drop things in a scuffle",
+		"webspinning = hungry",
+		"hunger only sated by the finest of bug-only diets",
+	)
+	input_obj_or_mob = list(
+		/mob/living/simple_animal/hostile/giant_spider,
+	)
+	output_organs = list(
+		/obj/item/organ/internal/eyes/night_vision/rat,
+		/obj/item/organ/internal/stomach/rat,
+		/obj/item/organ/internal/heart/rat,
+		/obj/item/organ/internal/tongue/rat,
+	)
+	infusion_desc = "chitinous"
+
 /datum/infuser_entry/felinid
 	name = "Cat"
 	infuse_mob_name = "feline"
