@@ -5,20 +5,21 @@
 
 #define SPIDER_COLORS SPIDER_ORGAN_COLOR + SPIDER_SCLERA_COLOR + SPIDER_PUPIL_COLOR
 
-///bonus of the spider: you grow more arms
+///bonus of the spider: you learn how to web-tunnel
 /datum/status_effect/organ_set_bonus/spider
-	organs_needed = 4
-	bonus_activate_text = span_notice("Spider DNA crawls under your skin! You've learned how to create web-tunnels, and your arms begin to split?!")
-	bonus_deactivate_text = span_notice("Your DNA is no longer majority spider, and your arms return to normal.")
+	organs_needed = 5
+	bonus_activate_text = span_notice("Spider DNA crawls under your skin! You've learned how to create web-tunnels.")
+	bonus_deactivate_text = span_notice("Your DNA is no longer majority spider, and so goes your web-tunnelling.")
 
 /datum/status_effect/organ_set_bonus/spider/enable_bonus()
 	. = ..()
-	ADD_TRAIT(owner, TRAIT_VENTCRAWLER_NUDE, REF(src))
+	owner.mind.teach_crafting_recipe(/datum/crafting_recipe/webtunnel)
+	ADD_TRAIT(owner, WEBTUNNELLER, type)
 
 /datum/status_effect/organ_set_bonus/spider/disable_bonus()
 	. = ..()
-	REMOVE_TRAIT(owner, TRAIT_VENTCRAWLER_NUDE, REF(src))
-
+	//we can't remove the crafting recipe, but we can let them lose the benefit of it
+	REMOVE_TRAIT(owner, WEBTUNNELLER, type)
 
 
 ///way more health than normal eyes, so takes more flashes to get damaged.
