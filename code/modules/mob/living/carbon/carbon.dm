@@ -1046,17 +1046,17 @@
 	if(href_list[VV_HK_MODIFY_BODYPART])
 		if(!check_rights(R_SPAWN))
 			return
-		var/edit_action = input(usr, "What would you like to do?","Modify Body Part") as null|anything in list("replace","remove")
+		var/edit_action = tgui_input_list(usr, "What would you like to do?","Modify Body Part", list("Replace", "Remove"))
 		if(!edit_action)
 			return
 		var/list/limb_list = list()
-		if(edit_action == "remove")
-			for(var/obj/item/bodypart/B as anything in bodyparts)
-				limb_list += B.body_zone
+		if(edit_action == "Remove")
+			for(var/obj/item/bodypart/potentially_removable as anything in bodyparts)
+				limb_list += potentially_removable.body_zone
 				limb_list -= BODY_ZONE_CHEST
 		else
 			limb_list = list(BODY_ZONE_HEAD, BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_CHEST)
-		var/result = input(usr, "Please choose which bodypart to [edit_action]","[capitalize(edit_action)] Bodypart") as null|anything in sort_list(limb_list)
+		var/result = tgui_input_list(usr, "Please choose which bodypart to [edit_action]","[capitalize(edit_action)] Bodypart", sort_list(limb_list))
 		if(result)
 			var/obj/item/bodypart/BP = get_bodypart(result)
 			var/list/limbtypes = list()

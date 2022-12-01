@@ -1,13 +1,13 @@
 /client/proc/manipulate_organs(mob/living/carbon/C in world)
 	set name = "Manipulate Organs"
 	set category = "Debug"
-	var/operation = tgui_input_list(usr, "Select organ operation", "Organ Manipulation", list("add organ", "add implant", "drop organ/implant", "remove organ/implant"))
+	var/operation = tgui_input_list(usr, "Select organ operation", "Organ Manipulation", list("Add organ", "Add implant", "Drop organ/implant", "Remove organ/implant"))
 	if (isnull(operation))
 		return
 
 	var/list/organs = list()
 	switch(operation)
-		if("add organ")
+		if("Add organ")
 			for(var/path in subtypesof(/obj/item/organ))
 				var/dat = replacetext("[path]", "/obj/item/organ/", ":")
 				organs[dat] = path
@@ -23,7 +23,7 @@
 			log_admin("[key_name(usr)] has added organ [organ.type] to [key_name(C)]")
 			message_admins("[key_name_admin(usr)] has added organ [organ.type] to [ADMIN_LOOKUPFLW(C)]")
 
-		if("add implant")
+		if("Add implant")
 			for(var/path in subtypesof(/obj/item/implant))
 				var/dat = replacetext("[path]", "/obj/item/implant/", ":")
 				organs[dat] = path
@@ -39,7 +39,7 @@
 			log_admin("[key_name(usr)] has added implant [organ.type] to [key_name(C)]")
 			message_admins("[key_name_admin(usr)] has added implant [organ.type] to [ADMIN_LOOKUPFLW(C)]")
 
-		if("drop organ/implant", "remove organ/implant")
+		if("Drop organ/implant", "Remove organ/implant")
 			for(var/obj/item/organ/user_organs as anything in C.internal_organs)
 				organs["[user_organs.name] ([user_organs.type])"] = user_organs
 
@@ -67,7 +67,7 @@
 
 			organ.forceMove(get_turf(C))
 
-			if(operation == "remove organ/implant")
+			if(operation == "Remove organ/implant")
 				qdel(organ)
 			else if(I) // Put the implant in case.
 				var/obj/item/implantcase/case = new(get_turf(C))
