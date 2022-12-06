@@ -269,3 +269,15 @@ GLOBAL_LIST_INIT(ai_employers, list(
 #define OBJECTIVE_WEIGHT_HUGE 20
 
 #define REVENANT_NAME_FILE "revenant_names.json"
+
+//antag panel categories!
+
+///fails unit tests if you didn't set it. Shouldn't appear
+#define TP_CATEGORY_UNCATEGORIZED "Uncategorized"
+
+///traitors, but also brothers
+#define TP_CATEGORY_SYNDICATES "Syndicates"
+///just revs.
+#define TP_CATEGORY_REVOLUTIONARIES "Revolutionaries"
+///holiday related things.
+#define TP_CATEGORY_HOLIDAY "Holiday Roles"

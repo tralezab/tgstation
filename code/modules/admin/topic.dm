@@ -1064,23 +1064,7 @@
 		H.open_language_menu(usr)
 
 	else if(href_list["traitor"])
-		if(!check_rights(R_ADMIN))
-			return
-
-		if(!SSticker.HasRoundStarted())
-			tgui_alert(usr,"The game hasn't started yet!")
-			return
-
-		var/mob/M = locate(href_list["traitor"])
-		if(!ismob(M))
-			var/datum/mind/D = M
-			if(!istype(D))
-				to_chat(usr, "This can only be used on instances of type /mob and /mind", confidential = TRUE)
-				return
-			else
-				D.traitor_panel()
-		else
-			show_traitor_panel(M)
+		show_traitor_panel(locate(href_list["traitor"]) in GLOB.mob_list)
 
 	else if(href_list["skill"])
 		if(!check_rights(R_ADMIN))

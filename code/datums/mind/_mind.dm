@@ -208,16 +208,6 @@
 
 	var/self_antagging = usr == current
 
-	if(href_list["add_antag"])
-		add_antag_wrapper(text2path(href_list["add_antag"]),usr)
-
-	if(href_list["remove_antag"])
-		var/datum/antagonist/A = locate(href_list["remove_antag"]) in antag_datums
-		if(!istype(A))
-			to_chat(usr,span_warning("Invalid antagonist ref to be removed."))
-			return
-		A.admin_remove(usr)
-
 	if(href_list["open_antag_vv"])
 		var/datum/antagonist/to_vv = locate(href_list["open_antag_vv"]) in antag_datums
 		if(!istype(to_vv))

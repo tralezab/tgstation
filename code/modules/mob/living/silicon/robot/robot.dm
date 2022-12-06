@@ -458,8 +458,11 @@
 	update_icons()
 	if(emagged)
 		throw_alert(ALERT_HACKED, /atom/movable/screen/alert/hacked)
+		mind?.add_special_status("Emagged", is_positive = FALSE, icon = "credit-card")
 	else
 		clear_alert(ALERT_HACKED)
+		mind?.remove_special_status("Emagged")
+
 	set_modularInterface_theme()
 
 /// Special handling for getting hit with a light eater

@@ -2,7 +2,7 @@
 /datum/antagonist/nukeop/clownop
 	name = ROLE_CLOWN_OPERATIVE
 	roundend_category = "clown operatives"
-	antagpanel_category = "ClownOp"
+	antagpanel_category = TP_CATEGORY_SYNDICATES
 	nukeop_outfit = /datum/outfit/syndicate/clownop
 	suicide_cry = "HAPPY BIRTHDAY!!"
 

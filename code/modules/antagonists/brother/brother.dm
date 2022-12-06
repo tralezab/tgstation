@@ -1,6 +1,6 @@
 /datum/antagonist/brother
 	name = "\improper Brother"
-	antagpanel_category = "Brother"
+	antagpanel_category = TP_CATEGORY_SYNDICATES
 	job_rank = ROLE_BROTHER
 	var/special_role = ROLE_BROTHER
 	antag_hud_name = "brother"

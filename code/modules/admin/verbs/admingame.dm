@@ -410,20 +410,6 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	mob.lighting_alpha = mob.default_lighting_alpha()
 	mob.update_sight()
 
-/datum/admins/proc/show_traitor_panel(mob/target_mob in GLOB.mob_list)
-	set category = "Admin.Game"
-	set desc = "Edit mobs's memory and role"
-	set name = "Show Traitor Panel"
-	var/datum/mind/target_mind = target_mob.mind
-	if(!target_mind)
-		to_chat(usr, "This mob has no mind!", confidential = TRUE)
-		return
-	if(!istype(target_mob) && !istype(target_mind))
-		to_chat(usr, "This can only be used on instances of type /mob and /mind", confidential = TRUE)
-		return
-	target_mind.traitor_panel()
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Traitor Panel") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
 /datum/admins/proc/show_skill_panel(target)
 	set category = "Admin.Game"
 	set desc = "Edit mobs's experience and skill levels"

@@ -43,7 +43,7 @@ GLOBAL_LIST_EMPTY(antagonists)
 	///This will hide adding this antag type in antag panel, use only for internal subtypes that shouldn't be added directly but still show if possessed by mind
 	var/show_in_antagpanel = TRUE
 	///Antagpanel will display these together, REQUIRED
-	var/antagpanel_category = "Uncategorized"
+	var/antagpanel_category = TP_CATEGORY_UNCATEGORIZED
 	///Will append antagonist name in admin listings - use for categories that share more than one antag type
 	var/show_name_in_check_antagonists = FALSE
 	/// Should this antagonist be shown as antag to ghosts? Shouldn't be used for stealthy antagonists like traitors

@@ -27,6 +27,7 @@
 			removed(target, TRUE)
 			qdel(src)
 			return TRUE
+		target.mind.add_special_status("Mindshielded", is_positive = TRUE, icon = "shield")
 		if(SEND_SIGNAL(target.mind, COMSIG_MINDSHIELD_IMPLANTED, user) & COMPONENT_MINDSHIELD_DECONVERTED)
 			if(prob(1) || check_holidays(APRIL_FOOLS))
 				target.say("I'm out! I quit! Whose kidneys are these?", forced = "They're out! They quit! Whose kidneys do they have?")

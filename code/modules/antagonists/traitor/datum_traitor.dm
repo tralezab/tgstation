@@ -1,7 +1,7 @@
 /datum/antagonist/traitor
 	name = "\improper Traitor"
 	roundend_category = "traitors"
-	antagpanel_category = "Traitor"
+	antagpanel_category = TP_CATEGORY_SYNDICATES
 	job_rank = ROLE_TRAITOR
 	antag_moodlet = /datum/mood_event/focused
 	antag_hud_name = "traitor"
