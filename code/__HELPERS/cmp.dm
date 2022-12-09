@@ -171,3 +171,7 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 /// Orders heretic knowledge by priority
 /proc/cmp_heretic_knowledge(datum/heretic_knowledge/knowledge_a, datum/heretic_knowledge/knowledge_b)
 	return initial(knowledge_b.priority) - initial(knowledge_a.priority)
+
+/// Orders antagonist group by group name
+/proc/cmp_antag_groups(list/group_a, list/group_b)
+	return sorttext(group_a["name"], group_a["name"])

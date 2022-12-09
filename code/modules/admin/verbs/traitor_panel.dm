@@ -119,7 +119,7 @@
 		//populating categories
 		categories |= group["categories"]
 
-	groups = flatten_list(name2group)
+	groups = sortTim(flatten_list(name2group), GLOBAL_PROC_REF(cmp_antag_groups))
 
 /datum/traitor_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	if(..())

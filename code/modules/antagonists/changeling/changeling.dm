@@ -10,6 +10,7 @@
 	name = "\improper Changeling"
 	roundend_category = "changelings"
 	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_ALIENS)
+	traitor_panel_group = "Changeling"
 	job_rank = ROLE_CHANGELING
 	antag_moodlet = /datum/mood_event/focused
 	antag_hud_name = "changeling"

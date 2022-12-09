@@ -1,3 +1,4 @@
+import { paginate } from 'common/collections';
 import { BooleanLike } from 'common/react';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Dimmer, Icon, Input, Section, Stack, Tabs } from '../components';
@@ -162,25 +163,30 @@ export const AntagonistList = (props, context) => {
     return cat2icon[cat];
   });
 
-  const antagonistGroups = allGroups.filter((antagGroup) => {
-    if (!searchQuery) {
-      if (categorizeSetting === 2) {
+  const showTabs = categorizeSetting !== 2 && !searchQuery;
+
+  const antagonistGroups = paginate(
+    allGroups.filter((antagGroup) => {
+      if (!searchQuery) {
+        if (categorizeSetting === 2) {
+          return true;
+        }
+        return antagGroup.categories.includes(category);
+      }
+      // antag name search check
+      if (antagGroup.name.toLowerCase().includes(searchQuery)) {
         return true;
       }
-      return antagGroup.categories.includes(category);
-    }
-    // antag name search check
-    if (antagGroup.name.toLowerCase().includes(searchQuery)) {
-      return true;
-    }
-    // antag subcategory search check
-    for (const antag of antagGroup.antagonists) {
-      if (antag.name.toLowerCase().includes(searchQuery)) {
-        return true;
+      // antag subcategory search check
+      for (const antag of antagGroup.antagonists) {
+        if (antag.name.toLowerCase().includes(searchQuery)) {
+          return true;
+        }
       }
-    }
-    return false;
-  });
+      return false;
+    }),
+    !showTabs ? 2 : 1
+  );
 
   const handleCategorizeChange = (newSetting: 0 | 1 | 2) => {
     setCategorizeSetting(newSetting);
@@ -232,7 +238,7 @@ export const AntagonistList = (props, context) => {
         </Stack>
       </Box>
       <Stack>
-        {categorizeSetting !== 2 && !searchQuery && (
+        {showTabs && (
           <>
             <Stack.Item grow>
               <Tabs vertical>
@@ -252,8 +258,14 @@ export const AntagonistList = (props, context) => {
         )}
         <Stack.Item grow={2}>
           <Stack vertical fill>
-            {antagonistGroups.map((antagGroup, i) => (
-              <AntagGroup key={i} group={antagGroup} />
+            {antagonistGroups.map((page, i) => (
+              <Stack.Item key={i}>
+                <Stack fill>
+                  {page.map((antagGroup, j) => (
+                    <AntagGroup key={j} group={antagGroup} />
+                  ))}
+                </Stack>
+              </Stack.Item>
             ))}
           </Stack>
         </Stack.Item>
@@ -267,8 +279,9 @@ export const AntagGroup = (props: { group: AntagonistGroup }, context) => {
   const { name, antagonists } = group;
 
   return (
-    <Stack.Item>
+    <Stack.Item grow>
       <Section
+        fill
         title={name}
         fitted
         mx={1}
