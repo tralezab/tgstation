@@ -3,10 +3,9 @@
 /datum/antagonist/abductor
 	name = "\improper Abductor"
 	roundend_category = "abductors"
-	antagpanel_category = "Abductor"
 	job_rank = ROLE_ABDUCTOR
 	antag_hud_name = "abductor"
-	show_in_antagpanel = FALSE //should only show subtypes
+	 //should only show subtypes
 	show_to_ghosts = TRUE
 	suicide_cry = "FOR THE MOTHERSHIP!!" // They can't even talk but y'know
 	var/datum/team/abductor_team/team
@@ -44,7 +43,8 @@
 	outfit = /datum/outfit/abductor/agent
 	landmark_type = /obj/effect/landmark/abductor/agent
 	greet_text = "Use your stealth technology and equipment to incapacitate humans for your scientist to retrieve."
-	show_in_antagpanel = TRUE
+	traitor_panel_categories = list(PANEL_PURPOSE_TEAM, PANEL_FACTION_ALIENS)
+	traitor_panel_group = "Abductors"
 
 /datum/antagonist/abductor/scientist
 	name = "\improper Abductor Scientist"
@@ -52,7 +52,8 @@
 	outfit = /datum/outfit/abductor/scientist
 	landmark_type = /obj/effect/landmark/abductor/scientist
 	greet_text = "Use your experimental console and surgical equipment to monitor your agent and experiment upon abducted humans."
-	show_in_antagpanel = TRUE
+	traitor_panel_categories = list(PANEL_PURPOSE_TEAM, PANEL_FACTION_ALIENS)
+	traitor_panel_group = "Abductors"
 	role_job = /datum/job/abductor_scientist
 
 /datum/antagonist/abductor/scientist/onemanteam

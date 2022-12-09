@@ -1,6 +1,6 @@
 /datum/antagonist/brother
 	name = "\improper Brother"
-	antagpanel_category = TP_CATEGORY_SYNDICATES
+	traitor_panel_categories = list(PANEL_PURPOSE_TEAM, PANEL_FACTION_SYNDICATE)
 	job_rank = ROLE_BROTHER
 	var/special_role = ROLE_BROTHER
 	antag_hud_name = "brother"

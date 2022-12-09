@@ -166,21 +166,8 @@ GLOBAL_DATUM_INIT(requests, /datum/request_manager, new)
 			usr.client.admin_follow(M)
 			return TRUE
 		if ("tp")
-			if(!SSticker.HasRoundStarted())
-				tgui_alert(usr,"The game hasn't started yet!")
-				return TRUE
-			var/mob/M = request.owner?.mob
-			if(!ismob(M))
-				var/datum/mind/D = M
-				if(!istype(D))
-					to_chat(usr, "This can only be used on instances of type /mob and /mind", confidential = TRUE)
-					return TRUE
-				else
-					D.traitor_panel()
-					return TRUE
-			else
-				usr.client.holder.show_traitor_panel(M)
-				return TRUE
+			usr.client.holder.show_traitor_panel(request.owner?.mob)
+			return TRUE
 		if ("logs")
 			var/mob/M = request.owner?.mob
 			if(!ismob(M))

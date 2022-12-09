@@ -7,7 +7,9 @@
 /datum/antagonist/abductee
 	name = "\improper Abductee"
 	roundend_category = "abductees"
-	antagpanel_category = "Other"
+	//not actually a team but related to abductors
+	traitor_panel_categories = list(PANEL_PURPOSE_TEAM, PANEL_FACTION_ALIENS)
+	traitor_panel_group = "Abductors"
 	antag_hud_name = "abductee"
 
 /datum/antagonist/abductee/on_gain()

@@ -2,12 +2,13 @@
 /datum/antagonist/heretic_monster
 	name = "\improper Eldritch Horror"
 	roundend_category = "Heretics"
-	antagpanel_category = "Heretic Beast"
+	traitor_panel_categories = list(PANEL_PURPOSE_SUMMONER, PANEL_FACTION_MAGICAL)
+	traitor_panel_group = "Heretic"
 	antag_moodlet = /datum/mood_event/heretics
 	job_rank = ROLE_HERETIC
 	antag_hud_name = "heretic_beast"
 	suicide_cry = "MY MASTER SMILES UPON ME!!"
-	show_in_antagpanel = FALSE
+
 	/// Our master (a heretic)'s mind.
 	var/datum/mind/master
 

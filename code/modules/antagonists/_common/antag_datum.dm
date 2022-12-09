@@ -39,17 +39,22 @@ GLOBAL_LIST_EMPTY(antagonists)
 	var/count_against_dynamic_roll_chance = TRUE
 	/// The battlecry this antagonist shouts when suiciding with C4/X4.
 	var/suicide_cry = ""
-	//Antag panel properties
-	///This will hide adding this antag type in antag panel, use only for internal subtypes that shouldn't be added directly but still show if possessed by mind
-	var/show_in_antagpanel = TRUE
-	///Antagpanel will display these together, REQUIRED
-	var/antagpanel_category = TP_CATEGORY_UNCATEGORIZED
 	///Will append antagonist name in admin listings - use for categories that share more than one antag type
 	var/show_name_in_check_antagonists = FALSE
 	/// Should this antagonist be shown as antag to ghosts? Shouldn't be used for stealthy antagonists like traitors
 	var/show_to_ghosts = FALSE
 	/// The typepath for the outfit to show in the preview for the preferences menu.
 	var/preview_outfit
+
+	//TRAITOR PANEL
+
+	///Traitor panel will display these together, REQUIRED
+	///list for both purpose and faction, see antagonists.dm in defines
+	var/list/traitor_panel_categories = PANEL_EXCLUDED
+	///String used to associate different types together as related (abductors and abductees)
+	///if they're related, they **need** to have the same panel flags
+	///if unset but panel flags are set, the group is the antagonist's name
+	var/traitor_panel_group = ""
 
 	//ANTAG UI
 
@@ -379,20 +384,21 @@ GLOBAL_LIST_EMPTY(antagonists)
 
 	return finish_preview_icon(render_preview_outfit(preview_outfit))
 
-/datum/antagonist/Topic(href,href_list)
-	if(!check_rights(R_ADMIN))
-		return
+// TODO port this
+// /datum/antagonist/Topic(href,href_list)
+// 	if(!check_rights(R_ADMIN))
+// 		return
 
-	//Some commands might delete/modify this datum clearing or changing owner
-	var/datum/mind/persistent_owner = owner
+// 	//Some commands might delete/modify this datum clearing or changing owner
+// 	var/datum/mind/persistent_owner = owner
 
-	var/commands = get_admin_commands()
-	for(var/admin_command in commands)
-		if(href_list["command"] == admin_command)
-			var/datum/callback/C = commands[admin_command]
-			C.Invoke(usr)
-			persistent_owner.traitor_panel()
-			return
+// 	var/commands = get_admin_commands()
+// 	for(var/admin_command in commands)
+// 		if(href_list["command"] == admin_command)
+// 			var/datum/callback/C = commands[admin_command]
+// 			C.Invoke(usr)
+// 			persistent_owner.traitor_panel()
+// 			return
 
 /datum/antagonist/proc/edit_memory(mob/user)
 	var/new_memo = tgui_input_text(user, "Write a new memory", "Antag Memory", antag_memory, multiline = TRUE)
@@ -433,7 +439,10 @@ GLOBAL_LIST_EMPTY(antagonists)
 
 //This one is created by admin tools for custom objectives
 /datum/antagonist/custom
-	antagpanel_category = "Custom"
+	//if this has both customs because they are the same thing it would duplicate the category
+	//just trust me, one item in this list works.
+	traitor_panel_categories = list(PANEL_PURPOSE_CUSTOM)
+	traitor_panel_group = "Custom"
 	show_name_in_check_antagonists = TRUE //They're all different
 	var/datum/team/custom_team
 

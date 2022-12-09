@@ -37,7 +37,13 @@
 
 /// Traitor Panel
 /datum/traitor_panel
+	///mind of the player we're messing with
 	var/datum/mind/mind
+
+	///all the categories preparing the data found
+	var/static/list/categories
+	///all the antagonist groups
+	var/static/list/groups
 
 /datum/traitor_panel/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -78,39 +84,42 @@
 				"icon" = "brain"
 			))
 	//antags
-	data["antagonistCategories"] = list()
-	data["antagonists"] = list()
-	if(!GLOB.antag_prototypes)
+	if(!groups)
 		setup_antag_prototypes()
-	for(var/antag_category in GLOB.antag_prototypes)
-		//categories should have at least one antag if we care to show it
-		var/valid_category = FALSE
-		for(var/datum/antagonist/prototype as anything in GLOB.antag_prototypes[antag_category])
-			var/datum/antagonist/has_this_antag = mind.has_antag_datum(prototype.type)
-			if(has_this_antag || prototype.show_in_antagpanel)
-				valid_category = TRUE
-				var/list/added = list(
-					"name" = prototype.name,
-					"type" = prototype.type,
-					"category" = antag_category,
-				)
-				if(has_this_antag)
-					added["hasThis"] = TRUE
-				UNTYPED_LIST_ADD(data["antagonists"], added)
-		if(valid_category)
-			data["antagonistCategories"] += antag_category
+	data["allCategories"] = categories
+	data["allGroups"] = groups
 	return data
 
+/// list of groups
+/// group has a list of antagonists
+/// antagonists has a list of names, types, and whether they have it
 /datum/traitor_panel/proc/setup_antag_prototypes()
-	GLOB.antag_prototypes = list()
-	for(var/antag_type in subtypesof(/datum/antagonist))
-		var/datum/antagonist/antag = new antag_type
-		var/cat_id = antag.antagpanel_category
-		if(!GLOB.antag_prototypes[cat_id])
-			GLOB.antag_prototypes[cat_id] = list(antag)
-		else
-			GLOB.antag_prototypes[cat_id] += antag
-	sortTim(GLOB.antag_prototypes, GLOBAL_PROC_REF(cmp_text_asc),associative=TRUE)
+	var/list/name2group = list()
+	categories = list()
+
+	for(var/datum/antagonist/antag_type as anything in subtypesof(/datum/antagonist))
+		if(initial(antag_type.traitor_panel_categories) == PANEL_EXCLUDED)
+			continue
+		var/datum/antagonist/prototype = new antag_type()
+
+		//populating groups
+		if(!prototype.traitor_panel_group)
+			prototype.traitor_panel_group = prototype.name
+		if(!name2group[prototype.traitor_panel_group])
+			name2group[prototype.traitor_panel_group] = list(
+				"name" = prototype.traitor_panel_group,
+				"categories" = prototype.traitor_panel_categories,
+				"antagonists" = list(),
+			)
+		var/list/group = name2group[prototype.traitor_panel_group]
+		UNTYPED_LIST_ADD(group["antagonists"], list(
+			"name" = prototype.name,
+			"type" = prototype.type,
+		))
+		//populating categories
+		categories |= group["categories"]
+
+	groups = flatten_list(name2group)
 
 /datum/traitor_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	if(..())
@@ -120,17 +129,30 @@
 	to_chat(world, action)
 	switch(action)
 		if("add_antag")
-			var/datum/antagonist/new_antag = params["type"]
+			mind.add_antag_wrapper(text2path(params["type"]), usr)
 		if("remove_antag")
-			mind.remove_antag_datum(params["type"])
+			mind.remove_antag_datum(text2path(params["type"]))
 
+/datum/mind/proc/add_special_status(content, is_positive, icon)
+	var/list/new_status = list(
+		"content" = content,
+		"isPositive" = is_positive,
+		"icon" = icon,
+	)
+	LAZYINITLIST(special_statuses)
+	UNTYPED_LIST_ADD(special_statuses, new_status)
 
-	if(href_list[])
-		add_antag_wrapper(text2path(href_list["add_antag"]),usr)
+/datum/mind/proc/remove_special_status(content)
+	if(!special_statuses)
+		return //well, it isn't in there
+	for(var/list/old_status as anything in special_statuses)
+		if(old_status["content"] == content)
+			UNTYPED_LIST_REMOVE(special_statuses, old_status)
+	UNSETEMPTY(special_statuses)
 
-	if(href_list[])
-		var/datum/antagonist/A = locate(href_list["remove_antag"]) in antag_datums
-		if(!istype(A))
-			to_chat(usr,span_warning("Invalid antagonist ref to be removed."))
-			return
-		A.admin_remove(usr)
+/datum/mind/proc/add_antag_wrapper(antag_type,mob/user)
+	var/datum/antagonist/new_antag = new antag_type()
+	new_antag.admin_add(src,user)
+	//If something gone wrong/admin-add assign another antagonist due to whatever clean it up
+	if(!new_antag.owner)
+		qdel(new_antag)

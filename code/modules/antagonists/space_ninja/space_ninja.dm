@@ -1,6 +1,6 @@
 /datum/antagonist/ninja
 	name = "\improper Space Ninja"
-	antagpanel_category = "Space Ninja"
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_THIRD_PARTY)
 	job_rank = ROLE_NINJA
 	antag_hud_name = "space_ninja"
 	hijack_speed = 1

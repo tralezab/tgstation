@@ -4,7 +4,7 @@
 	roundend_category = "Fugitive"
 	job_rank = ROLE_FUGITIVE
 	silent = TRUE //greet called by the event
-	show_in_antagpanel = FALSE
+
 	prevent_roundtype_conversion = FALSE
 	antag_hud_name = "fugitive"
 	suicide_cry = "FOR FREEDOM!!"

@@ -2,7 +2,6 @@
 /datum/antagonist/nukeop/clownop
 	name = ROLE_CLOWN_OPERATIVE
 	roundend_category = "clown operatives"
-	antagpanel_category = TP_CATEGORY_SYNDICATES
 	nukeop_outfit = /datum/outfit/syndicate/clownop
 	suicide_cry = "HAPPY BIRTHDAY!!"
 
@@ -43,7 +42,6 @@
 /datum/antagonist/nukeop/leader/clownop
 	name = "Clown Operative Leader"
 	roundend_category = "clown operatives"
-	antagpanel_category = "ClownOp"
 	nukeop_outfit = /datum/outfit/syndicate/clownop/leader
 	challengeitem = /obj/item/nuclear_challenge/clownops
 	suicide_cry = "HAPPY BIRTHDAY!!"

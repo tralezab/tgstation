@@ -1,7 +1,7 @@
 /datum/antagonist/blob
 	name = "\improper Blob"
 	roundend_category = "blobs"
-	antagpanel_category = "Biohazards"
+	traitor_panel_categories = list(PANEL_PURPOSE_SUMMONER, PANEL_FACTION_BIOHAZARDS)
 	show_to_ghosts = TRUE
 	job_rank = ROLE_BLOB
 

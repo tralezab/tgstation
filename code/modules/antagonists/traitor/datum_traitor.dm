@@ -1,7 +1,7 @@
 /datum/antagonist/traitor
 	name = "\improper Traitor"
 	roundend_category = "traitors"
-	antagpanel_category = TP_CATEGORY_SYNDICATES
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_SYNDICATE)
 	job_rank = ROLE_TRAITOR
 	antag_moodlet = /datum/mood_event/focused
 	antag_hud_name = "traitor"
@@ -106,28 +106,28 @@
 
 	return string
 
-/datum/antagonist/traitor/antag_panel_objectives()
-	var/result = ..()
-	if(!uplink_handler)
-		return result
-	result += "<i><b>Traitor specific objectives</b></i><br>"
-	result += "<i><b>Concluded Objectives</b></i>:<br>"
-	for(var/datum/traitor_objective/objective as anything in uplink_handler.completed_objectives)
-		result += "[traitor_objective_to_html(objective)]<br>"
-	if(!length(uplink_handler.completed_objectives))
-		result += "EMPTY<br>"
-	result += "<i><b>Ongoing Objectives</b></i>:<br>"
-	for(var/datum/traitor_objective/objective as anything in uplink_handler.active_objectives)
-		result += "[traitor_objective_to_html(objective)]<br>"
-	if(!length(uplink_handler.active_objectives))
-		result += "EMPTY<br>"
-	result += "<i><b>Potential Objectives</b></i>:<br>"
-	for(var/datum/traitor_objective/objective as anything in uplink_handler.potential_objectives)
-		result += "[traitor_objective_to_html(objective)]<br>"
-	if(!length(uplink_handler.potential_objectives))
-		result += "EMPTY<br>"
-	result += "<a href='?src=[REF(owner)];common=give_objective'>Force add objective</a><br>"
-	return result
+// /datum/antagonist/traitor/antag_panel_objectives()
+// 	var/result = ..()
+// 	if(!uplink_handler)
+// 		return result
+// 	result += "<i><b>Traitor specific objectives</b></i><br>"
+// 	result += "<i><b>Concluded Objectives</b></i>:<br>"
+// 	for(var/datum/traitor_objective/objective as anything in uplink_handler.completed_objectives)
+// 		result += "[traitor_objective_to_html(objective)]<br>"
+// 	if(!length(uplink_handler.completed_objectives))
+// 		result += "EMPTY<br>"
+// 	result += "<i><b>Ongoing Objectives</b></i>:<br>"
+// 	for(var/datum/traitor_objective/objective as anything in uplink_handler.active_objectives)
+// 		result += "[traitor_objective_to_html(objective)]<br>"
+// 	if(!length(uplink_handler.active_objectives))
+// 		result += "EMPTY<br>"
+// 	result += "<i><b>Potential Objectives</b></i>:<br>"
+// 	for(var/datum/traitor_objective/objective as anything in uplink_handler.potential_objectives)
+// 		result += "[traitor_objective_to_html(objective)]<br>"
+// 	if(!length(uplink_handler.potential_objectives))
+// 		result += "EMPTY<br>"
+// 	result += "<a href='?src=[REF(owner)];common=give_objective'>Force add objective</a><br>"
+// 	return result
 
 /datum/antagonist/traitor/on_removal()
 	owner.special_role = null

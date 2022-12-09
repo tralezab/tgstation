@@ -6,7 +6,7 @@
  */
 /datum/antagonist/shade_minion
 	name = "\improper Loyal Shade"
-	show_in_antagpanel = FALSE
+
 	show_in_roundend = FALSE
 	silent = TRUE
 	ui_name = "AntagInfoShade"

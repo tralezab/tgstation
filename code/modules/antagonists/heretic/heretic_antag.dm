@@ -15,7 +15,8 @@
 /datum/antagonist/heretic
 	name = "\improper Heretic"
 	roundend_category = "Heretics"
-	antagpanel_category = "Heretic"
+	traitor_panel_categories = list(PANEL_PURPOSE_SUMMONER, PANEL_FACTION_MAGICAL)
+	traitor_panel_group = "Heretic"
 	ui_name = "AntagInfoHeretic"
 	antag_moodlet = /datum/mood_event/heretics
 	job_rank = ROLE_HERETIC
@@ -565,18 +566,18 @@
 
 	return "<br><b>Research Done:</b><br>[english_list(string_of_knowledge, and_text = ", and ")]<br>"
 
-/datum/antagonist/heretic/antag_panel_objectives()
-	. = ..()
+// /datum/antagonist/heretic/antag_panel_objectives()
+// 	. = ..()
 
-	. += "<br>"
-	. += "<i><b>Current Targets:</b></i><br>"
-	if(LAZYLEN(sac_targets))
-		for(var/mob/living/carbon/human/target as anything in sac_targets)
-			. += " - <b>[target.real_name]</b>, the [target.mind?.assigned_role?.title || "human"].<br>"
+// 	. += "<br>"
+// 	. += "<i><b>Current Targets:</b></i><br>"
+// 	if(LAZYLEN(sac_targets))
+// 		for(var/mob/living/carbon/human/target as anything in sac_targets)
+// 			. += " - <b>[target.real_name]</b>, the [target.mind?.assigned_role?.title || "human"].<br>"
 
-	else
-		. += "<i>None!</i><br>"
-	. += "<br>"
+// 	else
+// 		. += "<i>None!</i><br>"
+// 	. += "<br>"
 
 /**
  * Learns the passed [typepath] of knowledge, creating a knowledge datum

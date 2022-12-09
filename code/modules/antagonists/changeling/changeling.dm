@@ -9,7 +9,7 @@
 /datum/antagonist/changeling
 	name = "\improper Changeling"
 	roundend_category = "changelings"
-	antagpanel_category = "Changeling"
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_ALIENS)
 	job_rank = ROLE_CHANGELING
 	antag_moodlet = /datum/mood_event/focused
 	antag_hud_name = "changeling"
@@ -990,7 +990,7 @@
 // Changelings spawned from non-changeling headslugs (IE, due to being transformed into a headslug as a non-ling). Weaker than a normal changeling.
 /datum/antagonist/changeling/headslug
 	name = "\improper Headslug Changeling"
-	show_in_antagpanel = FALSE
+
 	give_objectives = FALSE
 	count_against_dynamic_roll_chance = FALSE
 

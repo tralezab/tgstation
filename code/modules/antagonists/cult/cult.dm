@@ -6,7 +6,7 @@
 /datum/antagonist/cult
 	name = "Cultist"
 	roundend_category = "cultists"
-	antagpanel_category = "Cult"
+	traitor_panel_categories = list(PANEL_PURPOSE_CONVERSION, PANEL_FACTION_MAGICAL)
 	antag_moodlet = /datum/mood_event/cult
 	suicide_cry = "FOR NAR'SIE!!"
 	preview_outfit = /datum/outfit/cultist
@@ -204,7 +204,7 @@
 
 /datum/antagonist/cult/master
 	ignore_implant = TRUE
-	show_in_antagpanel = FALSE //Feel free to add this later
+	 //Feel free to add this later
 	antag_hud_name = "cultmaster"
 	var/datum/action/innate/cult/master/finalreck/reckoning = new
 	var/datum/action/innate/cult/master/cultmark/bloodmark = new

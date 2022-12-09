@@ -3,7 +3,7 @@
 	name = "Fugitive Hunter"
 	roundend_category = "Fugitive"
 	silent = TRUE //greet called by the spawn
-	show_in_antagpanel = FALSE
+
 	prevent_roundtype_conversion = FALSE
 	antag_hud_name = "fugitive_hunter"
 	suicide_cry = "FOR GLORY!!"

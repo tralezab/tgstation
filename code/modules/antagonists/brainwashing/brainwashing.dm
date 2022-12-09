@@ -29,9 +29,9 @@
 	name = "\improper Brainwashed Victim"
 	job_rank = ROLE_BRAINWASHED
 	roundend_category = "brainwashed victims"
-	show_in_antagpanel = TRUE
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_THIRD_PARTY)
+	traitor_panel_group = "Subverted Staff"
 	antag_hud_name = "brainwashed"
-	antagpanel_category = "Other"
 	show_name_in_check_antagonists = TRUE
 	count_against_dynamic_roll_chance = FALSE
 	ui_name = "AntagInfoBrainwashed"

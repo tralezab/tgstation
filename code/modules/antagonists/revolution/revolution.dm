@@ -6,7 +6,8 @@
 /datum/antagonist/rev
 	name = "\improper Revolutionary"
 	roundend_category = "revolutionaries" // if by some miracle revolutionaries without revolution happen
-	antagpanel_category = "Revolution"
+	traitor_panel_categories = list(PANEL_PURPOSE_CONVERSION, PANEL_FACTION_SYNDICATE)
+	traitor_panel_group = "Revolutionaries"
 	job_rank = ROLE_REV
 	antag_moodlet = /datum/mood_event/revolution
 	antag_hud_name = "rev"

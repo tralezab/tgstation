@@ -440,7 +440,6 @@
 	//Something in here might have changed your mob
 	if(self_antagging && (!usr || !usr.client) && current.client)
 		usr = current
-	traitor_panel()
 
 /datum/mind/proc/transfer_martial_arts(mob/living/new_character)
 	if(!ishuman(new_character))

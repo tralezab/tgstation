@@ -270,14 +270,33 @@ GLOBAL_LIST_INIT(ai_employers, list(
 
 #define REVENANT_NAME_FILE "revenant_names.json"
 
-//antag panel categories!
+//traitor panel categories!
 
-///fails unit tests if you didn't set it. Shouldn't appear
-#define TP_CATEGORY_UNCATEGORIZED "Uncategorized"
+///doesn't appear in traitor panel
+#define PANEL_EXCLUDED NONE
 
-///traitors, but also brothers
-#define TP_CATEGORY_SYNDICATES "Syndicates"
-///just revs.
-#define TP_CATEGORY_REVOLUTIONARIES "Revolutionaries"
-///holiday related things.
-#define TP_CATEGORY_HOLIDAY "Holiday Roles"
+///Custom antags
+#define PANEL_PURPOSE_CUSTOM "Custom"
+/// Entirely Solo Roles like traitor
+#define PANEL_PURPOSE_SOLO "Solo Roles"
+/// Solo, but summons/has support. Not a true team. Examples are Blob and Heretic
+#define PANEL_PURPOSE_SUMMONER "Supported Roles"
+/// Team roles where members are more than supporting roles or lesser creatures. Nuke Ops, for instance.
+#define PANEL_PURPOSE_TEAM "Team Roles"
+/// Team roles with conversion. Cult, Revs, etc.
+#define PANEL_PURPOSE_CONVERSION "Conversion Roles"
+
+///Custom antags, but for factions
+#define PANEL_FACTION_CUSTOM "Custom"
+/// Traitors, Brothers, anything with a tie to the Syndicate
+#define PANEL_FACTION_SYNDICATE "Syndicate"
+/// Wizards, Heretics, Cultists
+#define PANEL_FACTION_MAGICAL "Magical"
+/// Space Dragons, etc
+#define PANEL_FACTION_CREATURE "Creature"
+/// Abductors, Nightmares, Changelings
+#define PANEL_FACTION_ALIENS "Aliens"
+/// Blob, Sentient Virus
+#define PANEL_FACTION_BIOHAZARDS "Biohazards"
+/// Obsessed, Brainwashed, Malf
+#define PANEL_FACTION_THIRD_PARTY "Third Party"

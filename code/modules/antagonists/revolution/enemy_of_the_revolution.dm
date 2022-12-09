@@ -5,7 +5,7 @@
  */
 /datum/antagonist/enemy_of_the_revolution
 	name = "\improper Enemy of the Revolution"
-	show_in_antagpanel = FALSE
+
 	suicide_cry = "FOR NANOTRASEN, NOW AND FOREVER!!"
 
 /datum/antagonist/enemy_of_the_revolution/proc/forge_objectives()

@@ -1,6 +1,6 @@
 /datum/antagonist/sentient_creature
 	name = "\improper Sentient Creature"
-	show_in_antagpanel = FALSE
+
 	show_in_roundend = FALSE
 	count_against_dynamic_roll_chance = FALSE
 	ui_name = "AntagInfoSentient"

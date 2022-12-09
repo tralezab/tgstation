@@ -1,7 +1,6 @@
 /datum/antagonist/obsessed
 	name = "Obsessed"
-	show_in_antagpanel = TRUE
-	antagpanel_category = "Other"
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_THIRD_PARTY)
 	job_rank = ROLE_OBSESSED
 	antag_hud_name = "obsessed"
 	show_name_in_check_antagonists = TRUE

@@ -1,6 +1,6 @@
 /datum/antagonist/survivalist
 	name = "\improper Survivalist"
-	show_in_antagpanel = FALSE
+
 	show_name_in_check_antagonists = TRUE
 	suicide_cry = "FOR MYSELF!!"
 	var/greet_message = ""

@@ -2,7 +2,7 @@
 /datum/antagonist/fallen_changeling
 	name = "\improper Fallen Changeling"
 	roundend_category = "changelings"
-	antagpanel_category = "Changeling"
+	traitor_panel_categories = list(PANEL_PURPOSE_SOLO, PANEL_FACTION_ALIENS)
 	job_rank = ROLE_CHANGELING
 	antag_moodlet = /datum/mood_event/fallen_changeling
 	antag_hud_name = "changeling"

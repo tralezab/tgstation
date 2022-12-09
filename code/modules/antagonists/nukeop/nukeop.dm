@@ -1,7 +1,8 @@
 /datum/antagonist/nukeop
 	name = ROLE_NUCLEAR_OPERATIVE
 	roundend_category = "syndicate operatives" //just in case
-	antagpanel_category = TP_CATEGORY_SYNDICATES
+	traitor_panel_categories = list(PANEL_PURPOSE_TEAM, PANEL_FACTION_SYNDICATE)
+	traitor_panel_group = "Nuclear Team"
 	job_rank = ROLE_OPERATIVE
 	antag_hud_name = "synd"
 	antag_moodlet = /datum/mood_event/focused
@@ -315,7 +316,7 @@
 			nuke_team.memorized_code = null
 
 /datum/antagonist/nukeop/reinforcement
-	show_in_antagpanel = FALSE
+
 	send_to_spawnpoint = FALSE
 	nukeop_outfit = /datum/outfit/syndicate/reinforcement
 
