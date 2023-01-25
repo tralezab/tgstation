@@ -12,6 +12,8 @@
 #define COMSIG_ORGAN_REMOVED "comsig_organ_removed"
 /// Called when an organ is being regenerated with a new copy in species regenerate_organs (obj/item/organ/replacement)
 #define COMSIG_ORGAN_BEING_REPLACED "organ_being_replaced"
+/// Sent when an organ starts or stops failing
+#define COMSIG_ORGAN_FAILING_CHANGED "organ_failing_fixed"
 
 ///from base of mob/update_transform()
 #define COMSIG_LIVING_POST_UPDATE_TRANSFORM "living_post_update_transform"

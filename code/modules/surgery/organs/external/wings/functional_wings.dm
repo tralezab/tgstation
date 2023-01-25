@@ -42,7 +42,7 @@
 		fly = new
 		fly.Grant(reciever)
 
-/obj/item/organ/external/wings/functional/Remove(mob/living/carbon/organ_owner, special, moving)
+/obj/item/organ/external/wings/functional/Remove(mob/living/carbon/organ_owner, special)
 	. = ..()
 
 	fly.Remove(organ_owner)
@@ -64,10 +64,11 @@
 		return FALSE
 	return TRUE
 
-
 ///Check if we're still eligible for flight (wings covered, atmosphere too thin, etc)
 /obj/item/organ/external/wings/functional/proc/can_fly(mob/living/carbon/human/human)
 	if(human.stat || human.body_position == LYING_DOWN)
+		return FALSE
+	if(organ_flags & ORGAN_FAILING)
 		return FALSE
 	//Jumpsuits have tail holes, so it makes sense they have wing holes too
 	if(human.wear_suit && ((human.wear_suit.flags_inv & HIDEJUMPSUIT) && (!human.wear_suit.species_exception || !is_type_in_list(src, human.wear_suit.species_exception))))
@@ -155,11 +156,24 @@
 	desc = "Hey, HEY- NOT lizard wings. Dragon wings. Mighty dragon wings."
 	stored_feature_id = "Dragon"
 
-///robotic wings, which relate to androids.
+///robotic wings, which relate to androids. When emp'd, if attached, will fly right off of the owner.
 /obj/item/organ/external/wings/functional/robotic
 	name = "robotic wings"
-	desc = "Using microscopic hover-engines, or \"microwings,\" as they're known in the trade, these tiny devices are able to lift a few grams at a time. Gathering enough of them, and you can lift impressively large things."
+	desc = "Using microscopic hover-engines, or \"microwings\" as they're known in the trade, these tiny devices are able to lift a few grams at a time. Gathering enough of them, and you can lift impressively large things."
 	stored_feature_id = "Robotic"
+
+/obj/item/organ/external/wings/functional/robotic/emp_act(severity)
+	. = ..()
+	if(. & EMP_PROTECT_SELF)
+		return
+	do_sparks(5, FALSE, owner)
+	var/turf/owner_turf = get_turf(owner)
+	if(!owner || !owner_turf)
+		return
+	visible_message(span_danger("[src] goes haywire, sparking before flying right off of [owner]'s back!"))
+	Remove(owner, TRUE)
+	forceMove(owner_turf)
+	throw_at(get_edge_target_turf(src, turn(owner.dir, 180)), rand(4,5), 9)
 
 ///skeletal wings, which relate to skeletal races.
 /obj/item/organ/external/wings/functional/skeleton
@@ -167,12 +181,12 @@
 	desc = "Powered by pure edgy-teenager-notebook-scribblings. Just kidding. But seriously, how do these keep you flying?!"
 	stored_feature_id = "Skeleton"
 
-	///Are we burned?
-	var/burnt = FALSE
-	///Store our old datum here for if our burned wings are healed
-	var/original_sprite_datum
-///Prototype for moth wings, so in the future we can add burn off behavior.
+///Prototype for moth wings, which can burn off.
 /obj/item/organ/external/wings/functional/moth
+
+/obj/item/organ/external/wings/functional/moth/Initialize(mapload, mob_sprite)
+	. = ..()
+	AddComponent(/datum/component/burnable_wings, /datum/sprite_accessory/moth_wings/burnt_off)
 
 ///mothra wings, which relate to moths.
 /obj/item/organ/external/wings/functional/moth/mothra

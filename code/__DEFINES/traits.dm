@@ -983,9 +983,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Currently fishing
 #define TRAIT_GONE_FISHING "fishing"
 
-/// Makes a species be better/worse at tackling depending on their wing's status
-#define TRAIT_TACKLING_WINGED_ATTACKER "tacking_winged_attacker"
-
 /// Makes a species be frail and more likely to roll bad results if they hit a wall
 #define TRAIT_TACKLING_FRAIL_ATTACKER "tackling_frail_attacker"
 

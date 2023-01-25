@@ -191,7 +191,10 @@ INITIALIZE_IMMEDIATE(/obj/item/organ)
 
 ///SETS an organ's damage to the amount "damage_amount", and in doing so clears or sets the failing flag, good for when you have an effect that should fix an organ if broken
 /obj/item/organ/proc/setOrganDamage(damage_amount, required_organtype) //use mostly for admin heals
+	var/was_failing = organ_flags & ORGAN_FAILING
 	applyOrganDamage(damage_amount - damage, required_organtype = required_organtype)
+	var/is_failing = organ_flags & ORGAN_FAILING
+	SEND_SIGNAL(src, COMSIG)
 
 /** check_damage_thresholds
  * input: mob/organ_owner (a mob, the owner of the organ we call the proc on)

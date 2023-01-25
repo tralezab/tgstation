@@ -12,10 +12,10 @@
 /datum/surgery/advanced/wing_reconstruction/can_start(mob/user, mob/living/carbon/target)
 	if(!istype(target))
 		return FALSE
-	var/obj/item/organ/external/wings/moth/wings = target.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
-	if(!istype(wings, /obj/item/organ/external/wings/moth))
+	var/obj/item/organ/external/wings/wings = target.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
+	if(!(wings.organ_flags & ORGAN_FAILING))
 		return FALSE
-	return ..() && wings?.burnt
+	return ..()
 
 /datum/surgery_step/wing_reconstruction
 	name = "start wing reconstruction (hemostat)"
@@ -48,9 +48,8 @@
 			span_notice("[user] completes the surgery on [target]'s wings."),
 		)
 		display_pain(target, "You can feel your wings again!")
-		var/obj/item/organ/external/wings/moth/wings = target.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
-		if(istype(wings, /obj/item/organ/external/wings/moth)) //make sure we only heal moth wings.
-			wings.heal_wings()
+		var/obj/item/organ/external/wings/wings = target.getorganslot(ORGAN_SLOT_EXTERNAL_WINGS)
+		wings.setOrganDamage(0)
 
 		var/obj/item/organ/external/antennae/antennae = target.getorganslot(ORGAN_SLOT_EXTERNAL_ANTENNAE) //i mean we might aswell heal their antennae too
 		antennae?.heal_antennae()
