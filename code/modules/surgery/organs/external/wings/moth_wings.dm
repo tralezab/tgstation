@@ -3,23 +3,14 @@
 	name = "moth wings"
 	desc = "Spread your wings and FLOOOOAAAAAT!"
 
-	feature_key = "moth_wings"
 	preference = "feature_moth_wings"
-	layers = EXTERNAL_BEHIND | EXTERNAL_FRONT
 
 	dna_block = DNA_MOTH_WINGS_BLOCK
+	bodypart_overlay = /datum/bodypart_overlay/mutant/wings/moth
 
 /obj/item/organ/external/wings/moth/Initialize(mapload, mob_sprite)
 	. = ..()
 	AddComponent(/datum/component/burnable_wings, /datum/sprite_accessory/moth_wings/burnt_off)
-
-/obj/item/organ/external/wings/moth/get_global_feature_list()
-	return GLOB.moth_wings_list
-
-/obj/item/organ/external/wings/moth/can_draw_on_bodypart(mob/living/carbon/human/human)
-	if(!(human.wear_suit?.flags_inv & HIDEMUTWINGS))
-		return TRUE
-	return FALSE
 
 /obj/item/organ/external/wings/moth/Insert(mob/living/carbon/reciever, special, drop_if_replaced)
 	. = ..()
@@ -33,6 +24,14 @@
 
 /obj/item/organ/external/wings/moth/can_soften_fall()
 	return !(organ_flags & ORGAN_FAILING)
+
+/datum/bodypart_overlay/mutant/wings/moth/get_global_feature_list()
+	return GLOB.moth_wings_list
+
+/datum/bodypart_overlay/mutant/wings/moth/can_draw_on_bodypart(mob/living/carbon/human/human)
+	if(!(human.wear_suit?.flags_inv & HIDEMUTWINGS))
+		return TRUE
+	return FALSE
 
 ///Check if we can flutter around
 /obj/item/organ/external/wings/moth/proc/update_float_move()
