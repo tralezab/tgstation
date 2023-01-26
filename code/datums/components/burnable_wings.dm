@@ -7,13 +7,14 @@
 /datum/component/burnable_wings
 	///Store our old datum here for if our burned wings are healed
 	var/original_sprite_datum
-	/// Path for the visuals of a burnt off wing! That shit don't work no more!
-	var/burned_off_accessory_path
+	/// Datum for the visuals of a burnt off wing! That shit don't work no more!
+	var/burn_datum
 
-/datum/component/burnable_wings/Initialize(burned_off_accessory_path)
+/datum/component/burnable_wings/Initialize(burn_datum_path)
 	if(!istype(parent, /obj/item/organ/external/wings))
 		return COMPONENT_INCOMPATIBLE
-	src.burned_off_accessory_path = burned_off_accessory_path
+
+	burn_datum = fetch_sprite_datum(burn_datum)
 
 /datum/component/burnable_wings/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_ORGAN_IMPLANTED, PROC_REF(on_implanted))
@@ -61,7 +62,7 @@
 	SIGNAL_HANDLER
 
 	var/obj/item/organ/external/wings/parent_wings = parent
-	
+
 
 	if(heal_flags & (HEAL_LIMBS|HEAL_ORGANS))
 		parent_wings.setOrganDamage(0)
