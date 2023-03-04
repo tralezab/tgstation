@@ -153,7 +153,7 @@
 /datum/strippable_item/proc/finish_unequip(atom/source, mob/user)
 
 /// Returns a STRIPPABLE_OBSCURING_* define to report on whether or not this is obscured.
-/datum/strippable_item/proc/get_obscuring(atom/source)
+/datum/strippable_item/proc/get_obscuring(atom/source, mob/user)
 	SHOULD_NOT_SLEEP(TRUE)
 	return STRIPPABLE_OBSCURING_NONE
 
@@ -230,7 +230,7 @@
 
 	return finish_equip_mob(equipping, source, user)
 
-/datum/strippable_item/mob_item_slot/get_obscuring(atom/source)
+/datum/strippable_item/mob_item_slot/get_obscuring(atom/source, mob/user)
 	if (iscarbon(source))
 		var/mob/living/carbon/carbon_source = source
 		return (carbon_source.check_obscured_slots() & item_slot) \
@@ -332,7 +332,7 @@
 		if(strippable_key in LAZYACCESS(interactions, user))
 			LAZYSET(result, "interacting", TRUE)
 
-		var/obscuring = item_data.get_obscuring(owner)
+		var/obscuring = item_data.get_obscuring(owner, user)
 		if (obscuring != STRIPPABLE_OBSCURING_NONE)
 			LAZYSET(result, "obscured", obscuring)
 			items[strippable_key] = result
@@ -382,7 +382,7 @@
 			if (!strippable_item.should_show(owner, user))
 				return
 
-			if (strippable_item.get_obscuring(owner) == STRIPPABLE_OBSCURING_COMPLETELY)
+			if (strippable_item.get_obscuring(owner, user) == STRIPPABLE_OBSCURING_COMPLETELY)
 				return
 
 			var/item = strippable_item.get_item(owner)
@@ -447,7 +447,7 @@
 			if (!strippable_item.should_show(owner, user))
 				return
 
-			if (strippable_item.get_obscuring(owner) == STRIPPABLE_OBSCURING_COMPLETELY)
+			if (strippable_item.get_obscuring(owner, user) == STRIPPABLE_OBSCURING_COMPLETELY)
 				return
 
 			var/item = strippable_item.get_item(owner)

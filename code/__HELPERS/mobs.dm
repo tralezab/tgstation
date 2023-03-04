@@ -109,6 +109,7 @@
 		"moth_antennae" = pick(GLOB.moth_antennae_list),
 		"moth_markings" = pick(GLOB.moth_markings_list),
 		"tail_monkey" = "None",
+		"tail_fox" = "None",
 		"pod_hair" = pick(GLOB.pod_hair_list),
 	))
 

@@ -75,3 +75,23 @@
 	infusion_desc = "skittish"
 	tier = DNA_MUTANT_TIER_ONE
 	status_effect_type = /datum/status_effect/organ_set_bonus/rat
+
+/datum/infuser_entry/vulpini
+	name = "Fox"
+	infuse_mob_name = "vulpini"
+	desc = "Foxes are now quite rare because of the \"fox ears\" craze back in 2555. I mean, also because we're spacefarers who destroyed foxes' natural habitats ages ago, but that applies to most animals. Still, little did those dregs know, fox DNA actually has interesting applications."
+	threshold_desc = "you "
+	qualities = list(
+		"steal",
+		"pickpocketing skills through the roof",
+		"mysterious and mythological = i steal from your pockets",
+	)
+	input_obj_or_mob = list(
+		/mob/living/simple_animal/pet/fox,
+	)
+	output_organs = list(
+		/obj/item/organ/internal/ears/fox,
+		/obj/item/organ/external/tail/fox,
+	)
+	infusion_desc = "inexcusable"
+	tier = DNA_MUTANT_TIER_ONE

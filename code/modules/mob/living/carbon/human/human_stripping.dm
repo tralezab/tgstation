@@ -136,7 +136,9 @@ GLOBAL_LIST_INIT(strippable_human_items, create_strippable_list(list(
 	/// Which pocket we're referencing. Used for visible text.
 	var/pocket_side
 
-/datum/strippable_item/mob_item_slot/pocket/get_obscuring(atom/source)
+/datum/strippable_item/mob_item_slot/pocket/get_obscuring(atom/source, mob/user)
+	if(HAS_TRAIT(user, TRAIT_POCKET_PEEKER))
+		return STRIPPABLE_OBSCURING_NONE
 	return isnull(get_item(source)) \
 		? STRIPPABLE_OBSCURING_NONE \
 		: STRIPPABLE_OBSCURING_HIDDEN
@@ -154,15 +156,21 @@ GLOBAL_LIST_INIT(strippable_human_items, create_strippable_list(list(
 	if (isnull(item))
 		return FALSE
 
+	var/warn_on_failure = FALSE
+
+	var/delay = POCKET_STRIP_DELAY
+	if(HAS_TRAIT(user, TRAIT_QUICK_PICKPOCKET))
+		delay = POCKET_QUICK_STRIP_DELAY
+
 	to_chat(user, span_notice("You try to empty [source]'s [pocket_side] pocket."))
 
 	user.log_message("is pickpocketing [key_name(source)] of [item] ([pocket_side])", LOG_ATTACK, color="red")
 	source.log_message("is being pickpocketed of [item] by [key_name(user)] ([pocket_side])", LOG_VICTIM, color="orange", log_globally=FALSE)
 	item.add_fingerprint(src)
 
-	var/result = start_unequip_mob(item, source, user, POCKET_STRIP_DELAY)
+	var/result = start_unequip_mob(item, source, user, delay)
 
-	if (!result)
+	if (!result && warn_on_failure)
 		warn_owner(source)
 
 	return result

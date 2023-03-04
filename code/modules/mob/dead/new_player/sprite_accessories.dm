@@ -1775,6 +1775,12 @@
 	icon_state = "monkey"
 	color_src = FALSE
 
+/datum/sprite_accessory/tails/fox
+	name = "Fox"
+	icon = 'icons/mob/species/misc/fox_tail.dmi'
+	icon_state = "fox"
+	color_src = HAIR
+
 /datum/sprite_accessory/pod_hair
 	icon = 'icons/mob/species/podperson_hair.dmi'
 	em_block = TRUE
