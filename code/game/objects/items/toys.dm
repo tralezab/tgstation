@@ -400,7 +400,9 @@
 	AddComponent(/datum/component/transforming, \
 		throw_speed_on = throw_speed, \
 		hitsound_on = hitsound, \
-		clumsy_check = FALSE)
+		clumsy_check = FALSE, \
+		inhand_icon_change = FALSE, \
+	)
 	RegisterSignal(src, COMSIG_TRANSFORMING_ON_TRANSFORM, PROC_REF(on_transform))
 	AddElement(/datum/element/update_icon_updates_onmob)
 
@@ -872,6 +874,7 @@
 
 /obj/item/toy/snowball/afterattack(atom/target as mob|obj|turf|area, mob/user)
 	. = ..()
+	. |= AFTERATTACK_PROCESSED_ITEM
 	if(user.dropItemToGround(src))
 		throw_at(target, throw_range, throw_speed)
 
@@ -951,6 +954,7 @@
 	name = "xenomorph action figure"
 	desc = "MEGA presents the new Xenos Isolated action figure! Comes complete with realistic sounds! Pull back string to use."
 	w_class = WEIGHT_CLASS_SMALL
+	item_flags = XENOMORPH_HOLDABLE
 	var/cooldown = 0
 
 /obj/item/toy/toy_xeno/attack_self(mob/user)
@@ -1414,8 +1418,8 @@ GLOBAL_LIST_EMPTY(intento_players)
 		return
 
 	var/input
-	var/icon_x = text2num(modifiers["icon-x"])
-	var/icon_y = text2num(modifiers["icon-y"])
+	var/icon_x = text2num(modifiers[ICON_X])
+	var/icon_y = text2num(modifiers[ICON_Y])
 	if(icon_x > ICON_SPLIT && icon_y > ICON_SPLIT)
 		input = DISARM
 	if(icon_x < ICON_SPLIT && icon_y > ICON_SPLIT)

@@ -27,7 +27,7 @@
 
 /// Checks if this mob can use the beacon, returns TRUE if so or FALSE otherwise.
 /obj/item/choice_beacon/proc/can_use_beacon(mob/living/user)
-	if(user.canUseTopic(src, be_close = TRUE, no_dexterity = FALSE, no_tk = TRUE))
+	if(user.can_perform_action(src, FORBID_TELEKINESIS_REACH))
 		return TRUE
 
 	playsound(src, 'sound/machines/buzz-sigh.ogg', 40, TRUE)
@@ -52,7 +52,8 @@
 		\"Please stand by for a message from [company_source]. Message as follows: [company_message] Message ends.\""))
 
 	spawn_option(choice_path, user)
-	if(--uses <= 0)
+	uses--
+	if(uses <= 0)
 		do_sparks(3, source = src)
 		qdel(src)
 		return
