@@ -85,6 +85,7 @@
 #define SECHUD_BOTANIST "hudbotanist"
 #define SECHUD_CAPTAIN "hudcaptain"
 #define SECHUD_CARGO_TECHNICIAN "hudcargotechnician"
+#define SECHUD_CARGO_PACK_BEAST "hudcargopackbeast"
 #define SECHUD_CHAPLAIN "hudchaplain"
 #define SECHUD_CHEMIST "hudchemist"
 #define SECHUD_CHIEF_ENGINEER "hudchiefengineer"

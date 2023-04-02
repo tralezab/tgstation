@@ -52,6 +52,7 @@
 		jobs[job.title] = list(
 			"description" = job.description,
 			"department" = department_name,
+			"is_rare" = (job.job_flags & JOB_RARE_APPEARANCE)
 		)
 
 	data["departments"] = departments

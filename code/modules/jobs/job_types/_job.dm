@@ -29,6 +29,9 @@
 	/// How many players can spawn in as this job
 	var/spawn_positions = 0
 
+	/// If enabled by a station trait, how many positions to open?
+	var/bonus_positions = 1
+
 	/// How many players have this job
 	var/current_positions = 0
 
@@ -103,7 +106,7 @@
 	/// List of family heirlooms this job can get with the family heirloom quirk. List of types.
 	var/list/family_heirlooms
 
-	/// All values = (JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE | JOB_BOLD_SELECT_TEXT | JOB_ASSIGN_QUIRKS | JOB_CAN_BE_INTERN)
+	/// All values = (JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE | JOB_BOLD_SELECT_TEXT | JOB_ASSIGN_QUIRKS | JOB_CAN_BE_INTERN | JOB_RARE_APPEARANCE)
 	var/job_flags = NONE
 
 	/// Multiplier for general usage of the voice of god.
