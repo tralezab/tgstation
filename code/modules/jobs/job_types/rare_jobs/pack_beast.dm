@@ -1,4 +1,6 @@
 /datum/job/cargo_pack_beast
+	required_station_trait = STATION_TRAIT_JOB_CARGO_PACK_BEAST
+
 	title = JOB_CARGORILLA
 	description = "Carry crates to their destination with your beastly form. \
 	And you're a gorilla, so that should help you keep cargo safe."
@@ -15,7 +17,7 @@
 	display_order = JOB_DISPLAY_ORDER_CARGO_PACK_BEAST
 	bounty_types = CIV_JOB_BASIC //probably can't do more
 	departments_list = list(
-		/datum/job_department/cargo,
+			/datum/job_department/cargo,
 		)
 
 	mail_goodies = list(

@@ -20,4 +20,5 @@
 	weight = 1
 	show_in_report = FALSE // Selective attention test. Did you spot the pack beast?
 	trait_flags = NONE
+	trait_to_give = STATION_TRAIT_JOB_CARGO_PACK_BEAST
 	job_type = /datum/job/cargo_pack_beast

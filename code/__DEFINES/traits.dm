@@ -965,6 +965,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define STATION_TRAIT_SPIDER_INFESTATION "station_trait_spider_infestation"
 #define STATION_TRAIT_REVOLUTIONARY_TRASHING "station_trait_revolutionary_trashing"
 
+/// station trait jobs
+#define STATION_TRAIT_JOB_CARGO_PACK_BEAST "station_trait_job_cargo_pack_beast"
+
 ///From the market_crash event
 #define MARKET_CRASH_EVENT_TRAIT "crashed_market_event"
 

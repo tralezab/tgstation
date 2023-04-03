@@ -65,6 +65,9 @@ SUBSYSTEM_DEF(job)
 	/// Are we using the old job config system (txt) or the new job config system (TOML)? IF we are going to use the txt file, then we are in "legacy mode", and this will flip to TRUE.
 	var/legacy_mode = FALSE
 
+	/// If this round has a special job in it, players in the lobby need to know.
+	var/station_trait_job_enabled
+
 	/// This is just the message we prepen and put into all of the config files to ensure documentation. We use this in more than one place, so let's put it in the SS to make life a bit easier.
 	var/config_documentation = "## This is the configuration file for the job system.\n## This will only be enabled when the config flag LOAD_JOBS_FROM_TXT is enabled.\n\
 	## We use a system of keys here that directly correlate to the job, just to ensure they don't desync if we choose to change the name of a job.\n## You are able to change (as of now) four different variables in this file.\n\

@@ -32,6 +32,9 @@
 	/// If enabled by a station trait, how many positions to open?
 	var/bonus_positions = 1
 
+	/// for station trait jobs, what trait SSstation needs for the job to not get JOB_NEW_PLAYER_JOINABLE removed (disabling it for the round)
+	var/required_station_trait
+
 	/// How many players have this job
 	var/current_positions = 0
 
@@ -146,6 +149,9 @@
 	if(isnum(job_positions_edits["total_positions"]))
 		total_positions = job_positions_edits["total_positions"]
 
+	if(required_station_trait && !HAS_TRAIT(SSstation, required_station_trait)
+		job_flags &= ~JOB_NEW_PLAYER_JOINABLE
+		SSjob.station_trait_job_enabled = TRUE
 
 /// Executes after the mob has been spawned in the map. Client might not be yet in the mob, and is thus a separate variable.
 /datum/job/proc/after_spawn(mob/living/spawned, client/player_client)
