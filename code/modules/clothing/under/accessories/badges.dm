@@ -4,11 +4,13 @@
 	desc = "Fills you with the conviction of JUSTICE. Lawyers tend to want to show it to everyone they meet."
 	icon_state = "lawyerbadge"
 
-/obj/item/clothing/accessory/lawyers_badge/interact(mob/user)
+/obj/item/clothing/accessory/lawyers_badge/Initialize(mapload)
 	. = ..()
+	AddElement(/datum/element/show_off, PROC_REF(on_show_off))
+
+/obj/item/clothing/accessory/lawyers_badge/proc/on_show_off(mob/user)
 	if(prob(1))
 		user.say("The testimony contradicts the evidence!", forced = "[src]")
-	user.visible_message(span_notice("[user] shows [user.p_their()] attorney's badge."), span_notice("You show your attorney's badge."))
 
 /obj/item/clothing/accessory/lawyers_badge/accessory_equipped(obj/item/clothing/under/clothes, mob/living/user)
 	RegisterSignal(user, COMSIG_LIVING_SLAM_TABLE, PROC_REF(table_slam))

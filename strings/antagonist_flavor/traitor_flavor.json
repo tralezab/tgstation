@@ -52,7 +52,7 @@
         "goal": "The preparations are finally complete. Today is the day you go postal. You're going to hijack the emergency shuttle and live a new life free of Nanotrasen.",
         "introduction": "You're going postal today.",
         "roundend_report": "simply went completely postal!",
-        "ui_theme": "neutral",
+        "ui_theme": "syndicate",
         "uplink": "You've actually managed to steal a full uplink a month ago. This should certainly help accomplish your goals."
     },
     "Gorlex Marauders": {

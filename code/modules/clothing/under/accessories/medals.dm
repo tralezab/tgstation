@@ -13,6 +13,10 @@
 	/// Who gave out this medal
 	var/awarder
 
+/obj/item/clothing/accessory/medal/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/show_off)
+
 /// Callback for do_after to check if we can still be pinned
 /obj/item/clothing/accessory/medal/proc/pin_checks(mob/living/pinner, mob/living/carbon/human/pinning_on)
 	if(QDELETED(src) || QDELETED(pinner) || QDELETED(pinning_on))
