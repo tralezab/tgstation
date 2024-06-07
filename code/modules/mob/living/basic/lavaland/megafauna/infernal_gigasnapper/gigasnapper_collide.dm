@@ -44,7 +44,7 @@
 	owner.visible_message(span_boldwarning("[owner] bursts into a deadly charge!"))
 	charge_dir = direction
 
-/datum/action/cooldown/mob_cooldown/crab_collide/proc/temp_lava(mob/living/basic/mining/megafauna/infernal_gigasnapper/crab)
+/datum/action/cooldown/mob_cooldown/crab_collide/proc/temp_lava(mob/living/basic/mining/megafauna/gigasnapper/crab)
 	var/list/lava_turfs = crab.get_crab_turfs(TRUE)
 	for(var/turf/lava_turf in lava_turfs)
 		new /obj/effect/temp_visual/lava_warning(lava_turf)
@@ -90,7 +90,7 @@
 	return direction
 
 /// signal that fires when the action owner moves
-/datum/action/cooldown/mob_cooldown/crab_collide/proc/on_owner_moved(mob/living/basic/mining/megafauna/infernal_gigasnapper/crab, atom/old_loc, dir, forced, list/old_locs)
+/datum/action/cooldown/mob_cooldown/crab_collide/proc/on_owner_moved(mob/living/basic/mining/megafauna/gigasnapper/crab, atom/old_loc, dir, forced, list/old_locs)
 	SIGNAL_HANDLER
 	if(charge_dir)
 		new /obj/effect/temp_visual/decoy/fading(crab.loc, crab)
