@@ -6,23 +6,30 @@
 	maxHealth = 1000
 
 	icon = 'icons/mob/simple/lavaland/gigasnapper/gigasnapper.dmi'
-	icon_state = "crab"
+	icon_state = "gigasnapper"
 	pixel_x = -32
 	pixel_y = -16
 
+	faction = list(FACTION_MINING, FACTION_BOSS, FACTION_CRAB, FACTION_GIGASNAPPER)
 	mob_biotypes = MOB_ORGANIC | MOB_BEAST | MOB_SPECIAL
 
-	//// actions
-
-	/// side charging attack (and general collision logic)
-	var/datum/action/cooldown/mob_cooldown/crab_collide/collide_action = /datum/action/cooldown/mob_cooldown/crab_collide
+	///arena ability, checked by other abilities often
+	var/datum/action/cooldown/mob_cooldown/crab_arena/arena
 
 /mob/living/basic/mining/megafauna/gigasnapper/Initialize(mapload)
 	. = ..()
-	collide_action = new collide_action(src)
-	collide_action.Grant(src)
 	AddElement(/datum/element/footstep, FOOTSTEP_MOB_CLAW)
 	AddElement(/datum/element/dir_restricted_movement, (EAST | WEST))
+	///TODO: restore this
+	AddComponent(/datum/component/boss_music, 'sound/lavaland/gigasnapper_boss.ogg', 106 SECONDS)
+	var/static/list/innate_actions = list(
+		/datum/action/cooldown/mob_cooldown/crab_dig = BB_GIGASNAPPER_DIG,
+		/datum/action/cooldown/mob_cooldown/crab_collide = BB_GIGASNAPPER_COLLIDE,
+		/datum/action/cooldown/mob_cooldown/crab_arena = BB_GIGASNAPPER_ARENA,
+		/datum/action/cooldown/mob_cooldown/crab_minions = BB_GIGASNAPPER_MINIONS,
+	)
+	var/list/key_abilities = grant_actions_by_list(innate_actions)
+	arena = key_abilities[BB_GIGASNAPPER_ARENA]
 
 /// returns all the turfs that the crab sprite touches
 /mob/living/basic/mining/megafauna/gigasnapper/proc/get_crab_turfs(include_self_turf = FALSE) as /list
