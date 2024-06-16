@@ -4755,7 +4755,6 @@
 #include "code\modules\mob\living\basic\lavaland\megafauna\infernal_gigasnapper\gigasnapper.dm"
 #include "code\modules\mob\living\basic\lavaland\megafauna\infernal_gigasnapper\gigasnapper_actions.dm"
 #include "code\modules\mob\living\basic\lavaland\megafauna\infernal_gigasnapper\gigasnapper_collide.dm"
-#include "code\modules\mob\living\basic\lavaland\megafauna\infernal_gigasnapper\gigasnapper_summoning.dm"
 #include "code\modules\mob\living\basic\lavaland\megafauna\infernal_gigasnapper\smallsnipper.dm"
 #include "code\modules\mob\living\basic\lavaland\mook\mook.dm"
 #include "code\modules\mob\living\basic\lavaland\mook\mook_abilities.dm"

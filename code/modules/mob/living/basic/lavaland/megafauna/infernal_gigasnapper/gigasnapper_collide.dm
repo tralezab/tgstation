@@ -146,10 +146,10 @@
 		return
 
 	if(collided_structure.anchored && initial(collided_structure.anchored) == TRUE)
-		owner.visible_message(span_danger("[src] smashes through [collided_structure]!"))
+		owner.visible_message(span_danger("[owner] smashes through [collided_structure]!"))
 		collided_structure.deconstruct(FALSE)
 	else
-		owner.visible_message(span_danger("[src] violently rams [collided_structure] out of the way!"))
+		owner.visible_message(span_danger("[owner] violently rams [collided_structure] out of the way!"))
 		collided_structure.anchored = FALSE
 		collided_structure.take_damage(rand(20, 25))
 		throw_away(collided_structure)

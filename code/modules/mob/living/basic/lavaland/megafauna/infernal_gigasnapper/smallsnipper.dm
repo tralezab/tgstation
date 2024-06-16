@@ -9,6 +9,8 @@
 	icon = 'icons/mob/simple/lavaland/gigasnapper/32x32.dmi'
 	icon_state = "smallsnipper"
 
+	light_range = 2
+	light_color = COLOR_PALE_ORANGE
 	health = 50
 	maxHealth = 50
 	//not a boss but part of a boss fight so please dont. they fully work with player possession for admins
@@ -59,7 +61,7 @@
 /datum/action/cooldown/mob_cooldown/projectile_attack/smallsnipper_bubble
 	name = "Blow Bubble"
 	desc = "Blow a slow moving bubble to your left or right. Empowered if hovering over a special tile."
-	projectile_type = /obj/projectile/smallsnipper_bubble
+	projectile_type = /obj/projectile/crab_bubble
 
 /datum/action/cooldown/mob_cooldown/projectile_attack/smallsnipper_bubble/Activate(atom/target)
 	if(!isliving(target))
@@ -75,20 +77,6 @@
 		return
 	shoot_projectile(owner, target, dir2angle(direction), owner)
 	StartCooldown()
-
-/obj/projectile/smallsnipper_bubble
-	name = "bubble"
-	icon_state = "gumball"
-	color = "#03c6fc"
-	hitsound = 'sound/effects/splat.ogg'
-	ignored_factions = list(FACTION_GIGASNAPPER)
-	damage = 10
-	speed = 10
-	range = 20
-	jitter = 3 SECONDS
-	stutter = 3 SECONDS
-	damage_type = BRUTE
-	pass_flags = PASSTABLE
 
 /obj/effect/temp_visual/telegraphing/create_type/smallsnipper
 	icon = 'icons/mob/telegraphing/telegraph.dmi'
